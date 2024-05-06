@@ -1,13 +1,6 @@
 import Head from "next/head";
-import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-
-
-const inter = Inter({ subsets: ["latin"] });
+import styles from '@/styles/Home.module.css';
+import Hero from "@/components/Hero";
 
 export default function Home() {
   return (
@@ -16,6 +9,7 @@ export default function Home() {
         <title>Imani Escrow Service</title>
         <meta name="description" content="Secure Online Purchases" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
         <link rel="icon" href="/imanilogo.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         {/* <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin /> */}
@@ -25,8 +19,8 @@ export default function Home() {
         />
 
       </Head>
-      <main className={`${styles.main} ${inter.className}`}>
-
+      <main className={`${styles.main}`}>
+        <Hero />
       </main>
     </>
   );
