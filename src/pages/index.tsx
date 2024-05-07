@@ -1,6 +1,6 @@
 import Head from "next/head";
 import styles from '@/styles/Home.module.css';
-import Hero from "@/components/Hero";
+import LandingPage from "@/landingPage";
 
 export default function Home() {
   return (
@@ -12,7 +12,6 @@ export default function Home() {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
         <link rel="icon" href="/imanilogo.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        {/* <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin /> */}
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
@@ -20,7 +19,7 @@ export default function Home() {
 
       </Head>
       <main className={`${styles.main}`}>
-        <Hero />
+        <LandingPage />
       </main>
     </>
   );
