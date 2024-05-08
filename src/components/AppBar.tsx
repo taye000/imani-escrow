@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from './ToggleColorMode';
+import Link from 'next/link';
 
 const logoStyle = {
     width: '140px',
@@ -99,12 +100,13 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                             </Typography>
                             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                                 <MenuItem
-                                    onClick={() => scrollToSection('features')}
                                     sx={{ py: '6px', px: '12px' }}
                                 >
-                                    <Typography variant="body2" color="text.primary">
-                                        Contact
-                                    </Typography>
+                                    <Link href="/dashboard">
+                                        <Typography variant="body2" color="text.primary">
+                                            Dashboard
+                                        </Typography>
+                                    </Link>
                                 </MenuItem>
                                 <MenuItem
                                     onClick={() => scrollToSection('testimonials')}
