@@ -1,33 +1,40 @@
 import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
-import Box from '@mui/material/Box';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, secondaryListItems } from '../components/listItems';
-import Chart from '../components/Chart';
-import Deposits from '../components/Deposits';
-import Orders from '../components/Orders';
+import {
+    styled,
+    useTheme,
+    PaletteMode,
+    CssBaseline,
+    Box,
+    Divider,
+    List,
+    IconButton,
+    Badge,
+    Container,
+    Grid,
+    Paper,
+    Link,
+    Typography,
+    createTheme,
+    ThemeProvider,
+} from "@mui/material";
+import MuiDrawer from "@mui/material/Drawer";
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { mainListItems, secondaryListItems } from "../components/listItems";
+import Chart from "../components/Chart";
+import Deposits from "../components/Deposits";
+import Orders from "../components/Orders";
+import getLPTheme from "@/getLPTheme";
 
 function Copyright(props: any) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
+            <Link color="inherit" href="/">
+                ImaniEscrow
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -85,14 +92,18 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
 
 export default function Dashboard() {
     const [open, setOpen] = React.useState(true);
     const toggleDrawer = () => {
         setOpen(!open);
     };
+    const [mode, setMode] = React.useState<PaletteMode>('dark');
+    const [showCustomTheme, setShowCustomTheme] = React.useState(true);
+    const LPtheme = createTheme(getLPTheme(mode));
+    const defaultTheme = createTheme({ palette: { mode } });
+    const theme = useTheme();
+    const customTheme = createTheme(getLPTheme(mode));
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -101,7 +112,7 @@ export default function Dashboard() {
                 <AppBar position="absolute" open={open}>
                     <Toolbar
                         sx={{
-                            pr: '24px', // keep right padding when drawer closed
+                            pr: '24px',
                         }}
                     >
                         <IconButton
@@ -167,7 +178,7 @@ export default function Dashboard() {
                     <Toolbar />
                     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                         <Grid container spacing={3}>
-                            {/* Chart */}
+                            Chart
                             <Grid item xs={12} md={8} lg={9}>
                                 <Paper
                                     sx={{
@@ -180,7 +191,7 @@ export default function Dashboard() {
                                     <Chart />
                                 </Paper>
                             </Grid>
-                            {/* Recent Deposits */}
+                            Recent Deposits
                             <Grid item xs={12} md={4} lg={3}>
                                 <Paper
                                     sx={{
@@ -193,7 +204,7 @@ export default function Dashboard() {
                                     <Deposits />
                                 </Paper>
                             </Grid>
-                            {/* Recent Orders */}
+                            Recent Orders
                             <Grid item xs={12}>
                                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                                     <Orders />

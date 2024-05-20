@@ -21,7 +21,7 @@ function Copyright() {
     return (
         <Typography variant="body2" color="text.secondary" mt={1}>
             {'Copyright © '}
-            <Link href="https://mui.com/">ImaniEscrow&nbsp;</Link>
+            <Link href="/">ImaniEscrow&nbsp;</Link>
             {new Date().getFullYear()}
         </Typography>
     );
@@ -111,9 +111,6 @@ export default function Footer() {
                         Testimonials
                     </Link>
                     <Link color="text.secondary" href="#">
-                        Highlights
-                    </Link>
-                    <Link color="text.secondary" href="#">
                         Pricing
                     </Link>
                     <Link color="text.secondary" href="#">
@@ -135,9 +132,6 @@ export default function Footer() {
                     </Link>
                     <Link color="text.secondary" href="#">
                         Careers
-                    </Link>
-                    <Link color="text.secondary" href="#">
-                        Press
                     </Link>
                 </Box>
                 <Box
