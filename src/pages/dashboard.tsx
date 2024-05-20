@@ -16,6 +16,7 @@ import {
     Typography,
     createTheme,
     ThemeProvider,
+    MenuItem,
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
@@ -136,6 +137,15 @@ export default function Dashboard() {
                         >
                             Dashboard
                         </Typography>
+                        <MenuItem
+                            sx={{ py: '6px', px: '12px' }}
+                        >
+                            <Link href="/marketplace">
+                                <Typography variant="body2" color="text.primary">
+                                    MarketPlace
+                                </Typography>
+                            </Link>
+                        </MenuItem>
                         <IconButton color="inherit">
                             <Badge badgeContent={4} color="secondary">
                                 <NotificationsIcon />
@@ -204,7 +214,6 @@ export default function Dashboard() {
                                     <Deposits />
                                 </Paper>
                             </Grid>
-                            Recent Orders
                             <Grid item xs={12}>
                                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                                     <Orders />

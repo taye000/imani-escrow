@@ -13,12 +13,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from './ToggleColorMode';
 import Link from 'next/link';
 
-const logoStyle = {
-    width: '140px',
-    height: 'auto',
-    cursor: 'pointer',
-};
-
 interface AppAppBarProps {
     mode: PaletteMode;
     toggleColorMode: () => void;
