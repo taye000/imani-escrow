@@ -1,7 +1,27 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Button, Card, CardContent, CardMedia, Typography, Box, Divider } from '@mui/material';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import React from "react";
+import styled from "styled-components";
+import {
+    Button,
+    Card,
+    CardContent,
+    CardMedia,
+    Typography,
+    Box,
+    Divider,
+} from "@mui/material";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { useRouter } from "next/router";
+
+interface ProductCardProps {
+    product: {
+        id: string;
+        image: string;
+        title: string;
+        size: string;
+        description: string;
+        price: string;
+    };
+}
 
 const ProductCardContainer = styled(Card)`
   width: 250px;
@@ -10,6 +30,9 @@ const ProductCardContainer = styled(Card)`
   overflow: hidden;
   position: relative;
   margin: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const ProductImage = styled(CardMedia)`
@@ -21,6 +44,10 @@ const ProductImage = styled(CardMedia)`
 
 const ProductContent = styled(CardContent)`
   padding: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const ProductTitle = styled(Typography)`
@@ -29,8 +56,18 @@ const ProductTitle = styled(Typography)`
 `;
 
 const ProductDetails = styled(Typography)`
-  color: #D8D8D8; // Light grey
+  color: #d8d8d8; // Light grey
   font-size: 14px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+`;
+
+const PriceSizeContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto; // 1 flexible column, 1 auto-sized column
+  gap: 4px;
+  align-items: baseline;
 `;
 
 const PriceTag = styled(Typography)`
@@ -52,23 +89,26 @@ const FavoriteIcon = styled(FavoriteBorderIcon)`
   right: 10px;
 `;
 
-function ProductCard() {
+function ProductCard({ product }: ProductCardProps) {
+    const router = useRouter();
+    const handleViewItem = () => {
+        router.push(`/products/${product.id}`); // Navigate to item detail page
+    };
     return (
         <ProductCardContainer>
             <FavoriteIcon />
-            <ProductImage image="iphone11.jpg" />
-            <Divider/>
+            <ProductImage image={product.image} />
+            <Divider />
             <ProductContent>
-                <Box display="flex" justifyContent="space-between">
-                    <ProductTitle variant="h6">Nike Running Shoe</ProductTitle>
-                    <Typography variant="body2" color="white">EU38</Typography>
-                </Box>
-                <ProductDetails variant="body2">
-                    Crossing hardwood comfort with off-court flair. '80s-inspired construction, bold details
-                    and nothin'-but-net style.
-                </ProductDetails>
-                <PriceTag variant="body1">$69.99</PriceTag>
-                <AddToCartButton variant="contained">Add to Cart</AddToCartButton>
+                <ProductTitle variant="h6">{product.title}</ProductTitle>
+                <ProductDetails variant="body2">{product.description}</ProductDetails>
+                <PriceSizeContainer>
+                    <PriceTag variant="body1">${product.price}</PriceTag>
+                    <Typography variant="body2" color="white">
+                        {product.size}
+                    </Typography>
+                </PriceSizeContainer>
+                <AddToCartButton onClick={handleViewItem} variant="contained">View Item</AddToCartButton>
             </ProductContent>
         </ProductCardContainer>
     );
