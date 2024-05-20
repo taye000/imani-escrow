@@ -13,6 +13,8 @@ import ProductCard from '@/components/ProductCard';
 export const productData = [
     {
         image: "iphone11.jpg",
+        additionalImages: ["imanilogo.png", "avatar.jpg", "Milky_Way_at_Bear_Lake_4_nxqjo2.jpg"],
+        category: "Electronics",
         title: "iPhone 11",
         size: "64GB",
         description: "A powerful and versatile smartphone with a stunning dual-camera system.",
@@ -21,6 +23,8 @@ export const productData = [
     },
     {
         image: "iphone11.jpg",
+        additionalImages: ["imanilogo.png", "avatar.jpg", "Milky_Way_at_Bear_Lake_4_nxqjo2.jpg"],
+        category: "Electronics",
         title: "Samsung Galaxy S21",
         size: "128GB",
         description: "A cutting-edge phone with a vibrant display and powerful processor.",
@@ -29,6 +33,8 @@ export const productData = [
     },
     {
         image: "iphone11.jpg",
+        additionalImages: ["imanilogo.png", "avatar.jpg", "Milky_Way_at_Bear_Lake_4_nxqjo2.jpg"],
+        category: "Electronics",
         title: "Google Pixel 6",
         size: "256GB",
         description: "A smart and innovative phone with a focus on AI features.",
@@ -37,6 +43,8 @@ export const productData = [
     },
     {
         image: "iphone11.jpg",
+        additionalImages: ["imanilogo.png", "avatar.jpg", "Milky_Way_at_Bear_Lake_4_nxqjo2.jpg"],
+        category: "Electronics",
         title: "OnePlus 9 Pro",
         size: "128GB",
         description: "A flagship phone with a fast charging battery and Hasselblad camera.",
@@ -45,6 +53,8 @@ export const productData = [
     },
     {
         image: "iphone11.jpg",
+        additionalImages: ["imanilogo.png", "avatar.jpg", "Milky_Way_at_Bear_Lake_4_nxqjo2.jpg"],
+        category: "Electronics",
         title: "Xiaomi 12",
         size: "256GB",
         description: "A compact and powerful phone with a 120Hz AMOLED display.",

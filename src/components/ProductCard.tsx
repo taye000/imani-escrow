@@ -16,6 +16,8 @@ interface ProductCardProps {
     product: {
         id: string;
         image: string;
+        additionalImages: string[];
+        category: string;
         title: string;
         size: string;
         description: string;
@@ -63,6 +65,14 @@ const ProductDetails = styled(Typography)`
   white-space: nowrap;
 `;
 
+const ProductCategory = styled(Typography)`
+  color: #d8d8d8; // Light grey
+  font-size: 14px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+`;
+
 const PriceSizeContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr auto; // 1 flexible column, 1 auto-sized column
@@ -101,6 +111,7 @@ function ProductCard({ product }: ProductCardProps) {
             <Divider />
             <ProductContent>
                 <ProductTitle variant="h6">{product.title}</ProductTitle>
+                <ProductCategory variant="h6">{product.category}</ProductCategory>
                 <ProductDetails variant="body2">{product.description}</ProductDetails>
                 <PriceSizeContainer>
                     <PriceTag variant="body1">${product.price}</PriceTag>
