@@ -39,7 +39,7 @@ export default function Chart() {
         <React.Fragment>
             <Title>Today</Title>
             <ResponsiveContainer width="100%" height={240}>
-                <LineChart data={data}> 
+                <LineChart data={data}> {/* Single child within ResponsiveContainer */}
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis
@@ -47,7 +47,7 @@ export default function Chart() {
                             value: "Sales ($)",
                             angle: -90,
                             position: "insideLeft",
-                            style: theme.typography.body1,
+                            style: theme.typography.body1, // Corrected style property
                             fill: theme.palette.text.primary,
                         }}
                         domain={[0, 2500]}
@@ -58,7 +58,7 @@ export default function Chart() {
                         type="monotone"
                         dataKey="amount"
                         stroke={theme.palette.primary.main}
-                        strokeWidth={2}
+                        strokeWidth={2} // Add some stroke width for visibility
                     />
                 </LineChart>
             </ResponsiveContainer>
