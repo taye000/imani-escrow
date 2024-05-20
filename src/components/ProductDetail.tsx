@@ -23,17 +23,20 @@ const DetailContainer = styled.div`
 `;
 
 const ProductDetailsContainer = styled.div`
-  flex: 1; // Take up remaining space
-  padding-left: 24px; // Add spacing from the image
+  flex: 1;
+  padding-left: 24px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; // Distribute space evenly
 `;
 
 const ImageContainer = styled.div`
   display: flex; /* Use flexbox for layout */
   flex-direction: column; /* Stack children vertically */
   align-items: center; /* Center thumbnails horizontally */
+`;
+
+const DetailsContent = styled.div`
+  flex: 1; 
 `;
 
 const MainImage = styled.img`
@@ -88,6 +91,7 @@ const PriceSizeContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-top: 16px;
+  padding: 8px;
 `;
 
 const PriceTag = styled(Typography)`
@@ -186,18 +190,20 @@ function ProductDetail({ product, onBack }: ProductDetailProps) {
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <ProductDetailsContainer>
-                                    <Title variant="h4">{product.title}</Title>
-                                    <Title variant="h6">{product.category}</Title>
-                                    <Description variant="body1">{product.description}</Description>
-                                    <PriceSizeContainer>
-                                        <PriceTag variant="h6">${product.price}</PriceTag>
-                                        <Typography variant="subtitle1" color="white">
-                                            Size: {product.size}
-                                        </Typography>
-                                    </PriceSizeContainer>
-                                    <BackButton variant="outlined" color="inherit" onClick={onBack}>
-                                        Back
-                                    </BackButton>
+                                    <DetailsContent>
+                                        <Title variant="h4">{product.title}</Title>
+                                        <Title variant="h6">{product.category}</Title>
+                                        <PriceSizeContainer>
+                                            <PriceTag variant="h6">${product.price}</PriceTag>
+                                            <Typography variant="subtitle1" color="white">
+                                                Size: {product.size}
+                                            </Typography>
+                                        </PriceSizeContainer>
+                                        <Description variant="body1">{product.description}</Description>
+                                        <BackButton variant="outlined" color="inherit" onClick={onBack}>
+                                            Back to Marketplace
+                                        </BackButton>
+                                    </DetailsContent>
                                 </ProductDetailsContainer>
                             </Grid>
                         </Grid>

@@ -27,7 +27,7 @@ interface ProductCardProps {
 
 const ProductCardContainer = styled(Card)`
   width: 250px;
-  background-color: black;
+  background-color: #212121;
   border-radius: 8px;
   overflow: hidden;
   position: relative;
