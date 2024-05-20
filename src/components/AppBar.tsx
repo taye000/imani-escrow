@@ -102,6 +102,15 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                 <MenuItem
                                     sx={{ py: '6px', px: '12px' }}
                                 >
+                                    <Link href="/marketplace">
+                                        <Typography variant="body2" color="text.primary">
+                                            MarketPlace
+                                        </Typography>
+                                    </Link>
+                                </MenuItem>
+                                <MenuItem
+                                    sx={{ py: '6px', px: '12px' }}
+                                >
                                     <Link href="/dashboard">
                                         <Typography variant="body2" color="text.primary">
                                             Dashboard
@@ -109,19 +118,19 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                     </Link>
                                 </MenuItem>
                                 <MenuItem
-                                    onClick={() => scrollToSection('testimonials')}
-                                    sx={{ py: '6px', px: '12px' }}
-                                >
-                                    <Typography variant="body2" color="text.primary">
-                                        Testimonials
-                                    </Typography>
-                                </MenuItem>
-                                <MenuItem
                                     onClick={() => scrollToSection('highlights')}
                                     sx={{ py: '6px', px: '12px' }}
                                 >
                                     <Typography variant="body2" color="text.primary">
                                         Features
+                                    </Typography>
+                                </MenuItem>
+                                <MenuItem
+                                    onClick={() => scrollToSection('testimonials')}
+                                    sx={{ py: '6px', px: '12px' }}
+                                >
+                                    <Typography variant="body2" color="text.primary">
+                                        Testimonials
                                     </Typography>
                                 </MenuItem>
                                 <MenuItem
