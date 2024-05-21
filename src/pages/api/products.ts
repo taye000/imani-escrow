@@ -1,6 +1,6 @@
-// pages/api/products.tsx
-
 import { NextApiRequest, NextApiResponse } from "next";
+import { connectToDatabase } from "../../utils/db";
+import Product from "@/models/product";
 
 interface ProductData {
   productName: string;
@@ -28,18 +28,25 @@ export default async function handler(
         return res.status(400).json({ message: "Missing required fields" });
       }
 
-      // Database or Storage Logic (placeholder)
-      // You'll need to replace this with your actual code to save the product data to your database or storage system.
-      // Example:
-      // const newProduct = await Product.create(productData);
-      // console.log('Product saved to database:', newProduct);
+      try {
+        // Get the database connection
+        await connectToDatabase();
+        console.log("Connected to db");
 
-      return res.status(201).json({ message: "Product added successfully" }); // 201 Created
+        const newProduct = await Product.create(productData);
+        console.log("Product saved to database:", newProduct);
+        return res
+          .status(201)
+          .json({ message: "Product added successfully", data: newProduct });
+      } catch (error) {
+        console.error("Error saving product:", error);
+        return res.status(500).json({ message: "Failed to add product" }); // 500 Internal Server Error
+      }
     } catch (error) {
       console.error("Error adding product:", error);
       return res.status(500).json({ message: "Error adding product" });
     }
   } else {
-    return res.status(405).end(); // Method Not Allowed for other HTTP verbs
+    return res.status(405).end();
   }
 }
