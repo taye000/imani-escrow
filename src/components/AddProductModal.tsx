@@ -35,16 +35,20 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
         event.preventDefault();
         setIsLoading(true);
 
-        const formData = new FormData();
-        formData.append("productName", productName);
-        formData.append("description", description);
-        formData.append("price", price);
-        formData.append("paymentMethod", paymentMethod);
+        const productData = {
+            productName,
+            description,
+            price,
+            paymentMethod,
+        };
 
         try {
-            const response = await fetch("products", {
+            const response = await fetch("api/products", {
                 method: "POST",
-                body: formData,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(productData)
             });
 
             if (!response.ok) {

@@ -17,7 +17,7 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const productData: ProductData = req.body;
-      console.log("productData", productData);
+      console.log("req.body", req.body);
 
       // Data Validation (important!)
       if (
