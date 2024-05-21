@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
     styled,
-    useTheme,
     PaletteMode,
     CssBaseline,
     Box,
@@ -17,6 +16,9 @@ import {
     createTheme,
     ThemeProvider,
     MenuItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
@@ -24,11 +26,12 @@ import Toolbar from "@mui/material/Toolbar";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { mainListItems, secondaryListItems } from "../components/listItems";
 import Chart from "../components/Chart";
 import Deposits from "../components/Deposits";
 import Orders from "../components/Orders";
-import getLPTheme from "@/getLPTheme";
+import AddProductModal from '@/components/AddProductModal';
 
 function Copyright(props: any) {
     return (
@@ -100,11 +103,18 @@ export default function Dashboard() {
         setOpen(!open);
     };
     const [mode, setMode] = React.useState<PaletteMode>('dark');
-    const [showCustomTheme, setShowCustomTheme] = React.useState(true);
-    const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
-    const theme = useTheme();
-    const customTheme = createTheme(getLPTheme(mode));
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+        console.log('Modal opened');
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        console.log('Modal closed');
+    };
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -169,8 +179,15 @@ export default function Dashboard() {
                     <Divider />
                     <List component="nav">
                         {mainListItems}
+                        <ListItemButton onClick={handleOpenModal}>
+                            <ListItemIcon>
+                                <AddCircleIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Add Product" />
+                        </ListItemButton>
                         <Divider sx={{ my: 1 }} />
                         {secondaryListItems}
+
                     </List>
                 </Drawer>
                 <Box
@@ -224,6 +241,7 @@ export default function Dashboard() {
                     </Container>
                 </Box>
             </Box>
+            <AddProductModal open={isModalOpen} handleClose={handleCloseModal} />
         </ThemeProvider>
     );
 }

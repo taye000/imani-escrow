@@ -4,7 +4,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 
 export const mainListItems = (
@@ -14,12 +13,6 @@ export const mainListItems = (
                 <DashboardIcon />
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
-        </ListItemButton>
-        <ListItemButton>
-            <ListItemIcon>
-                <AddCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Add Product" />
         </ListItemButton>
     </React.Fragment>
 );
