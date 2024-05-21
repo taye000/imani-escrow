@@ -96,6 +96,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
+const handleAddProduct = (productData: any) => {
+    console.log("New product data:", productData); 
+    // Implement your logic to send data to the backend or update your state
+};
+
 
 export default function Dashboard() {
     const [open, setOpen] = React.useState(true);
@@ -241,7 +246,7 @@ export default function Dashboard() {
                     </Container>
                 </Box>
             </Box>
-            <AddProductModal open={isModalOpen} handleClose={handleCloseModal} />
+            <AddProductModal open={isModalOpen} handleClose={handleCloseModal} onSubmit={handleAddProduct} />
         </ThemeProvider>
     );
 }
