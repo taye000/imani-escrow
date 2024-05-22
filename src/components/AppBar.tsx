@@ -97,9 +97,11 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                 style={logoStyle}
                                 alt="logo of imani escrow"
                             /> */}
-                            <Typography variant="body2" color="text.primary">
-                                Imani Escrow
-                            </Typography>
+                            <Link href="/">
+                                <Typography variant="body2" color="text.primary">
+                                    Imani Escrow
+                                </Typography>
+                            </Link>
                             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                                 <MenuItem
                                     sx={{ py: '6px', px: '12px' }}

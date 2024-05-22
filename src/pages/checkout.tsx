@@ -7,6 +7,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import AppAppBar from '@/components/AppBar';
 import Footer from '@/components/Footer';
 import getLPTheme from '@/getLPTheme';
+import { useThemeContext } from '@/context/ThemeContext';
 
 interface ToggleCustomThemeProps {
     showCustomTheme: Boolean;
@@ -33,14 +34,11 @@ function ToggleCustomTheme({
 }
 
 export default function Checkout() {
-    const [mode, setMode] = React.useState<PaletteMode>('dark');
+    const { mode, toggleColorMode } = useThemeContext();
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
 
-    const toggleColorMode = () => {
-        setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
-    };
 
     const toggleCustomTheme = () => {
         setShowCustomTheme((prev) => !prev);

@@ -27,7 +27,7 @@ interface ProductCardProps {
 
 const ProductCardContainer = styled(Card)`
   width: 250px;
-  background-color: #212121;
+  background-color: primary;
   border-radius: 8px;
   overflow: hidden;
   position: relative;
@@ -54,11 +54,11 @@ const ProductContent = styled(CardContent)`
 
 const ProductTitle = styled(Typography)`
   font-weight: bold;
-  color: white;
+  color: primary;
 `;
 
 const ProductDetails = styled(Typography)`
-  color: #d8d8d8; // Light grey
+  color: primary;
   font-size: 14px;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -66,7 +66,7 @@ const ProductDetails = styled(Typography)`
 `;
 
 const ProductCategory = styled(Typography)`
-  color: #d8d8d8; // Light grey
+  color: primary;
   font-size: 14px;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -82,7 +82,7 @@ const PriceSizeContainer = styled.div`
 
 const PriceTag = styled(Typography)`
   font-weight: bold;
-  color: white;
+  color: primary;
   margin-top: 8px;
 `;
 

@@ -8,6 +8,8 @@ import AppAppBar from '@/components/AppBar';
 import Footer from '@/components/Footer';
 import getLPTheme from '@/getLPTheme';
 import ProductCard from '@/components/ProductCard';
+import styled from 'styled-components';
+import { useThemeContext } from '@/context/ThemeContext';
 
 //sample data
 export const productData = [
@@ -89,15 +91,24 @@ function ToggleCustomTheme({
     );
 }
 
+const MainLayout = styled.div`
+  display: flex;
+  border-radius: 16px;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 80vw;
+  align-items: center;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  `;
+
 export default function Marketplace() {
-    const [mode, setMode] = React.useState<PaletteMode>('dark');
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
+    const { mode, toggleColorMode } = useThemeContext();
     const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
-
-    const toggleColorMode = () => {
-        setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
-    };
 
     const toggleCustomTheme = () => {
         setShowCustomTheme((prev) => !prev);
@@ -108,15 +119,17 @@ export default function Marketplace() {
             <CssBaseline />
             <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
             <Box sx={{ bgcolor: 'background.default', p: 4, pt: 12 }}>
-                <Container maxWidth="lg">
-                    <Grid container justifyContent="center">
-                        {productData.map((product) => (
-                            <Grid item xs={12} sm={6} md={4} lg={3} key={product.title}>
-                                <ProductCard product={product} />
-                            </Grid>
-                        ))}
-                    </Grid>
-                </Container>
+                <MainLayout>
+                    <Container >
+                        <Grid container justifyContent="center">
+                            {productData.map((product) => (
+                                <Grid item xs={12} sm={6} md={4} lg={3} key={product.title}>
+                                    <ProductCard product={product} />
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </Container>
+                </MainLayout>
                 <Divider />
                 <Footer />
             </Box>

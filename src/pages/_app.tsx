@@ -2,6 +2,7 @@ import { UserProvider } from '@auth0/nextjs-auth0/client';
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import React from 'react';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [isComponentRendered, setIsComponentRendered] = React.useState(false);
@@ -15,7 +16,9 @@ export default function App({ Component, pageProps }: AppProps) {
   }
   return (
     <UserProvider>
-      <Component {...pageProps} />
+      <ThemeProvider>
+        <Component {...pageProps} />
+      </ThemeProvider>
     </UserProvider>
   );
 }

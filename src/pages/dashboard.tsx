@@ -32,6 +32,7 @@ import Chart from "../components/Chart";
 import Deposits from "../components/Deposits";
 import Orders from "../components/Orders";
 import AddProductModal from '@/components/AddProductModal';
+import { useThemeContext } from '@/context/ThemeContext';
 
 function Copyright(props: any) {
     return (
@@ -107,7 +108,7 @@ export default function Dashboard() {
     const toggleDrawer = () => {
         setOpen(!open);
     };
-    const [mode, setMode] = React.useState<PaletteMode>('dark');
+    const { mode, toggleColorMode } = useThemeContext();
     const defaultTheme = createTheme({ palette: { mode } });
     const [isModalOpen, setIsModalOpen] = React.useState(false);
 
