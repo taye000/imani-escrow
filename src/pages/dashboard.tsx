@@ -97,7 +97,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const handleAddProduct = (productData: any) => {
-    console.log("New product data:", productData); 
+    console.log("New product data:", productData);
     // Implement your logic to send data to the backend or update your state
 };
 
@@ -152,6 +152,15 @@ export default function Dashboard() {
                         >
                             Dashboard
                         </Typography>
+                        <MenuItem
+                            sx={{ py: '6px', px: '12px' }}
+                        >
+                            <Link href="/">
+                                <Typography variant="body2" color="text.primary">
+                                    Home
+                                </Typography>
+                            </Link>
+                        </MenuItem>
                         <MenuItem
                             sx={{ py: '6px', px: '12px' }}
                         >

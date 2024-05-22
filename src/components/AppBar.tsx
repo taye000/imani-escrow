@@ -12,6 +12,7 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from './ToggleColorMode';
 import Link from 'next/link';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 interface AppAppBarProps {
     mode: PaletteMode;
@@ -38,6 +39,14 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
             setOpen(false);
         }
     };
+
+    // const { user, error, isLoading } = useUser(); if (isLoading) {
+    //     return <div>Loading...</div>;
+    // }
+    // if (error) {
+    //     return <div>Error: {error.message}</div>;
+    // }
+    // console.log("User:", user);
 
     return (
         <div>
@@ -150,7 +159,7 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                 variant="text"
                                 size="small"
                                 component="a"
-                                href="/material-ui/getting-started/templates/sign-in/"
+                                href="/api/auth/login"
                                 target="_blank"
                             >
                                 Sign in
@@ -160,10 +169,20 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                 variant="contained"
                                 size="small"
                                 component="a"
-                                href="/material-ui/getting-started/templates/sign-up/"
+                                href="/api/auth/login"
                                 target="_blank"
                             >
                                 Sign up
+                            </Button>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                size="small"
+                                component="a"
+                                href="/api/auth/logou"
+                                target="_blank"
+                            >
+                                Sign Out
                             </Button>
                         </Box>
                         <Box sx={{ display: { sm: '', md: 'none' } }}>
@@ -214,7 +233,7 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                             color="primary"
                                             variant="contained"
                                             component="a"
-                                            href="/material-ui/getting-started/templates/sign-up/"
+                                            href="/api/auth/login"
                                             target="_blank"
                                             sx={{ width: '100%' }}
                                         >
@@ -226,11 +245,21 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                             color="primary"
                                             variant="outlined"
                                             component="a"
-                                            href="/material-ui/getting-started/templates/sign-in/"
+                                            href="/api/auth/login"
                                             target="_blank"
                                             sx={{ width: '100%' }}
                                         >
                                             Sign in
+                                        </Button>
+                                        <Button
+                                            color="primary"
+                                            variant="outlined"
+                                            component="a"
+                                            href="/api/auth/logout"
+                                            target="_blank"
+                                            sx={{ width: '100%' }}
+                                        >
+                                            Sign Out
                                         </Button>
                                     </MenuItem>
                                 </Box>

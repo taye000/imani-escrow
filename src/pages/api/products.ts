@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../utils/db";
 import Product from "@/models/product";
+// import { getSession } from "@auth0/nextjs-auth0";
 
 interface ProductData {
   productName: string;
@@ -14,6 +15,17 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // const session = await getSession();
+  // if (!session || typeof session !== "object" || !("user" in session)) {
+  //   return res.status(401).json({ message: "Unauthorized" });
+  // }
+
+  // const user = session.user;
+  // console.log("user", user);
+  // if (!user) {
+  //   return res.status(401).json({ message: "Unauthorized" });
+  // }
+
   if (req.method === "POST") {
     try {
       const productData: ProductData = req.body;

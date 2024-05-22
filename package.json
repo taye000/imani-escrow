@@ -9,12 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^3.5.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@fontsource/roboto": "^5.0.13",
     "@mui/icons-material": "^5.15.16",
     "@mui/material": "^5.15.18",
     "@mui/x-charts": "^7.5.0",
+    "dotenv": "^16.4.5",
     "gsap": "^3.12.5",
     "mongodb": "^6.6.2",
     "mongoose": "^8.4.0",
