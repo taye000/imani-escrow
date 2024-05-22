@@ -154,7 +154,6 @@ export default function Dashboard() {
                             Dashboard
                         </Typography>
                         <MenuItem
-                            sx={{ py: '6px', px: '12px' }}
                         >
                             <Link href="/">
                                 <Typography variant="body2" color="text.primary">
@@ -163,7 +162,6 @@ export default function Dashboard() {
                             </Link>
                         </MenuItem>
                         <MenuItem
-                            sx={{ py: '6px', px: '12px' }}
                         >
                             <Link href="/profile">
                                 <Typography variant="body2" color="text.primary">
@@ -172,7 +170,6 @@ export default function Dashboard() {
                             </Link>
                         </MenuItem>
                         <MenuItem
-                            sx={{ py: '6px', px: '12px' }}
                         >
                             <Link href="/marketplace">
                                 <Typography variant="body2" color="text.primary">

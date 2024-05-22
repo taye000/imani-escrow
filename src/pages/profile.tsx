@@ -47,7 +47,6 @@ function ToggleCustomTheme({
 
 const ProfileContainer = styled.div`
   border-radius: 16px;
-  background-color: primary;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
   border-radius: 16px;
   display: flex;
@@ -122,48 +121,50 @@ export default function Profile() {
         <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
             <CssBaseline />
             <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
-            <Container maxWidth="lg">
-                <Divider />
-                <ProfileContainer>
-                    <Grid container spacing={3} justifyContent="center">
-                        <Grid item xs={12} md={8}>
-                            <ProfileHeaderContainer>
-                                {/* Profile Picture */}
-                                <ProfileImage src={user.profilePicture} alt={user.name} variant="rounded" sx={{
-                                    width: { xs: 100, sm: 150, md: 200 }, // Different sizes for different screens
-                                    height: { xs: 100, sm: 150, md: 200 },
-                                }} />
+            <Box sx={{ bgcolor: 'background.default', p: 4, pt: 12 }}>
+                <Container maxWidth="lg">
+                    <Divider />
+                    <ProfileContainer>
+                        <Grid container spacing={3} justifyContent="center">
+                            <Grid item xs={12} md={8}>
+                                <ProfileHeaderContainer>
+                                    {/* Profile Picture */}
+                                    <ProfileImage src={user.profilePicture} alt={user.name} variant="rounded" sx={{
+                                        width: { xs: 100, sm: 150, md: 200 }, // Different sizes for different screens
+                                        height: { xs: 100, sm: 150, md: 200 },
+                                    }} />
 
-                                {/* Profile Details */}
-                                <ProfileDetails>
-                                    <UserName variant="h4">{user.name}</UserName>
-                                    <UserBio variant="body1">{user.bio}</UserBio>
+                                    {/* Profile Details */}
+                                    <ProfileDetails>
+                                        <UserName variant="h4">{user.name}</UserName>
+                                        <UserBio variant="body1">{user.bio}</UserBio>
 
-                                    <ContactInfo>
-                                        <ContactItem variant="body2">
-                                            <Link href={`mailto:${user.email}`} color="inherit">
-                                                {user.email}
-                                            </Link>
-                                        </ContactItem>
-                                        <ContactItem variant="body2">{user.phoneNumber}</ContactItem>
-                                        <ContactItem variant="body2">{user.address}</ContactItem>
-                                    </ContactInfo>
-                                </ProfileDetails>
-                                <EditButton
-                                    variant="outlined"
-                                    color="inherit"
-                                    startIcon={<EditIcon />} // Add the EditIcon
-                                    onClick={handleEditClick}
-                                >
-                                    Edit
-                                </EditButton>
-                            </ProfileHeaderContainer>
+                                        <ContactInfo>
+                                            <ContactItem variant="body2">
+                                                <Link href={`mailto:${user.email}`} color="inherit">
+                                                    {user.email}
+                                                </Link>
+                                            </ContactItem>
+                                            <ContactItem variant="body2">{user.phoneNumber}</ContactItem>
+                                            <ContactItem variant="body2">{user.address}</ContactItem>
+                                        </ContactInfo>
+                                    </ProfileDetails>
+                                    <EditButton
+                                        variant="outlined"
+                                        color="inherit"
+                                        startIcon={<EditIcon />} // Add the EditIcon
+                                        onClick={handleEditClick}
+                                    >
+                                        Edit
+                                    </EditButton>
+                                </ProfileHeaderContainer>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </ProfileContainer>
-            </Container>
-            <Divider />
-            <Footer />
+                    </ProfileContainer>
+                </Container>
+                <Divider />
+                <Footer />
+            </Box>
             <ToggleCustomTheme
                 showCustomTheme={showCustomTheme}
                 toggleCustomTheme={toggleCustomTheme}
