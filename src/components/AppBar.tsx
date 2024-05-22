@@ -12,7 +12,6 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from './ToggleColorMode';
 import Link from 'next/link';
-import { useUser } from '@auth0/nextjs-auth0/client';
 
 interface AppAppBarProps {
     mode: PaletteMode;
@@ -102,6 +101,15 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                 Imani Escrow
                             </Typography>
                             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                                <MenuItem
+                                    sx={{ py: '6px', px: '12px' }}
+                                >
+                                    <Link href="/profile">
+                                        <Typography variant="body2" color="text.primary">
+                                            Profile
+                                        </Typography>
+                                    </Link>
+                                </MenuItem>
                                 <MenuItem
                                     sx={{ py: '6px', px: '12px' }}
                                 >

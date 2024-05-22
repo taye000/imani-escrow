@@ -1,28 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import {
-    Button,
-    Card,
-    CardContent,
-    CardMedia,
-    Typography,
-    Box,
-    Divider,
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Divider,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useRouter } from "next/router";
 
 interface ProductCardProps {
-    product: {
-        id: string;
-        image: string;
-        additionalImages: string[];
-        category: string;
-        title: string;
-        size: string;
-        description: string;
-        price: string;
-    };
+  product: {
+    id: string;
+    image: string;
+    additionalImages: string[];
+    category: string;
+    title: string;
+    size: string;
+    description: string;
+    price: string;
+  };
 }
 
 const ProductCardContainer = styled(Card)`
@@ -92,37 +92,47 @@ const AddToCartButton = styled(Button)`
   text-transform: none;
 `;
 
-const FavoriteIcon = styled(FavoriteBorderIcon)`
-  color: white;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-`;
 
 function ProductCard({ product }: ProductCardProps) {
-    const router = useRouter();
-    const handleViewItem = () => {
-        router.push(`/products/${product.id}`); // Navigate to item detail page
-    };
-    return (
-        <ProductCardContainer>
-            <FavoriteIcon />
-            <ProductImage image={product.image} />
-            <Divider />
-            <ProductContent>
-                <ProductTitle variant="h6">{product.title}</ProductTitle>
-                <ProductCategory variant="h6">{product.category}</ProductCategory>
-                <ProductDetails variant="body2">{product.description}</ProductDetails>
-                <PriceSizeContainer>
-                    <PriceTag variant="body1">${product.price}</PriceTag>
-                    <Typography variant="body2" color="white">
-                        {product.size}
-                    </Typography>
-                </PriceSizeContainer>
-                <AddToCartButton onClick={handleViewItem} variant="contained">View Item</AddToCartButton>
-            </ProductContent>
-        </ProductCardContainer>
-    );
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const router = useRouter();
+
+  const handleViewItem = () => {
+    router.push(`/products/${product.id}`); // Navigate to item detail page
+  };
+
+  const handleFavoriteClick = () => {
+    setIsFavorite(!isFavorite);
+  };
+
+  const FavoriteIconStyled = styled(isFavorite ? FavoriteIcon : FavoriteBorderIcon)`
+    color: white;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  `;
+
+  return (
+    <ProductCardContainer>
+      <FavoriteIconStyled onClick={handleFavoriteClick} />
+      <ProductImage image={product.image} />
+      <Divider />
+      <ProductContent>
+        <ProductTitle variant="h6">{product.title}</ProductTitle>
+        <ProductCategory variant="h6">{product.category}</ProductCategory>
+        <ProductDetails variant="body2">{product.description}</ProductDetails>
+        <PriceSizeContainer>
+          <PriceTag variant="body1">${product.price}</PriceTag>
+          <Typography variant="body2" color="white">
+            {product.size}
+          </Typography>
+        </PriceSizeContainer>
+        <AddToCartButton onClick={handleViewItem} variant="contained">View Item</AddToCartButton>
+      </ProductContent>
+    </ProductCardContainer>
+  );
 }
 
 export default ProductCard;

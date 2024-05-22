@@ -34,11 +34,5 @@ export const secondaryListItems = (
             </ListItemIcon>
             <ListItemText primary="Last quarter" />
         </ListItemButton>
-        <ListItemButton>
-            <ListItemIcon>
-                <AssignmentIcon />
-            </ListItemIcon>
-            <ListItemText primary="Year-end sale" />
-        </ListItemButton>
     </React.Fragment>
 );
