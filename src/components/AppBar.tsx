@@ -13,7 +13,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from './ToggleColorMode';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import Link from 'next/link';
+import router from 'next/router';
 
+const activeStyle = {
+    fontWeight: 'bold',
+    borderBottom: '2px solid',
+};
 interface AppAppBarProps {
     mode: PaletteMode;
     toggleColorMode: () => void;
@@ -39,6 +44,9 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
             setOpen(false);
         }
     };
+
+    const isActive = (path: string) => router.pathname === path;
+
 
     // const { user, error, isLoading } = useUser(); if (isLoading) {
     //     return <div>Loading...</div>;
@@ -105,7 +113,7 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                             </Link>
                             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                                 <MenuItem
-                                    sx={{ py: '6px', px: '12px' }}
+                                    sx={{ ...(isActive('/profile') && activeStyle) }}
                                 >
                                     <Link href="/profile">
                                         <Typography variant="body2" color="text.primary">
@@ -114,7 +122,7 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                     </Link>
                                 </MenuItem>
                                 <MenuItem
-                                    sx={{ py: '6px', px: '12px' }}
+                                    sx={{ ...(isActive('/marketplace') && activeStyle) }}
                                 >
                                     <Link href="/marketplace">
                                         <Typography variant="body2" color="text.primary">
