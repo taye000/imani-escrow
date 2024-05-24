@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PaletteMode } from '@mui/material';
+import { IconButton, PaletteMode } from '@mui/material';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from './ToggleColorMode';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import Link from 'next/link';
 
 interface AppAppBarProps {
@@ -164,6 +165,11 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                             }}
                         >
                             <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
+                            <Link href="/checkout">
+                                <IconButton color="primary" aria-label="shopping cart">
+                                    <AddShoppingCartIcon />
+                                </IconButton>
+                            </Link>
                             <Button
                                 color="primary"
                                 variant="text"
