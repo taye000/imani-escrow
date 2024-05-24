@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import CircularProgress from '@mui/material/CircularProgress';
 import { TextField } from '@mui/material';
 
 const style = {
@@ -113,7 +114,7 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
                             rows={4}
                         />
 
-                        <Button type="submit" variant="contained" color="primary" onClick={handleSubmit} disabled={isLoading}>
+                        <Button type="submit" variant="contained" color="primary" onClick={handleSubmit} disabled={isLoading} endIcon={isLoading && <CircularProgress size={20} />}>
                             Add Product
                         </Button>
                     </form>

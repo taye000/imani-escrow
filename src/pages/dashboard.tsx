@@ -104,12 +104,13 @@ const handleAddProduct = (productData: any) => {
 
 
 export default function Dashboard() {
-    const [open, setOpen] = React.useState(true);
     const toggleDrawer = () => {
         setOpen(!open);
     };
     const { mode, toggleColorMode } = useThemeContext();
     const defaultTheme = createTheme({ palette: { mode } });
+    
+    const [open, setOpen] = React.useState(true);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
 
     const handleOpenModal = () => {
