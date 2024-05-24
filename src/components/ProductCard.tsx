@@ -7,9 +7,11 @@ import {
   CardMedia,
   Typography,
   Divider,
+  Grid,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useRouter } from "next/router";
 
 interface ProductCardProps {
@@ -90,6 +92,18 @@ const AddToCartButton = styled(Button)`
   width: 100%;
   margin-top: 16px;
   text-transform: none;
+  padding: 8px 16px;
+  font-size: 14px;
+`;
+
+const ButtonRow = styled(Grid)`
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  margin-top: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
 `;
 
 
@@ -100,6 +114,33 @@ function ProductCard({ product }: ProductCardProps) {
 
   const handleViewItem = () => {
     router.push(`/products/${product.id}`); // Navigate to item detail page
+  };
+
+  const handleAddtoCart = async () => {
+    try {
+      const response = await fetch('/api/add-to-cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: product.id,
+          quantity: 1,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Product added to cart:', data);
+        // You can update your UI here (e.g., show a toast notification)
+      } else {
+        console.error('Error adding to cart:', response.status);
+        // Handle the error (e.g., show an error message to the user)
+      }
+    } catch (error) {
+      console.error('Unexpected error adding to cart:', error);
+      // Handle unexpected errors
+    }
   };
 
   const handleFavoriteClick = () => {
@@ -129,7 +170,22 @@ function ProductCard({ product }: ProductCardProps) {
             {product.size}
           </Typography>
         </PriceSizeContainer>
-        <AddToCartButton onClick={handleViewItem} variant="contained">View Item</AddToCartButton>
+        <ButtonRow container spacing={1}>
+          <Grid item xs={8}> {/* 'View Item' takes 8/12 (66%) of the width */}
+            <AddToCartButton onClick={handleViewItem} variant="contained">
+              View Item
+            </AddToCartButton>
+          </Grid>
+          <Grid item xs={4}> {/* 'Add to Cart' takes 4/12 (33%) of the width */}
+            <AddToCartButton
+              onClick={handleAddtoCart}
+              variant="contained"
+              startIcon={<AddShoppingCartIcon />}
+            >
+              +1
+            </AddToCartButton>
+          </Grid>
+        </ButtonRow>
       </ProductContent>
     </ProductCardContainer>
   );

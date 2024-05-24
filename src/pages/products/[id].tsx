@@ -11,7 +11,7 @@ const ProductDetailPage = () => {
     const product = productData.find((item) => item.id === id);
 
     if (!product) {
-        return <div>Product not found</div>; // Handle product not found
+        return <div>Product not found</div>;
     }
 
     return <ProductDetail product={product} onBack={() => router.back()} />;

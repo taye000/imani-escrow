@@ -14,10 +14,13 @@ import { ThemeProvider, createTheme, useTheme } from "@mui/material/styles";
 import AppAppBar from "@/components/AppBar";
 import Footer from "@/components/Footer";
 import getLPTheme from "@/getLPTheme";
+import { useThemeContext } from '@/context/ThemeContext';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+
 
 const DetailContainer = styled.div`
   display: flex;
-  background-color: #212121;
+  background-color: primary;
   padding: 24px;
   border-radius: 8px;
 `;
@@ -76,12 +79,12 @@ const Thumbnail = styled.img<{ selected: boolean }>`
 
 const Title = styled(Typography)`
   font-weight: bold;
-  color: white;
+  color: primary;
   margin-top: 16px;
 `;
 
 const Description = styled(Typography)`
-  color: #d8d8d8;
+  color: primary;
   font-size: 14px;
   margin-top: 8px;
 `;
@@ -96,17 +99,29 @@ const PriceSizeContainer = styled.div`
 
 const PriceTag = styled(Typography)`
   font-weight: bold;
-  color: white;
+  color: primary;
+`;
+
+const AddToCartButton = styled(Button)`
+  width: 100%;
+  margin-top: 16px;
+  text-transform: none;
+  padding: 8px 16px;
+  font-size: 14px;
 `;
 
 const BackButton = styled(Button)`
   width: 100%;
   margin-top: 16px;
   text-transform: none;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin-top: 16px;
 `;
 
 interface ProductDetailProps {
     product: {
+        id: string;
         image: string;
         additionalImages: string[];
         category: string;
@@ -142,23 +157,47 @@ function ToggleCustomTheme({
 }
 
 function ProductDetail({ product, onBack }: ProductDetailProps) {
-    const [mode, setMode] = React.useState<PaletteMode>("dark");
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
+    const { mode, toggleColorMode } = useThemeContext();
     const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
     const [selectedImage, setSelectedImage] = React.useState(product.image);
+
+    const toggleCustomTheme = () => {
+        setShowCustomTheme((prev) => !prev);
+    };
 
     const handleThumbnailClick = (image: string) => {
         setSelectedImage(image);
     };
 
-    const toggleColorMode = () => {
-        setMode((prev) => (prev === "dark" ? "light" : "dark"));
+    const handleAddtoCart = async () => {
+        try {
+            const response = await fetch('/api/add-to-cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    productId: product.id,
+                    quantity: 1,
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Product added to cart:', data);
+                // You can update your UI here (e.g., show a toast notification)
+            } else {
+                console.error('Error adding to cart:', response.status);
+                // Handle the error (e.g., show an error message to the user)
+            }
+        } catch (error) {
+            console.error('Unexpected error adding to cart:', error);
+            // Handle unexpected errors
+        }
     };
 
-    const toggleCustomTheme = () => {
-        setShowCustomTheme((prev) => !prev);
-    };
     return (
         <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
             <CssBaseline />
@@ -200,9 +239,24 @@ function ProductDetail({ product, onBack }: ProductDetailProps) {
                                             </Typography>
                                         </PriceSizeContainer>
                                         <Description variant="body1">{product.description}</Description>
-                                        <BackButton variant="outlined" color="inherit" onClick={onBack}>
-                                            Back to Marketplace
-                                        </BackButton>
+                                        <Divider />
+                                        <Grid container spacing={2}>
+                                            <Grid item xs={12}>
+                                                <AddToCartButton
+                                                    onClick={handleAddtoCart}
+                                                    variant="contained"
+                                                    startIcon={<AddShoppingCartIcon />}
+                                                >
+                                                    +1
+                                                </AddToCartButton>
+                                            </Grid>
+                                            <Divider />
+                                            <Grid item xs={12}>
+                                                <BackButton variant="outlined" color="inherit" onClick={onBack}>
+                                                    Back to Marketplace
+                                                </BackButton>
+                                            </Grid>
+                                        </Grid>
                                     </DetailsContent>
                                 </ProductDetailsContainer>
                             </Grid>
