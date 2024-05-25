@@ -13,7 +13,6 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useRouter } from "next/router";
-import { productData } from "@/pages/marketplace";
 
 interface ProductCardProps {
   product: {

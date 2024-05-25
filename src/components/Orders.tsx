@@ -92,15 +92,16 @@ export default function Orders() {
     const [selectedOrder, setSelectedOrder] = React.useState<Order | null>(null);
 
     const [open, setOpen] = React.useState(false);
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
 
     const handleOpenModal = (order: Order) => {
-        setOpen(true);
+        setIsModalOpen(true);
         setSelectedOrder(order);
         console.log('order detail Modal opened');
     };
 
     const handleCloseModal = () => {
-        setOpen(false);
+        setIsModalOpen(false);
         console.log('order detailModal closed');
     };
 
@@ -141,7 +142,7 @@ export default function Orders() {
             </Link>
             {selectedOrder && (
                 <OrderDetailModal
-                    open={true}
+                    open={isModalOpen}
                     handleClose={handleCloseModal}
                     order={selectedOrder}
 
