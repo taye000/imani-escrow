@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PaletteMode, Grid, Container, Typography, Avatar, Button } from '@mui/material';
+import { Grid, Container, Typography, Avatar, Button } from '@mui/material';
 import styled from "styled-components";
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -11,13 +11,15 @@ import getLPTheme from '@/getLPTheme';
 import Link from 'next/link';
 import EditIcon from '@mui/icons-material/Edit';
 import { useThemeContext } from '@/context/ThemeContext';
+import EditProfileModal, { userData } from '@/components/EditProfileModal';
 
-const user = {
+export const sampleUser = {
+    id: 1,
     name: "John Doe",
     bio: "I'm a software engineer who loves building web applications.",
-    profilePicture: "/avatar.jpg",
+    photo: "/avatar.jpg",
     email: "john.doe@example.com",
-    phoneNumber: "123-456-7890",
+    phone: "123-456-7890",
     address: "123 Main St, Anytown, USA",
 };
 
@@ -98,6 +100,10 @@ const EditButton = styled(Button)`
   right: 16px;
 `;
 
+const handleEditProfile = (userData: userData) => {
+    console.log('Edit profile clicked', userData);
+    // Handle edit profile logic here
+};
 
 export default function Profile() {
     const { mode, toggleColorMode } = useThemeContext();
@@ -105,13 +111,20 @@ export default function Profile() {
     const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
 
-    const toggleCustomTheme = () => {
-        setShowCustomTheme((prev) => !prev);
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+        console.log('Modal opened');
     };
 
-    const handleEditClick = () => {
-        // Add your logic to handle the edit action here
-        // open a modal.
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        console.log('Modal closed');
+    };
+
+    const toggleCustomTheme = () => {
+        setShowCustomTheme((prev) => !prev);
     };
 
     return (
@@ -127,31 +140,31 @@ export default function Profile() {
                                 <Grid item xs={12} md={8}>
                                     <ProfileHeaderContainer>
                                         {/* Profile Picture */}
-                                        <ProfileImage src={user.profilePicture} alt={user.name} variant="rounded" sx={{
+                                        <ProfileImage src={sampleUser.photo} alt={sampleUser.name} variant="rounded" sx={{
                                             width: { xs: 100, sm: 150, md: 200 }, // Different sizes for different screens
                                             height: { xs: 100, sm: 150, md: 200 },
                                         }} />
 
                                         {/* Profile Details */}
                                         <ProfileDetails>
-                                            <UserName variant="h4">{user.name}</UserName>
-                                            <UserBio variant="body1">{user.bio}</UserBio>
+                                            <UserName variant="h4">{sampleUser.name}</UserName>
+                                            <UserBio variant="body1">{sampleUser.bio}</UserBio>
 
                                             <ContactInfo>
                                                 <ContactItem variant="body2">
-                                                    <Link href={`mailto:${user.email}`} color="inherit">
-                                                        {user.email}
+                                                    <Link href={`mailto:${sampleUser.email}`} color="inherit">
+                                                        {sampleUser.email}
                                                     </Link>
                                                 </ContactItem>
-                                                <ContactItem variant="body2">{user.phoneNumber}</ContactItem>
-                                                <ContactItem variant="body2">{user.address}</ContactItem>
+                                                <ContactItem variant="body2">{sampleUser.phone}</ContactItem>
+                                                <ContactItem variant="body2">{sampleUser.address}</ContactItem>
                                             </ContactInfo>
                                         </ProfileDetails>
                                         <EditButton
                                             variant="outlined"
                                             color="inherit"
-                                            startIcon={<EditIcon />} // Add the EditIcon
-                                            onClick={handleEditClick}
+                                            startIcon={<EditIcon />}
+                                            onClick={handleOpenModal}
                                         >
                                             Edit
                                         </EditButton>
@@ -163,6 +176,11 @@ export default function Profile() {
                     <Divider />
                     <Footer />
                 </Box>
+                <EditProfileModal
+                    open={isModalOpen}
+                    handleClose={handleCloseModal}
+                    onSubmit={handleEditProfile}
+                />
             </Container>
             <ToggleCustomTheme
                 showCustomTheme={showCustomTheme}

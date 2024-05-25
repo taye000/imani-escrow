@@ -91,7 +91,7 @@ export default function Orders() {
     const defaultTheme = createTheme({ palette: { mode } });
     const [selectedOrder, setSelectedOrder] = React.useState<Order | null>(null);
 
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
 
     const handleOpenModal = (order: Order) => {
         setOpen(true);
@@ -139,7 +139,7 @@ export default function Orders() {
             <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
                 See more orders
             </Link>
-            {selectedOrder && ( // Render the OrderDetailModal if selectedOrder is not null
+            {selectedOrder && (
                 <OrderDetailModal
                     open={true}
                     handleClose={handleCloseModal}
