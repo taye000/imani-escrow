@@ -31,9 +31,10 @@ interface Order {
     id: number;
     date: string;
     name: string;
-    shipTo: string;
+    address: string;
     paymentMethod: string;
     amount: number;
+    items: { name: string; price: number; photo: string }[];
 }
 
 // Sample Order Data
@@ -42,41 +43,46 @@ const orders: Order[] = [
         id: 0,
         date: '16 Mar, 2019',
         name: 'Elvis Presley',
-        shipTo: 'Tupelo, MS',
+        address: 'Tupelo, MS',
         paymentMethod: 'VISA ⠀•••• 3719',
         amount: 312.44,
+        items: [{ name: 'Shoes', price: 100, photo: '/public/iphone11.jpg' }, { name: 'Shirt', price: 50, photo: '/public/iphone11.jpg' }, { name: 'Pants', price: 100, photo: '/public/iphone11.jpg' }]
     },
     {
         id: 1,
         date: '23 Mar, 2019',
         name: 'Paul McCartney',
-        shipTo: 'London, UK',
+        address: 'London, UK',
         paymentMethod: 'VISA ⠀•••• 2574',
         amount: 866.99,
+        items: [{ name: 'Shoes', price: 100, photo: '/public/iphone11.jpg' }, { name: 'Shirt', price: 50, photo: '/public/iphone11.jpg' }, { name: 'Pants', price: 100, photo: '/public/iphone11.jpg' }]
     },
     {
         id: 2,
         date: '23 Mar, 2019',
         name: 'Tom Scholz',
-        shipTo: 'Boston, MA',
+        address: 'Boston, MA',
         paymentMethod: 'MC ⠀•••• 1253',
         amount: 100.81,
+        items: [{ name: 'Shoes', price: 100, photo: '/public/iphone11.jpg' }, { name: 'Shirt', price: 50, photo: '/public/iphone11.jpg' }, { name: 'Pants', price: 100, photo: '/public/iphone11.jpg' }]
     },
     {
         id: 3,
         date: '24 Mar, 2019',
         name: 'Michael Jackson',
-        shipTo: 'Gary, IN',
+        address: 'Gary, IN',
         paymentMethod: 'AMEX ⠀•••• 2000',
         amount: 654.39,
+        items: [{ name: 'Shoes', price: 100, photo: '/public/iphone11.jpg' }, { name: 'Shirt', price: 50, photo: '/public/iphone11.jpg' }, { name: 'Pants', price: 100, photo: '/public/iphone11.jpg' }]
     },
     {
         id: 4,
         date: '24 Mar, 2019',
         name: 'Bruce Springsteen',
-        shipTo: 'Long Branch, NJ',
+        address: 'Long Branch, NJ',
         paymentMethod: 'VISA ⠀•••• 5919',
         amount: 212.79,
+        items: [{ name: 'Shoes', price: 100, photo: '/public/iphone11.jpg' }, { name: 'Shirt', price: 50, photo: '/public/iphone11.jpg' }, { name: 'Pants', price: 100, photo: '/public/iphone11.jpg' }]
     },
 ];
 
@@ -120,7 +126,7 @@ export default function Orders() {
                     <TableRow>
                         <TableCell>Date</TableCell>
                         <TableCell>Name</TableCell>
-                        <TableCell>Ship To</TableCell>
+                        <TableCell>Address</TableCell>
                         <TableCell>Payment Method</TableCell>
                         <TableCell align="right">Sale Amount</TableCell>
                     </TableRow>
@@ -130,7 +136,7 @@ export default function Orders() {
                         <StyledTableRow key={order.id} onClick={() => handleOpenModal(order)}>
                             <TableCell>{order.date}</TableCell>
                             <TableCell>{order.name}</TableCell>
-                            <TableCell>{order.shipTo}</TableCell>
+                            <TableCell>{order.address}</TableCell>
                             <TableCell>{order.paymentMethod}</TableCell>
                             <TableCell align="right">{`$${order.amount}`}</TableCell>
                         </StyledTableRow>

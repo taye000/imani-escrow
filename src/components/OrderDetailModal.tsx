@@ -22,7 +22,7 @@ interface OrderDetailProps {
         id: number;
         date: string;
         name: string;
-        shipTo: string;
+        address: string;
         paymentMethod: string;
         amount: number;
     };
@@ -49,7 +49,7 @@ export default function OrderDetailModal({ open, handleClose, order }: OrderDeta
                         Order Total: $ {order.amount}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Shipping Address: {order.shipTo}
+                        Shipping Address: {order.address}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         Payment Method: {order.paymentMethod}
