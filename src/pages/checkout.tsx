@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Grid, Typography, Button, RadioGroup, FormControlLabel, Radio, TextField, Card, CardMedia, Container } from '@mui/material';
+import { Grid, Typography, Button, IconButton, RadioGroup, FormControlLabel, Radio, TextField, Card, CardMedia, Container } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -10,8 +10,12 @@ import getLPTheme from '@/getLPTheme';
 import { useThemeContext } from '@/context/ThemeContext';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import styled from 'styled-components';
 import { productData } from './marketplace';
+import { ICartItem } from '@/models/cart';
+import { Types } from 'mongoose';
 
 const ProductCardContainer = styled.div`
   display: flex;
@@ -63,7 +67,7 @@ const OrderSummaryItem = styled.div`
 `;
 
 interface ToggleCustomThemeProps {
-    showCustomTheme: Boolean;
+    showCustomTheme: boolean;
     toggleCustomTheme: () => void;
 }
 
@@ -86,12 +90,55 @@ function ToggleCustomTheme({
     );
 }
 
+const updateCart = async (cartItems: ICartItem[]) => {
+    try {
+        const response = await fetch("/api/edit-cart", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ items: cartItems }),
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log("Cart updated successfully:", result);
+        } else {
+            console.error("Failed to update cart");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+};
+
 export default function Checkout() {
     const { mode, toggleColorMode } = useThemeContext();
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
     const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState('card');
+    const [cartItems, setCartItems] = React.useState<ICartItem[]>([]);
+
+    React.useEffect(() => {
+        // Initialize cart items from product data or fetch from backend if necessary
+        const initialCartItems = productData.map(product => ({
+            productId: new Types.ObjectId(product.id),
+            quantity: 1, // Default quantity
+        }));
+        setCartItems(initialCartItems);
+    }, []);
+
+    const handleUpdateCart = (productId: string, quantity: number) => {
+        setCartItems(prevItems => {
+            const updatedItems = prevItems.map(item =>
+                item.productId.toString() === productId
+                    ? { ...item, quantity }
+                    : item
+            ).filter(item => item.quantity > 0); // Remove items with 0 quantity
+            updateCart(updatedItems);
+            return updatedItems;
+        });
+    };
 
     const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedPaymentMethod(event.target.value);
@@ -113,28 +160,29 @@ export default function Checkout() {
                                 <SectionTitle variant="h6">Check out</SectionTitle>
                                 {productData.map((product) => (
                                     <ProductCardContainer key={product.id}>
-                                        <ProductImage
-                                            image={product.image}
-                                        />
+                                        <ProductImage image={product.image} />
                                         <ProductDetails>
                                             <TitlePriceContainer>
-                                                <Typography variant="body1">{product.title}</Typography>
+                                                <Typography variant="body1">{product.productName}</Typography>
                                                 <Typography variant="body1">{product.price}</Typography>
                                             </TitlePriceContainer>
                                             <Typography variant="body2">{product.description}</Typography>
+                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                <IconButton onClick={() => handleUpdateCart(product.id, 0)} color="secondary">
+                                                    <RemoveIcon />
+                                                </IconButton>
+                                                <IconButton onClick={() => handleUpdateCart(product.id, 1)} color="primary">
+                                                    <AddIcon />
+                                                </IconButton>
+                                            </Box>
                                         </ProductDetails>
                                     </ProductCardContainer>
                                 ))}
-                                <OrderSummaryItem>
-                                    <Button>Edit details</Button>
-                                </OrderSummaryItem>
                             </Grid>
 
                             <Grid item xs={12} md={6}>
                                 <SectionTitle variant="h6">Payment method</SectionTitle>
-                                <RadioGroup defaultValue="card"
-                                    onChange={handlePaymentMethodChange}
-                                    value={selectedPaymentMethod}>
+                                <RadioGroup defaultValue="card" onChange={handlePaymentMethodChange} value={selectedPaymentMethod}>
                                     <FormControlLabel
                                         value="mpesa"
                                         control={<Radio />}
@@ -180,10 +228,7 @@ export default function Checkout() {
                     <Footer />
                 </Box>
             </Container>
-            <ToggleCustomTheme
-                showCustomTheme={showCustomTheme}
-                toggleCustomTheme={toggleCustomTheme}
-            />
+            <ToggleCustomTheme showCustomTheme={showCustomTheme} toggleCustomTheme={toggleCustomTheme} />
         </ThemeProvider>
     );
 }

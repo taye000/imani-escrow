@@ -20,7 +20,7 @@ interface ProductCardProps {
     image: string;
     additionalImages: string[];
     category: string;
-    title: string;
+    productName: string;
     size: string;
     description: string;
     price: string;
@@ -161,7 +161,7 @@ function ProductCard({ product }: ProductCardProps) {
       <ProductImage image={product.image} />
       <Divider />
       <ProductContent>
-        <ProductTitle variant="h6">{product.title}</ProductTitle>
+        <ProductTitle variant="h6">{product.productName}</ProductTitle>
         <ProductCategory variant="h6">{product.category}</ProductCategory>
         <ProductDetails variant="body2">{product.description}</ProductDetails>
         <PriceSizeContainer>

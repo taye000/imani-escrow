@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PaletteMode, Grid, Container } from '@mui/material';
+import { Grid, Container } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -17,51 +17,51 @@ export const productData = [
         image: "iphone11.jpg",
         additionalImages: ["imanilogo.png", "avatar.jpg", "Milky_Way_at_Bear_Lake_4_nxqjo2.jpg"],
         category: "Electronics",
-        title: "iPhone 11",
+        productName: "iPhone 11",
         size: "64GB",
         description: "A powerful and versatile smartphone with a stunning dual-camera system.",
         price: "$599.99",
-        id: "1",
+        id: "10d5ec49f4d3f915b4e47f0b",
     },
     {
         image: "iphone11.jpg",
         additionalImages: ["imanilogo.png", "avatar.jpg", "Milky_Way_at_Bear_Lake_4_nxqjo2.jpg"],
         category: "Electronics",
-        title: "Samsung Galaxy S21",
+        productName: "Samsung Galaxy S21",
         size: "128GB",
         description: "A cutting-edge phone with a vibrant display and powerful processor.",
         price: "$799.99",
-        id: "2",
+        id: "20d5ec49f4d3f915b4e47f0b",
     },
     {
         image: "iphone11.jpg",
         additionalImages: ["imanilogo.png", "avatar.jpg", "Milky_Way_at_Bear_Lake_4_nxqjo2.jpg"],
         category: "Electronics",
-        title: "Google Pixel 6",
+        productName: "Google Pixel 6",
         size: "256GB",
         description: "A smart and innovative phone with a focus on AI features.",
         price: "$899.99",
-        id: "3",
+        id: "30d5ec49f4d3f915b4e47f0b",
     },
     {
         image: "iphone11.jpg",
         additionalImages: ["imanilogo.png", "avatar.jpg", "Milky_Way_at_Bear_Lake_4_nxqjo2.jpg"],
         category: "Electronics",
-        title: "OnePlus 9 Pro",
+        productName: "OnePlus 9 Pro",
         size: "128GB",
         description: "A flagship phone with a fast charging battery and Hasselblad camera.",
         price: "$699.99",
-        id: "4",
+        id: "40d5ec49f4d3f915b4e47f0b",
     },
     {
         image: "iphone11.jpg",
         additionalImages: ["imanilogo.png", "avatar.jpg", "Milky_Way_at_Bear_Lake_4_nxqjo2.jpg"],
         category: "Electronics",
-        title: "Xiaomi 12",
+        productName: "Xiaomi 12",
         size: "256GB",
         description: "A compact and powerful phone with a 120Hz AMOLED display.",
         price: "$549.99",
-        id: "5",
+        id: "50d5ec49f4d3f915b4e47f0b",
     }
 ];
 
@@ -122,7 +122,7 @@ export default function Marketplace() {
                         <Container >
                             <Grid container justifyContent="center">
                                 {productData.map((product) => (
-                                    <Grid item xs={12} sm={6} md={4} lg={3} key={product.title}>
+                                    <Grid item xs={12} sm={6} md={4} lg={3} key={product.productName}>
                                         <ProductCard product={product} />
                                     </Grid>
                                 ))}

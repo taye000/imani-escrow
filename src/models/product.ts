@@ -3,15 +3,20 @@ import { Model, model, Schema } from "mongoose";
 export interface IProduct {
   _id: Schema.Types.ObjectId;
   productName: string;
-  price: number;
+  price: String;
   description: string;
   paymentMethod: string;
+  image: string;
+  additionalImages: string[];
+  category: string;
+  size: string;
+  color: string;
 }
 
 const productSchema = new Schema<IProduct>(
   {
     productName: { type: String, required: true },
-    price: { type: Number, required: true },
+    price: { type: String, required: true },
     description: { type: String, required: true },
     paymentMethod: { type: String, required: true },
   },

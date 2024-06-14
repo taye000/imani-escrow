@@ -57,7 +57,7 @@ cartSchema
         throw new Error("Product not found");
       }
 
-      return total + product.price * item.quantity;
+      return total + Number(product.price) * item.quantity;
     }, Promise.resolve(0)); // Start the reduce function with a promise resolving to 0
 
     total.then((result) => cb(null, result)).catch((error) => cb(error, 0));
