@@ -18,6 +18,12 @@ import { ICartItem } from '@/models/cart';
 import { Types } from 'mongoose';
 import toast from 'react-hot-toast';
 
+const sampleCart = {
+    userId: new Types.ObjectId(), // Replace with an actual ObjectId if available
+    items: productData,
+    totalAmount: "1000"
+};
+
 const ProductCardContainer = styled.div`
   display: flex;
   align-items: center;
@@ -66,6 +72,13 @@ const OrderSummaryItem = styled.div`
   align-items: center;
   padding: 8px 0;
 `;
+
+export interface CardDetails {
+    cardholderName: string;
+    cardNumber: string;
+    expiryDate: string;
+    cvc: string;
+}
 
 interface ToggleCustomThemeProps {
     showCustomTheme: boolean;
@@ -122,10 +135,18 @@ export default function Checkout() {
     const defaultTheme = createTheme({ palette: { mode } });
     const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState('card');
     const [cartItems, setCartItems] = React.useState<ICartItem[]>([]);
+    const [mpesaPhoneNumber, setMpesaPhoneNumber] = React.useState('');
+    const [cardDetailsFilled, setCardDetailsFilled] = React.useState(false);
+    const [cardDetails, setCardDetails] = React.useState<CardDetails>({
+        cardholderName: '',
+        cardNumber: '',
+        expiryDate: '',
+        cvc: '',
+    });
 
     React.useEffect(() => {
         // Initialize cart items from product data or fetch from backend if necessary
-        const initialCartItems = productData.map(product => ({
+        const initialCartItems = sampleCart.items.map(product => ({
             productId: new Types.ObjectId(product.id),
             quantity: 1, // Default quantity
         }));
@@ -146,6 +167,41 @@ export default function Checkout() {
 
     const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedPaymentMethod(event.target.value);
+    };
+
+    const handleMpesaPhoneNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setMpesaPhoneNumber(event.target.value);
+    };
+
+    const handleCardDetailsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+
+        setCardDetails(prevDetails => ({
+            ...prevDetails,
+            [name]: value
+        }));
+
+        setCardDetailsFilled(
+            cardDetails.cardholderName !== '' &&
+            cardDetails.cardNumber !== '' &&
+            cardDetails.expiryDate !== '' &&
+            cardDetails.cvc !== ''
+        );
+    };
+
+
+    const handlePayNow = () => {
+        if (cartItems.length === 0) {
+            toast.error("Please add products to your cart before proceeding.");
+        } else if (selectedPaymentMethod === 'mpesa' && !mpesaPhoneNumber) {
+            toast.error("Please enter your M-pesa phone number.");
+        } else if (selectedPaymentMethod === 'card' && !cardDetailsFilled) {
+            toast.error("Please fill in your card details.");
+        } else {
+            // Proceed with payment logic
+            console.log("Payment processed successfully!");
+            toast.success("Payment processed successfully!");
+        }
     };
 
     const toggleCustomTheme = () => {
@@ -208,23 +264,38 @@ export default function Checkout() {
                                 </RadioGroup>
 
                                 {selectedPaymentMethod === 'mpesa' ? (
-                                    <TextField label="Phone Number" fullWidth margin="normal" />
+                                    <TextField label="Phone Number"
+                                        fullWidth margin="normal"
+                                        value={mpesaPhoneNumber}
+                                        onChange={handleMpesaPhoneNumberChange} />
                                 ) : (
                                     <>
-                                        <TextField label="Cardholder name" fullWidth margin="normal" />
-                                        <TextField label="Card number" fullWidth margin="normal" />
-                                        <TextField label="Expiry date" fullWidth margin="normal" />
-                                        <TextField label="CVC" fullWidth margin="normal" />
+                                        <TextField label="Cardholder name"
+                                            name='CardholderName'
+                                            fullWidth margin="normal"
+                                            onChange={handleCardDetailsChange} />
+                                        <TextField label="Card number"
+                                            name='CardNumber'
+                                            fullWidth margin="normal"
+                                            onChange={handleCardDetailsChange} />
+                                        <TextField label="Expiry date"
+                                            name='ExpiryDate'
+                                            fullWidth margin="normal"
+                                            onChange={handleCardDetailsChange} />
+                                        <TextField label="CVC"
+                                            name='cvc'
+                                            fullWidth margin="normal"
+                                            onChange={handleCardDetailsChange} />
                                     </>
                                 )}
 
                                 <SectionTitle variant="h6" sx={{ mt: 3 }}>Order Details</SectionTitle>
                                 <OrderSummaryItem>
                                     <Typography variant="body2">Subtotal</Typography>
-                                    <Typography variant="body2">$945.97</Typography>
+                                    <Typography variant="body2">${sampleCart.totalAmount}</Typography>
                                 </OrderSummaryItem>
 
-                                <Button variant="contained" fullWidth sx={{ mt: 2 }}>Pay now</Button>
+                                <Button variant="contained" fullWidth sx={{ mt: 2 }} onClick={handlePayNow}>Pay now</Button>
                             </Grid>
                         </Grid>
                     </CheckoutContainer>
