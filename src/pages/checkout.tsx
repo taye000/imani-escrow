@@ -16,6 +16,7 @@ import styled from 'styled-components';
 import { productData } from './marketplace';
 import { ICartItem } from '@/models/cart';
 import { Types } from 'mongoose';
+import toast from 'react-hot-toast';
 
 const ProductCardContainer = styled.div`
   display: flex;
@@ -103,11 +104,14 @@ const updateCart = async (cartItems: ICartItem[]) => {
         if (response.ok) {
             const result = await response.json();
             console.log("Cart updated successfully:", result);
+            toast.success("Cart updated successfully");
         } else {
             console.error("Failed to update cart");
+            toast.error("Failed to update cart");
         }
     } catch (error) {
         console.error("Error:", error);
+        toast.error("Failed to update cart, try again later.");
     }
 };
 

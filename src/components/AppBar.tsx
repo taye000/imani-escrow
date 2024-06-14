@@ -11,7 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from './ToggleColorMode';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Link from 'next/link';
 import router from 'next/router';
 
@@ -166,7 +166,7 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                             <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
                             <Link href="/checkout">
                                 <IconButton color="primary" aria-label="shopping cart">
-                                    <AddShoppingCartIcon />
+                                    <ShoppingCartIcon />
                                 </IconButton>
                             </Link>
                             <Button

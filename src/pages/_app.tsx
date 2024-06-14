@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import React from 'react';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { Toaster } from 'react-hot-toast'; // Import toast from react-hot-toast
 
 export default function App({ Component, pageProps }: AppProps) {
   const [isComponentRendered, setIsComponentRendered] = React.useState(false);
@@ -18,6 +19,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <UserProvider>
       <ThemeProvider>
         <Component {...pageProps} />
+        <Toaster />
       </ThemeProvider>
     </UserProvider>
   );

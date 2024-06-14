@@ -16,7 +16,7 @@ import Footer from "@/components/Footer";
 import getLPTheme from "@/getLPTheme";
 import { useThemeContext } from '@/context/ThemeContext';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-
+import toast from 'react-hot-toast';
 
 const DetailContainer = styled.div`
   display: flex;
@@ -125,7 +125,7 @@ interface ProductDetailProps {
         image: string;
         additionalImages: string[];
         category: string;
-        title: string;
+        productName: string;
         size: string;
         description: string;
         price: string;
@@ -187,14 +187,14 @@ function ProductDetail({ product, onBack }: ProductDetailProps) {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Product added to cart:', data);
-                // You can update your UI here (e.g., show a toast notification)
+                toast.success(`${product.productName} added to cart`);
             } else {
                 console.error('Error adding to cart:', response.status);
-                // Handle the error (e.g., show an error message to the user)
+                toast.error(`Failed to add ${product.productName} to cart`);
             }
         } catch (error) {
             console.error('Unexpected error adding to cart:', error);
-            // Handle unexpected errors
+            toast.error(`Unexpected error while adding ${product.productName} to cart`); // Show unexpected error toast
         }
     };
 
@@ -209,7 +209,7 @@ function ProductDetail({ product, onBack }: ProductDetailProps) {
                             <Grid item xs={12} md={6}>
                                 {" "}
                                 <ImageContainer>
-                                    <MainImage src={`/${selectedImage}`} alt={product.title} />
+                                    <MainImage src={`/${selectedImage}`} alt={product.productName} />
                                     <ThumbnailsContainer>
                                         {[product.image, ...product.additionalImages].map(
                                             (img, index) => (
@@ -230,7 +230,7 @@ function ProductDetail({ product, onBack }: ProductDetailProps) {
                             <Grid item xs={12} md={6}>
                                 <ProductDetailsContainer>
                                     <DetailsContent>
-                                        <Title variant="h4">{product.title}</Title>
+                                        <Title variant="h4">{product.productName}</Title>
                                         <Title variant="h6">{product.category}</Title>
                                         <PriceSizeContainer>
                                             <PriceTag variant="h6">${product.price}</PriceTag>

@@ -13,6 +13,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useRouter } from "next/router";
+import toast from 'react-hot-toast';
 
 interface ProductCardProps {
   product: {
@@ -106,10 +107,8 @@ const ButtonRow = styled(Grid)`
   align-items: center;
 `;
 
-
 function ProductCard({ product }: ProductCardProps) {
   const [isFavorite, setIsFavorite] = useState(false);
-
   const router = useRouter();
 
   const handleViewItem = () => {
@@ -132,14 +131,14 @@ function ProductCard({ product }: ProductCardProps) {
       if (response.ok) {
         const data = await response.json();
         console.log('Product added to cart:', data);
-        // You can update your UI here (e.g., show a toast notification)
+        toast.success(`${product.productName} added to cart`);
       } else {
         console.error('Error adding to cart:', response.status);
-        // Handle the error (e.g., show an error message to the user)
+        toast.error(`Failed to add ${product.productName} to cart`);
       }
     } catch (error) {
       console.error('Unexpected error adding to cart:', error);
-      // Handle unexpected errors
+      toast.error(`Unexpected error while adding ${product.productName} to cart`); // Show unexpected error toast
     }
   };
 
