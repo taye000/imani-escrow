@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import CircularProgress from '@mui/material/CircularProgress';
-import { TextField } from '@mui/material';
+import { TextField, Grid } from '@mui/material';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -25,6 +25,7 @@ export interface userData {
     email: string;
     address: string;
     photo: string;
+    description: string;
 }
 
 interface EditProfileModalProps {
@@ -39,6 +40,7 @@ export default function EditProfileModal({ open, handleClose, onSubmit }: EditPr
     const [email, setEmail] = React.useState("");
     const [address, setAddress] = React.useState("");
     const [photo, setPhoto] = React.useState("");
+    const [description, setDescription] = React.useState("");
     const [isLoading, setIsLoading] = React.useState(false);
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -74,6 +76,7 @@ export default function EditProfileModal({ open, handleClose, onSubmit }: EditPr
                 email,
                 address,
                 photo,
+                description,
             });
         } catch (error) {
             console.error("There was a problem updating the profile:", error);
@@ -82,53 +85,80 @@ export default function EditProfileModal({ open, handleClose, onSubmit }: EditPr
         }
     };
 
-
     return (
         <div>
             <Modal open={open} onClose={handleClose}>
                 <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Add Product
+                        Edit Profile
                     </Typography>
-                    <form>
-                        <TextField
-                            fullWidth
-                            label="Product Name"
-                            value={name}
-                            name="name"
-                            onChange={(e) => setName(e.target.value)}
-                            margin="normal"
-                        />
-                        <TextField
-                            fullWidth
-                            label="phone"
-                            value={phone}
-                            name="phone"
-                            onChange={(e) => setPhone(e.target.value)}
-                            margin="normal"
-                        />
-                        <TextField
-                            fullWidth
-                            label="Email"
-                            value={email}
-                            name="email"
-                            onChange={(e) => setEmail(e.target.value)}
-                            margin="normal"
-                        />
-                        <TextField
-                            fullWidth
-                            label="photo"
-                            value={photo}
-                            name="photo"
-                            onChange={(e) => setPhoto(e.target.value)}
-                            margin="normal"
-                            multiline
-                            rows={4}
-                        />
+                    <form onSubmit={handleSubmit}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="Name"
+                                    value={name}
+                                    name="name"
+                                    onChange={(e) => setName(e.target.value)}
+                                    margin="normal"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="Phone"
+                                    value={phone}
+                                    name="phone"
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    margin="normal"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="Email"
+                                    value={email}
+                                    name="email"
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    margin="normal"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="Address"
+                                    value={address}
+                                    name="address"
+                                    onChange={(e) => setAddress(e.target.value)}
+                                    margin="normal"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="description"
+                                    value={description}
+                                    name="description"
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    margin="normal"
+                                    multiline
+                                    rows={4}
+                                />
+                            </Grid>
 
-                        <Button type="submit" variant="contained" color="primary" onClick={handleSubmit} disabled={isLoading} endIcon={isLoading && <CircularProgress size={20} />}>
-                            Add Product
-                        </Button>
+                            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    disabled={isLoading}
+                                    endIcon={isLoading && <CircularProgress size={20} />}
+                                >
+                                    Update
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </form>
                 </Box>
             </Modal>

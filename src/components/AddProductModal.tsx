@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import CircularProgress from '@mui/material/CircularProgress';
-import { TextField } from '@mui/material';
+import { TextField, Grid } from '@mui/material';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -78,45 +78,62 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Add Product
                     </Typography>
-                    <form>
-                        <TextField
-                            fullWidth
-                            label="Product Name"
-                            value={productName}
-                            name="productName"
-                            onChange={(e) => setProductName(e.target.value)}
-                            margin="normal"
-                        />
-                        <TextField
-                            fullWidth
-                            label="Price"
-                            value={price}
-                            name="price"
-                            onChange={(e) => setPrice(e.target.value)}
-                            margin="normal"
-                        />
-                        <TextField
-                            fullWidth
-                            label="Payment Method"
-                            value={paymentMethod}
-                            name="paymentMethod"
-                            onChange={(e) => setPaymentMethod(e.target.value)}
-                            margin="normal"
-                        />
-                        <TextField
-                            fullWidth
-                            label="Description"
-                            value={description}
-                            name="description"
-                            onChange={(e) => setDescription(e.target.value)}
-                            margin="normal"
-                            multiline
-                            rows={4}
-                        />
-
-                        <Button type="submit" variant="contained" color="primary" onClick={handleSubmit} disabled={isLoading} endIcon={isLoading && <CircularProgress size={20} />}>
-                            Add Product
-                        </Button>
+                    <form onSubmit={handleSubmit}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="Product Name"
+                                    value={productName}
+                                    name="productName"
+                                    onChange={(e) => setProductName(e.target.value)}
+                                    margin="normal"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="Price"
+                                    value={price}
+                                    name="price"
+                                    onChange={(e) => setPrice(e.target.value)}
+                                    margin="normal"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="Payment Method"
+                                    value={paymentMethod}
+                                    name="paymentMethod"
+                                    onChange={(e) => setPaymentMethod(e.target.value)}
+                                    margin="normal"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="Description"
+                                    value={description}
+                                    name="description"
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    margin="normal"
+                                    multiline
+                                    rows={4}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    disabled={isLoading}
+                                    endIcon={isLoading && <CircularProgress size={20} />}
+                                >
+                                    Add Product
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </form>
                 </Box>
             </Modal>
