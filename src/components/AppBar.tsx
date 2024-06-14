@@ -47,15 +47,6 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
 
     const isActive = (path: string) => router.pathname === path;
 
-
-    // const { user, error, isLoading } = useUser(); if (isLoading) {
-    //     return <div>Loading...</div>;
-    // }
-    // if (error) {
-    //     return <div>Error: {error.message}</div>;
-    // }
-    // console.log("User:", user);
-
     return (
         <div>
             <AppBar
@@ -193,16 +184,6 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                 variant="contained"
                                 size="small"
                                 component="a"
-                                href="/api/auth/login"
-                                target="_blank"
-                            >
-                                Sign up
-                            </Button>
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                size="small"
-                                component="a"
                                 href="/api/auth/logou"
                                 target="_blank"
                             >
@@ -252,18 +233,6 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                     </MenuItem>
                                     <MenuItem onClick={() => scrollToSection('faq')}>FAQ</MenuItem>
                                     <Divider />
-                                    <MenuItem>
-                                        <Button
-                                            color="primary"
-                                            variant="contained"
-                                            component="a"
-                                            href="/api/auth/login"
-                                            target="_blank"
-                                            sx={{ width: '100%' }}
-                                        >
-                                            Sign up
-                                        </Button>
-                                    </MenuItem>
                                     <MenuItem>
                                         <Button
                                             color="primary"

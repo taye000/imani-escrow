@@ -12,6 +12,7 @@ import Link from 'next/link';
 import EditIcon from '@mui/icons-material/Edit';
 import { useThemeContext } from '@/context/ThemeContext';
 import EditProfileModal, { userData } from '@/components/EditProfileModal';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 export const sampleUser = {
     id: 1,
@@ -127,6 +128,11 @@ export default function Profile() {
         setShowCustomTheme((prev) => !prev);
     };
 
+    const { user, error, isLoading } = useUser();
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>{error.message}</div>;
+
     return (
         <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
             <CssBaseline />
@@ -148,6 +154,7 @@ export default function Profile() {
                                         {/* Profile Details */}
                                         <ProfileDetails>
                                             <UserName variant="h4">{sampleUser.name}</UserName>
+                                            <UserName variant="h4">{user?.name}</UserName>
                                             <UserBio variant="body1">{sampleUser.bio}</UserBio>
 
                                             <ContactInfo>
