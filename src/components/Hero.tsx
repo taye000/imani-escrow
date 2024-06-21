@@ -11,6 +11,8 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Link from 'next/link';
+import router from 'next/router';
+import toast from 'react-hot-toast';
 
 export const currencies = [
     { code: 'USD', label: '🇺🇸 USD' },
@@ -25,6 +27,8 @@ export const currencies = [
 
 export default function Hero() {
     const [transactionType, setTransactionType] = React.useState('');
+    const [price, setPrice] = React.useState('');
+    const [item, setItem] = React.useState('');
     const [currency, setCurrency] = React.useState('USD');
 
     const handleTransactionTypeChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -33,6 +37,31 @@ export default function Hero() {
 
     const handleCurrencyChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setCurrency(event.target.value);
+    };
+
+    const handlePriceChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setPrice(event.target.value);
+    };
+
+    const handleItemChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setItem(event.target.value);
+    };
+
+    const handleGetStarted = () => {
+        if (!item || !price) {
+            toast.error('Please fill in all required fields.');
+            return;
+        }
+
+        router.push({
+            pathname: '/escrow',
+            query: {
+                transactionType,
+                item,
+                price,
+                currency,
+            },
+        });
     };
 
     return (
@@ -114,6 +143,8 @@ export default function Hero() {
                             id="item"
                             hiddenLabel
                             size="small"
+                            onChange={handleItemChange}
+                            value={item}
                             variant="outlined"
                             placeholder="Laptops, vehicles..."
                             sx={{ flex: 2 }}
@@ -126,6 +157,8 @@ export default function Hero() {
                             id="price"
                             hiddenLabel
                             size="small"
+                            onChange={handlePriceChange}
+                            value={price}
                             variant="outlined"
                             placeholder="800"
                             sx={{ flex: 1, marginLeft: 2 }}
@@ -150,7 +183,7 @@ export default function Hero() {
                                 ))}
                             </Select>
                         </FormControl>
-                        <Button variant="contained" color="primary" sx={{ ml: 2 }}>
+                        <Button variant="contained" color="primary" sx={{ ml: 2 }} onClick={handleGetStarted}>
                             Get started now
                         </Button>
                     </Stack>
