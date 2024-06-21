@@ -3,12 +3,38 @@ import { alpha } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import Link from 'next/link';
+
+export const currencies = [
+    { code: 'USD', label: '🇺🇸 USD' },
+    { code: 'EUR', label: '🇪🇺 EUR' },
+    { code: 'GBP', label: '🇬🇧 POUND' },
+    { code: 'KES', label: '🇰🇪 KES' },
+    { code: 'UGX', label: '🇺🇬 UGX' },
+    { code: 'RWF', label: '🇷🇼 RWF' },
+    { code: 'TZS', label: '🇹🇿 TZS' },
+];
+
 
 export default function Hero() {
+    const [transactionType, setTransactionType] = React.useState('');
+    const [currency, setCurrency] = React.useState('USD');
+
+    const handleTransactionTypeChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setTransactionType(event.target.value);
+    };
+
+    const handleCurrencyChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+        setCurrency(event.target.value);
+    };
+
     return (
         <Box
             id="hero"
@@ -71,20 +97,61 @@ export default function Hero() {
                         useFlexGap
                         sx={{ pt: 2, width: { xs: '100%', sm: 'auto' } }}
                     >
+                        <FormControl size="small" variant="outlined" sx={{ minWidth: 120 }}>
+                            <InputLabel id="transaction-type-label">I'm</InputLabel>
+                            <Select
+                                labelId="transaction-type-label"
+                                id="transaction-type"
+                                value={transactionType}
+                                onChange={handleTransactionTypeChange}
+                                label="I'm"
+                            >
+                                <MenuItem value="buying">Buying</MenuItem>
+                                <MenuItem value="selling">Selling</MenuItem>
+                            </Select>
+                        </FormControl>
                         <TextField
-                            id="outlined-basic"
+                            id="item"
                             hiddenLabel
                             size="small"
                             variant="outlined"
-                            aria-label="Enter your email address"
-                            placeholder="Your email address"
+                            placeholder="Laptops, vehicles..."
+                            sx={{ flex: 2 }}
                             inputProps={{
                                 autoComplete: 'off',
-                                'aria-label': 'Enter your email address',
+                                'aria-label': 'Enter the item',
                             }}
                         />
-                        <Button variant="contained" color="primary">
-                            Start now
+                        <TextField
+                            id="price"
+                            hiddenLabel
+                            size="small"
+                            variant="outlined"
+                            placeholder="800"
+                            sx={{ flex: 1, marginLeft: 2 }}
+                            inputProps={{
+                                autoComplete: 'off',
+                                'aria-label': 'Enter the price',
+                            }}
+                        />
+                        <FormControl size="small" variant="outlined" sx={{ minWidth: 80 }}>
+                            <InputLabel id="currency-label"></InputLabel>
+                            <Select
+                                labelId="currency-label"
+                                id="currency"
+                                value={currency}
+                                onChange={handleCurrencyChange}
+                                label="Currency"
+                            >
+                                {currencies.map((currency) => (
+                                    <MenuItem key={currency.code} value={currency.code}>
+                                        {currency.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <Button variant="contained" color="primary" sx={{ ml: 2 }}>
+                            Get started now
                         </Button>
                     </Stack>
                     <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
