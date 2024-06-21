@@ -102,9 +102,11 @@ export default function Marketplace() {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
+            const data = await response.json();
+            toast.success(`${data.productName} added successfully`);
         } catch (error) {
             console.error("There was a problem submitting the form:", error);
+            toast.error("There was a problem submitting the form");
         } finally {
             setIsLoading(false);
         }
