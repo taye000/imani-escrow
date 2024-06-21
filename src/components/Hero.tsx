@@ -26,7 +26,7 @@ export const currencies = [
 
 
 export default function Hero() {
-    const [transactionType, setTransactionType] = React.useState('');
+    const [transactionType, setTransactionType] = React.useState('selling');
     const [price, setPrice] = React.useState('');
     const [item, setItem] = React.useState('');
     const [currency, setCurrency] = React.useState('USD');
@@ -146,6 +146,7 @@ export default function Hero() {
                             onChange={handleItemChange}
                             value={item}
                             variant="outlined"
+                            label="Item"
                             placeholder="Laptops, vehicles..."
                             sx={{ flex: 2 }}
                             inputProps={{
@@ -160,6 +161,7 @@ export default function Hero() {
                             onChange={handlePriceChange}
                             value={price}
                             variant="outlined"
+                            label="Price"
                             placeholder="800"
                             sx={{ flex: 1, marginLeft: 2 }}
                             inputProps={{
@@ -168,7 +170,7 @@ export default function Hero() {
                             }}
                         />
                         <FormControl size="small" variant="outlined" sx={{ minWidth: 80 }}>
-                            <InputLabel id="currency-label"></InputLabel>
+                            <InputLabel id="currency-label">Currency</InputLabel>
                             <Select
                                 labelId="currency-label"
                                 id="currency"

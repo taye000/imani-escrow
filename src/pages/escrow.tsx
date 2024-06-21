@@ -149,7 +149,7 @@ export default function Marketplace() {
                                         <TextField
                                             fullWidth
                                             id="item"
-                                            hiddenLabel
+                                            label="Item Name"
                                             size="small"
                                             onChange={(e) => setProductName(e.target.value)}
                                             value={productName}
@@ -163,7 +163,7 @@ export default function Marketplace() {
                                         <TextField
                                             fullWidth
                                             id="price"
-                                            hiddenLabel
+                                            label="Price"
                                             size="small"
                                             onChange={(e) => setSelectedPrice(e.target.value)}
                                             value={selectedPrice}

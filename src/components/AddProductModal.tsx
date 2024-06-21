@@ -29,6 +29,8 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
     const [productName, setProductName] = React.useState("");
     const [paymentMethod, setPaymentMethod] = React.useState("");
     const [description, setDescription] = React.useState("");
+    const [category, setCategory] = React.useState("");
+    const [transactionType, setTransactionType] = React.useState("selling");
     const [price, setPrice] = React.useState("");
     const [isLoading, setIsLoading] = React.useState(false);
 
@@ -41,6 +43,8 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
             description,
             price,
             paymentMethod,
+            category,
+            transactionType,
         };
 
         try {
@@ -62,6 +66,8 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
                 description,
                 paymentMethod,
                 price,
+                category,
+                transactionType,
             });
         } catch (error) {
             console.error("There was a problem submitting the form:", error);
@@ -87,6 +93,16 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
                                     value={productName}
                                     name="productName"
                                     onChange={(e) => setProductName(e.target.value)}
+                                    margin="normal"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="Category"
+                                    value={category}
+                                    name="category"
+                                    onChange={(e) => setCategory(e.target.value)}
                                     margin="normal"
                                 />
                             </Grid>

@@ -11,6 +11,8 @@ export interface IProduct {
   category: string;
   size: string;
   color: string;
+  transactionType: string;
+  currency: string;
 }
 
 const productSchema = new Schema<IProduct>(
@@ -19,6 +21,13 @@ const productSchema = new Schema<IProduct>(
     price: { type: String, required: true },
     description: { type: String, required: true },
     paymentMethod: { type: String, required: true },
+    image: { type: String, required: false },
+    additionalImages: { type: [String], required: false },
+    category: { type: String, required: true },
+    size: { type: String, required: false },
+    color: { type: String, required: false },
+    transactionType: { type: String, required: true },
+    currency: { type: String, required: true },
   },
   {
     toJSON: {

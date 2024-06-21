@@ -8,6 +8,9 @@ interface ProductData {
   price: string;
   paymentMethod: string;
   description: string;
+  currency: string;
+  transactionType: string;
+  category: string;
   // Add more fields here as needed (e.g., image, additionalImages)
 }
 
@@ -35,7 +38,11 @@ export default async function handler(
       if (
         !productData.productName ||
         !productData.price ||
-        !productData.paymentMethod
+        !productData.paymentMethod ||
+        !productData.description ||
+        !productData.currency ||
+        !productData.transactionType ||
+        !productData.category
       ) {
         return res.status(400).json({ message: "Missing required fields" });
       }
