@@ -11,18 +11,8 @@ import getLPTheme from '@/getLPTheme';
 import Link from 'next/link';
 import EditIcon from '@mui/icons-material/Edit';
 import { useThemeContext } from '@/context/ThemeContext';
-import EditProfileModal, { userData } from '@/components/EditProfileModal';
+import EditProfileModal from '@/components/EditProfileModal';
 import { useUser } from '@auth0/nextjs-auth0/client';
-
-export const sampleUser = {
-    id: 1,
-    name: "John Doe",
-    bio: "I'm a software engineer who loves building web applications.",
-    photo: "/avatar.jpg",
-    email: "john.doe@example.com",
-    phone: "123-456-7890",
-    address: "123 Main St, Anytown, USA",
-};
 
 interface ToggleCustomThemeProps {
     showCustomTheme: Boolean;
@@ -101,12 +91,16 @@ const EditButton = styled(Button)`
   right: 16px;
 `;
 
-const handleEditProfile = (userData: userData) => {
-    console.log('Edit profile clicked', userData);
-    // Handle edit profile logic here
+const handleEditProfile = () => {
 };
 
 export default function Profile() {
+    const { user, isLoading, error } = useUser();
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>{error.message}</div>;
+    if (!user) return <div>Please sign in to view your profile.</div>;
+
     const { mode, toggleColorMode } = useThemeContext();
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const LPtheme = createTheme(getLPTheme(mode));
@@ -128,11 +122,6 @@ export default function Profile() {
         setShowCustomTheme((prev) => !prev);
     };
 
-    const { user, error, isLoading } = useUser();
-
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>{error.message}</div>;
-
     return (
         <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
             <CssBaseline />
@@ -146,25 +135,24 @@ export default function Profile() {
                                 <Grid item xs={12} md={8}>
                                     <ProfileHeaderContainer>
                                         {/* Profile Picture */}
-                                        <ProfileImage src={sampleUser.photo} alt={sampleUser.name} variant="rounded" sx={{
+                                        <ProfileImage src={user?.picture ?? '/avatar.jpg'} alt={user?.name || "profile picture"} variant="rounded" sx={{
                                             width: { xs: 100, sm: 150, md: 200 }, // Different sizes for different screens
                                             height: { xs: 100, sm: 150, md: 200 },
                                         }} />
 
                                         {/* Profile Details */}
                                         <ProfileDetails>
-                                            <UserName variant="h4">{sampleUser.name}</UserName>
                                             <UserName variant="h4">{user?.name}</UserName>
-                                            <UserBio variant="body1">{sampleUser.bio}</UserBio>
+                                            {/* <UserBio variant="body1">{user?.bio}</UserBio> */}
 
                                             <ContactInfo>
                                                 <ContactItem variant="body2">
-                                                    <Link href={`mailto:${sampleUser.email}`} color="inherit">
-                                                        {sampleUser.email}
+                                                    <Link href={`mailto:${user?.email}`} color="inherit">
+                                                        {user?.email}
                                                     </Link>
                                                 </ContactItem>
-                                                <ContactItem variant="body2">{sampleUser.phone}</ContactItem>
-                                                <ContactItem variant="body2">{sampleUser.address}</ContactItem>
+                                                {/* <ContactItem variant="body2">{user?.phone}</ContactItem> */}
+                                                {/* <ContactItem variant="body2">{user?.address}</ContactItem> */}
                                             </ContactInfo>
                                         </ProfileDetails>
                                         <EditButton
