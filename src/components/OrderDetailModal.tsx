@@ -30,8 +30,6 @@ interface OrderDetailProps {
         date: string;
         paymentMethod: string;
         address: string;
-        currency: string;
-        transactionType: string;
     };
 }
 

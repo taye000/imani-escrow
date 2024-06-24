@@ -23,8 +23,8 @@ export interface Product {
     date: string;
     paymentMethod: string;
     address: string;
-    currency: string;
-    transactionType: string;
+    currency?: string;
+    transactionType?: string;
 }
 
 //sample data
