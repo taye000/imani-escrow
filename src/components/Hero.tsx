@@ -186,7 +186,7 @@ export default function Hero() {
                             </Select>
                         </FormControl>
                         <Button variant="contained" color="primary" sx={{ ml: 2 }} onClick={handleGetStarted}>
-                            Get started now
+                            Start now
                         </Button>
                     </Stack>
                     <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>

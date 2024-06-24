@@ -3,17 +3,6 @@ import { connectToDatabase } from "../../utils/db";
 import Product from "@/models/product";
 // import { getSession } from "@auth0/nextjs-auth0";
 
-interface ProductData {
-  productName: string;
-  price: string;
-  paymentMethod: string;
-  description: string;
-  currency: string;
-  transactionType: string;
-  category: string;
-  // Add more fields here as needed (e.g., image, additionalImages)
-}
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -31,7 +20,7 @@ export default async function handler(
 
   if (req.method === "POST") {
     try {
-      const productData: ProductData = req.body;
+      const productData = req.body;
       console.log("req.body", req.body);
 
       // Data Validation (important!)

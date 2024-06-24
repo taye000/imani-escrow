@@ -30,6 +30,8 @@ interface OrderDetailProps {
         date: string;
         paymentMethod: string;
         address: string;
+        currency: string;
+        transactionType: string;
     };
 }
 
@@ -48,7 +50,7 @@ export default function OrderDetailModal({ open, handleClose, order }: OrderDeta
                         Order Date: {order.date}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Client: {order.productName}
+                        Name: {order.productName}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         Order Total: $ {order.price}
