@@ -14,6 +14,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
 import toast from 'react-hot-toast';
 import { currencies } from '@/components/Hero';
+import withAuth from '@/components/withAuth';
 
 interface ToggleCustomThemeProps {
     showCustomTheme: Boolean;
@@ -50,7 +51,7 @@ const MainLayout = styled.div`
   margin-bottom: 20px;
 `;
 
-export default function Marketplace() {
+function Escrow() {
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const { mode, toggleColorMode } = useThemeContext();
     const LPtheme = createTheme(getLPTheme(mode));
@@ -265,3 +266,5 @@ export default function Marketplace() {
         </ThemeProvider>
     );
 }
+
+export default withAuth(Escrow);

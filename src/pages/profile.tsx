@@ -13,6 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useThemeContext } from '@/context/ThemeContext';
 import EditProfileModal from '@/components/EditProfileModal';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import withAuth from '@/components/withAuth';
 
 interface ToggleCustomThemeProps {
     showCustomTheme: Boolean;
@@ -94,7 +95,7 @@ const EditButton = styled(Button)`
 const handleEditProfile = () => {
 };
 
-export default function Profile() {
+function Profile() {
     const { user, isLoading, error } = useUser();
 
     if (isLoading) return <div>Loading...</div>;
@@ -184,3 +185,5 @@ export default function Profile() {
         </ThemeProvider >
     );
 }
+
+export default withAuth(Profile);

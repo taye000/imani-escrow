@@ -14,6 +14,7 @@ import AddProductModal from '@/components/AddProductModal';
 import Chart from '@/components/Chart';
 import Deposits from '@/components/Deposits';
 import Orders from '@/components/Orders';
+import withAuth from '@/components/withAuth';
 
 interface ToggleCustomThemeProps {
     showCustomTheme: Boolean;
@@ -47,7 +48,7 @@ function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }: ToggleCustomT
     );
 }
 
-export default function Dashboard() {
+function Dashboard() {
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const { mode, toggleColorMode } = useThemeContext();
     const LPtheme = createTheme(getLPTheme(mode));
@@ -183,3 +184,5 @@ export default function Dashboard() {
         </ThemeProvider>
     );
 }
+
+export default withAuth(Dashboard);

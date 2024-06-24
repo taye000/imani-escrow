@@ -17,6 +17,7 @@ import { productData } from './marketplace';
 import { ICartItem } from '@/models/cart';
 import { Types } from 'mongoose';
 import toast from 'react-hot-toast';
+import withAuth from '@/components/withAuth';
 
 const sampleCart = {
     userId: new Types.ObjectId(), // Replace with an actual ObjectId if available
@@ -128,7 +129,7 @@ const updateCart = async (cartItems: ICartItem[]) => {
     }
 };
 
-export default function Checkout() {
+function Checkout() {
     const { mode, toggleColorMode } = useThemeContext();
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const LPtheme = createTheme(getLPTheme(mode));
@@ -307,3 +308,5 @@ export default function Checkout() {
         </ThemeProvider>
     );
 }
+
+export default withAuth(Checkout);
