@@ -1,115 +1,73 @@
 import * as React from 'react';
 import {
-    styled,
-    CssBaseline,
-    Box,
-    Divider,
-    List,
-    IconButton,
-    Badge,
-    Container,
-    Grid,
-    Paper,
-    Link,
-    Typography,
-    createTheme,
-    ThemeProvider,
-    MenuItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-} from "@mui/material";
-import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { mainListItems, secondaryListItems } from "../components/listItems";
-import Chart from "../components/Chart";
-import Deposits from "../components/Deposits";
-import Orders from "../components/Orders";
-import AddProductModal from '@/components/AddProductModal';
+    Container, Grid, Button, ListItemIcon, ListItemText, Paper,
+    CssBaseline, Box, Divider, Typography, ThemeProvider, createTheme
+} from '@mui/material';
 import { useThemeContext } from '@/context/ThemeContext';
+import AppAppBar from '@/components/AppBar';
+import Footer from '@/components/Footer';
+import getLPTheme from '@/getLPTheme';
+import styled from 'styled-components';
+import toast from 'react-hot-toast';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddProductModal from '@/components/AddProductModal';
+import Chart from '@/components/Chart';
+import Deposits from '@/components/Deposits';
+import Orders from '@/components/Orders';
 
-function Copyright(props: any) {
+interface ToggleCustomThemeProps {
+    showCustomTheme: Boolean;
+    toggleCustomTheme: () => void;
+}
+
+const MainLayout = styled.div`
+  display: flex;
+  background-color: primary;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 80vw;
+  align-items: center;
+  margin: 0 auto;
+  margin-bottom: 20px;
+`;
+
+function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }: ToggleCustomThemeProps) {
     return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" href="/">
-                ImaniEscrow
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                width: '100vw',
+                position: 'fixed',
+                bottom: 24,
+            }}
+        >
+        </Box>
     );
 }
 
-const drawerWidth: number = 240;
-
-interface AppBarProps extends MuiAppBarProps {
-    open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({ theme, open }) => ({
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-    }),
-    ...(open && {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    }),
-}));
-
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-    ({ theme, open }) => ({
-        '& .MuiDrawer-paper': {
-            position: 'relative',
-            whiteSpace: 'nowrap',
-            width: drawerWidth,
-            transition: theme.transitions.create('width', {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
-            boxSizing: 'border-box',
-            ...(!open && {
-                overflowX: 'hidden',
-                transition: theme.transitions.create('width', {
-                    easing: theme.transitions.easing.sharp,
-                    duration: theme.transitions.duration.leavingScreen,
-                }),
-                width: theme.spacing(7),
-                [theme.breakpoints.up('sm')]: {
-                    width: theme.spacing(9),
-                },
-            }),
-        },
-    }),
-);
-
-const handleAddProduct = (productData: any) => {
-    console.log("New product data:", productData);
-    // Implement your logic to send data to the backend or update your state
-};
-
-
 export default function Dashboard() {
-    const toggleDrawer = () => {
-        setOpen(!open);
-    };
+    const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const { mode, toggleColorMode } = useThemeContext();
+    const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
-    
-    const [open, setOpen] = React.useState(true);
+
+    // Get data from URL query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const transactionType = urlParams.get('transactionType');
+    const item = urlParams.get('item');
+    const price = urlParams.get('price');
+    const currency = urlParams.get('currency');
+
+    const [productName, setProductName] = React.useState(item || "");
+    const [paymentMethod, setPaymentMethod] = React.useState("");
+    const [description, setDescription] = React.useState("");
+    const [category, setCategory] = React.useState("");
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [selectedTransactionType, setSelectedTransactionType] = React.useState(transactionType || "");
+    const [selectedPrice, setSelectedPrice] = React.useState(price || "");
+    const [selectedCurrency, setSelectedCurrency] = React.useState(currency || "");
     const [isModalOpen, setIsModalOpen] = React.useState(false);
 
     const handleOpenModal = () => {
@@ -122,147 +80,106 @@ export default function Dashboard() {
         console.log('Modal closed');
     };
 
-    return (
-        <ThemeProvider theme={defaultTheme}>
-            <Box sx={{ display: 'flex' }}>
-                <CssBaseline />
-                <AppBar position="absolute" open={open}>
-                    <Toolbar
-                        sx={{
-                            pr: '24px',
-                        }}
-                    >
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={toggleDrawer}
-                            sx={{
-                                marginRight: '36px',
-                                ...(open && { display: 'none' }),
-                            }}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography
-                            component="h1"
-                            variant="h6"
-                            color="inherit"
-                            noWrap
-                            sx={{ flexGrow: 1 }}
-                        >
-                            Dashboard
-                        </Typography>
-                        <MenuItem
-                        >
-                            <Link href="/">
-                                <Typography variant="body2" color="text.primary">
-                                    Home
-                                </Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem
-                        >
-                            <Link href="/profile">
-                                <Typography variant="body2" color="text.primary">
-                                    Profile
-                                </Typography>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem
-                        >
-                            <Link href="/marketplace">
-                                <Typography variant="body2" color="text.primary">
-                                    MarketPlace
-                                </Typography>
-                            </Link>
-                        </MenuItem>
-                        <IconButton color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
-                <Drawer variant="permanent" open={open}>
-                    <Toolbar
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'flex-end',
-                            px: [1],
-                        }}
-                    >
-                        <IconButton onClick={toggleDrawer}>
-                            <ChevronLeftIcon />
-                        </IconButton>
-                    </Toolbar>
-                    <Divider />
-                    <List component="nav">
-                        {mainListItems}
-                        <ListItemButton onClick={handleOpenModal}>
-                            <ListItemIcon>
-                                <AddCircleIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Add Product" />
-                        </ListItemButton>
-                        <Divider sx={{ my: 1 }} />
-                        {secondaryListItems}
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+        if (!productName || !description || !category || !selectedPrice || !paymentMethod || !selectedTransactionType || !selectedCurrency) {
+            toast.error("Please fill in all fields");
+            return;
+        }
+        setIsLoading(true);
 
-                    </List>
-                </Drawer>
-                <Box
-                    component="main"
-                    sx={{
-                        backgroundColor: (theme) =>
-                            theme.palette.mode === 'light'
-                                ? theme.palette.grey[100]
-                                : theme.palette.grey[900],
-                        flexGrow: 1,
-                        height: '100vh',
-                        overflow: 'auto',
-                    }}
-                >
-                    <Toolbar />
-                    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                        <Grid container spacing={3}>
-                            Chart
-                            <Grid item xs={12} md={8} lg={9}>
-                                <Paper
-                                    sx={{
-                                        p: 2,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        height: 240,
-                                    }}
-                                >
-                                    <Chart />
-                                </Paper>
-                            </Grid>
-                            Recent Deposits
-                            <Grid item xs={12} md={4} lg={3}>
-                                <Paper
-                                    sx={{
-                                        p: 2,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        height: 240,
-                                    }}
-                                >
-                                    <Deposits />
-                                </Paper>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                                    <Orders />
-                                </Paper>
-                            </Grid>
+        const productData = {
+            productName,
+            description,
+            category,
+            price: selectedPrice,
+            paymentMethod,
+            transactionType: selectedTransactionType,
+            currency: selectedCurrency,
+        };
+
+        try {
+            const response = await fetch("api/products", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(productData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            toast.success(`${data.productName} added successfully`);
+        } catch (error) {
+            console.error("There was a problem submitting the form:", error);
+            toast.error("There was a problem submitting the form");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const toggleCustomTheme = () => {
+        setShowCustomTheme((prev) => !prev);
+    };
+
+    return (
+        <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
+            <CssBaseline />
+            <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
+            <Container maxWidth="lg" sx={{ bgcolor: 'background.default', p: 4, pt: 12 }}>
+                <MainLayout>
+                    <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mb: 2 }}>
+                        Dashboard
+                    </Typography>
+                    <Divider sx={{ mb: 2 }} />
+                    <Button onClick={handleOpenModal} sx={{ mb: 2 }}>
+                        <ListItemIcon>
+                            <AddCircleIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Add Product" />
+                    </Button>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} md={8} lg={9}>
+                            <Paper
+                                sx={{
+                                    p: 2,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    height: 240,
+                                }}
+                            >
+                                <Chart />
+                            </Paper>
                         </Grid>
-                        <Copyright sx={{ pt: 4 }} />
-                    </Container>
-                </Box>
-            </Box>
-            <AddProductModal open={isModalOpen} handleClose={handleCloseModal} onSubmit={handleAddProduct} />
+                        <Grid item xs={12} md={4} lg={3}>
+                            <Paper
+                                sx={{
+                                    p: 2,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    height: 240,
+                                }}
+                            >
+                                <Deposits />
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                                <Orders />
+                            </Paper>
+                        </Grid>
+                    </Grid>
+                </MainLayout>
+                <Divider sx={{ mt: 4, mb: 4 }} />
+                <Footer />
+            </Container>
+            <ToggleCustomTheme
+                showCustomTheme={showCustomTheme}
+                toggleCustomTheme={toggleCustomTheme}
+            />
+            <AddProductModal open={isModalOpen} handleClose={handleCloseModal} onSubmit={handleSubmit} />
         </ThemeProvider>
     );
 }
