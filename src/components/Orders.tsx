@@ -11,6 +11,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import getLPTheme from '@/getLPTheme';
 import { useThemeContext } from '@/context/ThemeContext';
 import OrderDetailModal from './OrderDetailModal';
+import { Product, productData } from '@/pages/marketplace';
 
 const StyledTableRow = styled(TableRow)`
   margin-bottom: 16px;
@@ -27,65 +28,6 @@ const StyledTableRow = styled(TableRow)`
   }
 `;
 
-interface Order {
-    id: number;
-    date: string;
-    name: string;
-    address: string;
-    paymentMethod: string;
-    amount: number;
-    items: { name: string; price: number; photo: string }[];
-}
-
-// Sample Order Data
-const orders: Order[] = [
-    {
-        id: 0,
-        date: '16 Mar, 2019',
-        name: 'Elvis Presley',
-        address: 'Tupelo, MS',
-        paymentMethod: 'VISA ⠀•••• 3719',
-        amount: 312.44,
-        items: [{ name: 'Shoes', price: 100, photo: '/public/iphone11.jpg' }, { name: 'Shirt', price: 50, photo: '/public/iphone11.jpg' }, { name: 'Pants', price: 100, photo: '/public/iphone11.jpg' }]
-    },
-    {
-        id: 1,
-        date: '23 Mar, 2019',
-        name: 'Paul McCartney',
-        address: 'London, UK',
-        paymentMethod: 'VISA ⠀•••• 2574',
-        amount: 866.99,
-        items: [{ name: 'Shoes', price: 100, photo: '/public/iphone11.jpg' }, { name: 'Shirt', price: 50, photo: '/public/iphone11.jpg' }, { name: 'Pants', price: 100, photo: '/public/iphone11.jpg' }]
-    },
-    {
-        id: 2,
-        date: '23 Mar, 2019',
-        name: 'Tom Scholz',
-        address: 'Boston, MA',
-        paymentMethod: 'MC ⠀•••• 1253',
-        amount: 100.81,
-        items: [{ name: 'Shoes', price: 100, photo: '/public/iphone11.jpg' }, { name: 'Shirt', price: 50, photo: '/public/iphone11.jpg' }, { name: 'Pants', price: 100, photo: '/public/iphone11.jpg' }]
-    },
-    {
-        id: 3,
-        date: '24 Mar, 2019',
-        name: 'Michael Jackson',
-        address: 'Gary, IN',
-        paymentMethod: 'AMEX ⠀•••• 2000',
-        amount: 654.39,
-        items: [{ name: 'Shoes', price: 100, photo: '/public/iphone11.jpg' }, { name: 'Shirt', price: 50, photo: '/public/iphone11.jpg' }, { name: 'Pants', price: 100, photo: '/public/iphone11.jpg' }]
-    },
-    {
-        id: 4,
-        date: '24 Mar, 2019',
-        name: 'Bruce Springsteen',
-        address: 'Long Branch, NJ',
-        paymentMethod: 'VISA ⠀•••• 5919',
-        amount: 212.79,
-        items: [{ name: 'Shoes', price: 100, photo: '/public/iphone11.jpg' }, { name: 'Shirt', price: 50, photo: '/public/iphone11.jpg' }, { name: 'Pants', price: 100, photo: '/public/iphone11.jpg' }]
-    },
-];
-
 function preventDefault(event: React.MouseEvent) {
     event.preventDefault();
 }
@@ -95,14 +37,14 @@ export default function Orders() {
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
-    const [selectedOrder, setSelectedOrder] = React.useState<Order | null>(null);
+    const [selectedOrder, setSelectedOrder] = React.useState<Product | null>(null);
 
     const [open, setOpen] = React.useState(false);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-    const handleOpenModal = (order: Order) => {
+    const handleOpenModal = (productData: Product) => {
         setIsModalOpen(true);
-        setSelectedOrder(order);
+        setSelectedOrder(productData);
         console.log('order detail Modal opened');
     };
 
@@ -132,13 +74,13 @@ export default function Orders() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {orders.map((order) => (
+                    {productData.map((order) => (
                         <StyledTableRow key={order.id} onClick={() => handleOpenModal(order)}>
                             <TableCell>{order.date}</TableCell>
-                            <TableCell>{order.name}</TableCell>
+                            <TableCell>{order.productName}</TableCell>
                             <TableCell>{order.address}</TableCell>
                             <TableCell>{order.paymentMethod}</TableCell>
-                            <TableCell align="right">{`$${order.amount}`}</TableCell>
+                            <TableCell align="right">{`$${order.price}`}</TableCell>
                         </StyledTableRow>
                     ))}
                 </TableBody>
@@ -151,7 +93,6 @@ export default function Orders() {
                     open={isModalOpen}
                     handleClose={handleCloseModal}
                     order={selectedOrder}
-
                 />
             )}
         </ThemeProvider>

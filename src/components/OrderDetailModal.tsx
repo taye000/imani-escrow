@@ -19,12 +19,17 @@ interface OrderDetailProps {
     open: boolean;
     handleClose: () => void;
     order: {
-        id: number;
+        image: string;
+        additionalImages: string[];
+        category: string;
+        productName: string;
+        size: string;
+        description: string;
+        price: string;
+        id: string;
         date: string;
-        name: string;
-        address: string;
         paymentMethod: string;
-        amount: number;
+        address: string;
     };
 }
 
@@ -43,10 +48,10 @@ export default function OrderDetailModal({ open, handleClose, order }: OrderDeta
                         Order Date: {order.date}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Client: {order.name}
+                        Client: {order.productName}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Order Total: $ {order.amount}
+                        Order Total: $ {order.price}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         Shipping Address: {order.address}

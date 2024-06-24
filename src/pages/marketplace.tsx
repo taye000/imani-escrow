@@ -11,6 +11,20 @@ import ProductCard from '@/components/ProductCard';
 import styled from 'styled-components';
 import { useThemeContext } from '@/context/ThemeContext';
 
+export interface Product {
+    image: string;
+    additionalImages: string[];
+    category: string;
+    productName: string;
+    size: string;
+    description: string;
+    price: string;
+    id: string;
+    date: string;
+    paymentMethod: string;
+    address: string;
+}
+
 //sample data
 export const productData = [
     {
@@ -22,6 +36,9 @@ export const productData = [
         description: "A powerful and versatile smartphone with a stunning dual-camera system.",
         price: "599.99",
         id: "10d5ec49f4d3f915b4e47f0b",
+        date: '16 Mar, 2019',
+        paymentMethod: "M-PESA",
+        address: "Cotton Avenue, Kilimani."
     },
     {
         image: "iphone11.jpg",
@@ -32,6 +49,9 @@ export const productData = [
         description: "A cutting-edge phone with a vibrant display and powerful processor.",
         price: "799.99",
         id: "20d5ec49f4d3f915b4e47f0b",
+        date: '16 Mar, 2019',
+        paymentMethod: "M-PESA",
+        address: "Cotton Avenue, Kilimani."
     },
     {
         image: "iphone11.jpg",
@@ -42,6 +62,9 @@ export const productData = [
         description: "A smart and innovative phone with a focus on AI features.",
         price: "899.99",
         id: "30d5ec49f4d3f915b4e47f0b",
+        date: '16 Mar, 2019',
+        paymentMethod: "M-PESA",
+        address: "Cotton Avenue, Kilimani."
     },
     {
         image: "iphone11.jpg",
@@ -52,6 +75,9 @@ export const productData = [
         description: "A flagship phone with a fast charging battery and Hasselblad camera.",
         price: "699.99",
         id: "40d5ec49f4d3f915b4e47f0b",
+        date: '16 Mar, 2019',
+        paymentMethod: "M-PESA",
+        address: "Cotton Avenue, Kilimani."
     },
     {
         image: "iphone11.jpg",
@@ -62,6 +88,9 @@ export const productData = [
         description: "A compact and powerful phone with a 120Hz AMOLED display.",
         price: "549.99",
         id: "50d5ec49f4d3f915b4e47f0b",
+        date: '16 Mar, 2019',
+        paymentMethod: "M-PESA",
+        address: "Cotton Avenue, Kilimani."
     }
 ];
 
