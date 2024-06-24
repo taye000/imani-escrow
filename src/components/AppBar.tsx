@@ -14,17 +14,22 @@ import ToggleColorMode from './ToggleColorMode';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Link from 'next/link';
 import router from 'next/router';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 const activeStyle = {
     fontWeight: 'bold',
     borderBottom: '2px solid',
 };
+
 interface AppAppBarProps {
     mode: PaletteMode;
     toggleColorMode: () => void;
 }
 
 function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
+    const { user, isLoading, error } = useUser();
+    console.log(user);
+
     const [open, setOpen] = React.useState(false);
 
     const toggleDrawer = (newOpen: boolean) => () => {
@@ -90,28 +95,12 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                 px: 0,
                             }}
                         >
-                            {/* <img
-                                src={
-                                    'https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg'
-                                }
-                                style={logoStyle}
-                                alt="logo of imani escrow"
-                            /> */}
                             <Link href="/">
                                 <Typography variant="body2" color="text.primary">
                                     Imani Escrow
                                 </Typography>
                             </Link>
                             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                                <MenuItem
-                                    sx={{ ...(isActive('/profile') && activeStyle) }}
-                                >
-                                    <Link href="/profile">
-                                        <Typography variant="body2" color="text.primary">
-                                            Profile
-                                        </Typography>
-                                    </Link>
-                                </MenuItem>
                                 <MenuItem
                                     sx={{ ...(isActive('/marketplace') && activeStyle) }}
                                 >
@@ -169,26 +158,36 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                     <ShoppingCartIcon />
                                 </IconButton>
                             </Link>
-                            <Button
-                                color="primary"
-                                variant="text"
-                                size="small"
-                                component="a"
-                                href="/api/auth/login"
-                                target="_blank"
-                            >
-                                Sign in
-                            </Button>
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                size="small"
-                                component="a"
-                                href="/api/auth/logou"
-                                target="_blank"
-                            >
-                                Sign Out
-                            </Button>
+                            {!user ? (
+                                <Button
+                                    color="primary"
+                                    variant="text"
+                                    size="small"
+                                    component="a"
+                                    href="/api/auth/login"
+                                >
+                                    Sign in
+                                </Button>
+                            ) : (
+                                <>
+                                    <Link href="/profile">
+                                        <Typography variant="body2" color="text.primary">
+                                            {user.name}
+                                        </Typography>
+                                    </Link>
+                                    <Box sx={{ marginLeft: '10px' }}>
+                                        <Button
+                                            color="primary"
+                                            variant="contained"
+                                            size="small"
+                                            component="a"
+                                            href="/api/auth/logout"
+                                        >
+                                            Sign Out
+                                        </Button>
+                                    </Box>
+                                </>
+                            )}
                         </Box>
                         <Box sx={{ display: { sm: '', md: 'none' } }}>
                             <Button
@@ -234,26 +233,29 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                     <MenuItem onClick={() => scrollToSection('faq')}>FAQ</MenuItem>
                                     <Divider />
                                     <MenuItem>
-                                        <Button
-                                            color="primary"
-                                            variant="outlined"
-                                            component="a"
-                                            href="/api/auth/login"
-                                            target="_blank"
-                                            sx={{ width: '100%' }}
-                                        >
-                                            Sign in
-                                        </Button>
-                                        <Button
-                                            color="primary"
-                                            variant="outlined"
-                                            component="a"
-                                            href="/api/auth/logout"
-                                            target="_blank"
-                                            sx={{ width: '100%' }}
-                                        >
-                                            Sign Out
-                                        </Button>
+                                        {!user ? (
+                                            <Button
+                                                color="primary"
+                                                variant="outlined"
+                                                component="a"
+                                                href="/api/auth/login"
+                                                target="_blank"
+                                                sx={{ width: '100%' }}
+                                            >
+                                                Sign in
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                color="primary"
+                                                variant="outlined"
+                                                component="a"
+                                                href="/api/auth/logout"
+                                                target="_blank"
+                                                sx={{ width: '100%' }}
+                                            >
+                                                Sign Out
+                                            </Button>
+                                        )}
                                     </MenuItem>
                                 </Box>
                             </Drawer>
