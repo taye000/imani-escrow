@@ -28,7 +28,6 @@ interface AppAppBarProps {
 
 function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
     const { user, isLoading, error } = useUser();
-    console.log(user);
 
     const [open, setOpen] = React.useState(false);
 

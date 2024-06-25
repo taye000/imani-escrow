@@ -15,6 +15,7 @@ import Button from '@mui/material/Button';
 import toast from 'react-hot-toast';
 import { currencies } from '@/components/Hero';
 import withAuth from '@/components/withAuth';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 interface ToggleCustomThemeProps {
     showCustomTheme: Boolean;
@@ -52,6 +53,11 @@ const MainLayout = styled.div`
 `;
 
 function Escrow() {
+    const { user, error } = useUser();
+
+    if (error) return <div>{error.message}</div>;
+    if (!user) return <div>Please sign in to view your profile.</div>;
+
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const { mode, toggleColorMode } = useThemeContext();
     const LPtheme = createTheme(getLPTheme(mode));
@@ -90,7 +96,7 @@ function Escrow() {
             transactionType: selectedTransactionType,
             currency: selectedCurrency,
         };
-
+        console.log(productData);
         try {
             const response = await fetch("api/products", {
                 method: "POST",

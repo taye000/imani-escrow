@@ -1,29 +1,27 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../utils/db";
 import Product from "@/models/product";
-// import { getSession } from "@auth0/nextjs-auth0";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // const session = await getSession();
-  // if (!session || typeof session !== "object" || !("user" in session)) {
-  //   return res.status(401).json({ message: "Unauthorized" });
-  // }
+  console.log("req.body", req.body);
 
-  // const user = session.user;
-  // console.log("user", user);
-  // if (!user) {
-  //   return res.status(401).json({ message: "Unauthorized" });
-  // }
+  const session = await getSession(req, res);
+
+  if (!session || typeof session !== "object" || !("user" in session)) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const user = session.user;
 
   if (req.method === "POST") {
     try {
       const productData = req.body;
       console.log("req.body", req.body);
 
-      // Data Validation (important!)
       if (
         !productData.productName ||
         !productData.price ||
@@ -36,12 +34,19 @@ export default async function handler(
         return res.status(400).json({ message: "Missing required fields" });
       }
 
+      const payload = {
+        userId: user.sub,
+        ...productData,
+      };
+
+      console.log("payload", payload);
+
       try {
         // Get the database connection
         await connectToDatabase();
         console.log("Connected to db");
 
-        const newProduct = await Product.create(productData);
+        const newProduct = await Product.create(payload);
         console.log("Product saved to database:", newProduct);
         return res
           .status(201)
