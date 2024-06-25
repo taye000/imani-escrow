@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { connectToDatabase } from "../../utils/db";
+import { connectToDatabase } from "../../../utils/db";
 import Product from "@/models/product";
 import { getSession } from "@auth0/nextjs-auth0";
 
@@ -39,10 +39,7 @@ export default async function handler(
         ...productData,
       };
 
-      console.log("payload", payload);
-
       try {
-        // Get the database connection
         await connectToDatabase();
         console.log("Connected to db");
 
@@ -58,6 +55,16 @@ export default async function handler(
     } catch (error) {
       console.error("Error adding product:", error);
       return res.status(500).json({ message: "Error adding product" });
+    }
+  } else if (req.method === "GET") {
+    try {
+      await connectToDatabase();
+
+      const products = await Product.find({});
+      return res.status(200).json(products);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return res.status(500).json({ message: "Failed to fetch products" });
     }
   } else {
     return res.status(405).end();

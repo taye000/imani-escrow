@@ -48,7 +48,7 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
         };
 
         try {
-            const response = await fetch("api/products", {
+            const response = await fetch("api/product", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

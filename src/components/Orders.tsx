@@ -11,7 +11,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import getLPTheme from '@/getLPTheme';
 import { useThemeContext } from '@/context/ThemeContext';
 import OrderDetailModal from './OrderDetailModal';
-import { Product, productData } from '@/pages/marketplace';
+import { Product } from '@/pages/marketplace';
 
 const StyledTableRow = styled(TableRow)`
   margin-bottom: 16px;
@@ -38,6 +38,8 @@ export default function Orders() {
     const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
     const [selectedOrder, setSelectedOrder] = React.useState<Product | null>(null);
+    const [products, setProducts] = React.useState<Product[]>([]);
+    const [loading, setLoading] = React.useState(true);
 
     const [open, setOpen] = React.useState(false);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -60,6 +62,31 @@ export default function Orders() {
     const toggleCustomTheme = () => {
         setShowCustomTheme((prev) => !prev);
     };
+
+    React.useEffect(() => {
+        const fetchUserProducts = async () => {
+            try {
+                const response = await fetch('/api/product/user');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user products');
+                }
+                const data: Product[] = await response.json();
+                setProducts(data);
+                console.log('Fetched user products:', data);
+            } catch (error) {
+                console.error('Error fetching user products:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserProducts();
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <ThemeProvider theme={defaultTheme}>
             <Title>Recent Orders</Title>
@@ -74,9 +101,9 @@ export default function Orders() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {productData.map((order) => (
+                    {products.map((order) => (
                         <StyledTableRow key={order.id} onClick={() => handleOpenModal(order)}>
-                            <TableCell>{order.date}</TableCell>
+                            <TableCell>{order.createdAt}</TableCell>
                             <TableCell>{order.productName}</TableCell>
                             <TableCell>{order.address}</TableCell>
                             <TableCell>{order.paymentMethod}</TableCell>

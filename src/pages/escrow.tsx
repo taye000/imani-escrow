@@ -98,7 +98,7 @@ function Escrow() {
         };
         console.log(productData);
         try {
-            const response = await fetch("api/products", {
+            const response = await fetch("api/product", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

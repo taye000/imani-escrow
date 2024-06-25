@@ -25,78 +25,9 @@ export interface Product {
     address: string;
     currency?: string;
     transactionType?: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
-
-//sample data
-export const productData = [
-    {
-        image: "iphone11.jpg",
-        additionalImages: ["imanilogo.png", "avatar.jpg", "Milky_Way_at_Bear_Lake_4_nxqjo2.jpg"],
-        category: "Electronics",
-        productName: "iPhone 11",
-        size: "64GB",
-        description: "A powerful and versatile smartphone with a stunning dual-camera system.",
-        price: "599.99",
-        id: "10d5ec49f4d3f915b4e47f0b",
-        date: '16 Mar, 2019',
-        paymentMethod: "M-PESA",
-        address: "Cotton Avenue, Kilimani."
-    },
-    {
-        image: "iphone11.jpg",
-        additionalImages: ["imanilogo.png", "avatar.jpg", "Milky_Way_at_Bear_Lake_4_nxqjo2.jpg"],
-        category: "Electronics",
-        productName: "Samsung Galaxy S21",
-        size: "128GB",
-        description: "A cutting-edge phone with a vibrant display and powerful processor.",
-        price: "799.99",
-        id: "20d5ec49f4d3f915b4e47f0b",
-        date: '16 Mar, 2019',
-        paymentMethod: "M-PESA",
-        address: "Cotton Avenue, Kilimani."
-    },
-    {
-        image: "iphone11.jpg",
-        additionalImages: ["imanilogo.png", "avatar.jpg", "Milky_Way_at_Bear_Lake_4_nxqjo2.jpg"],
-        category: "Electronics",
-        productName: "Google Pixel 6",
-        size: "256GB",
-        description: "A smart and innovative phone with a focus on AI features.",
-        price: "899.99",
-        id: "30d5ec49f4d3f915b4e47f0b",
-        date: '16 Mar, 2019',
-        paymentMethod: "M-PESA",
-        address: "Cotton Avenue, Kilimani."
-    },
-    {
-        image: "iphone11.jpg",
-        additionalImages: ["imanilogo.png", "avatar.jpg", "Milky_Way_at_Bear_Lake_4_nxqjo2.jpg"],
-        category: "Electronics",
-        productName: "OnePlus 9 Pro",
-        size: "128GB",
-        description: "A flagship phone with a fast charging battery and Hasselblad camera.",
-        price: "699.99",
-        id: "40d5ec49f4d3f915b4e47f0b",
-        date: '16 Mar, 2019',
-        paymentMethod: "M-PESA",
-        address: "Cotton Avenue, Kilimani."
-    },
-    {
-        image: "iphone11.jpg",
-        additionalImages: ["imanilogo.png", "avatar.jpg", "Milky_Way_at_Bear_Lake_4_nxqjo2.jpg"],
-        category: "Electronics",
-        productName: "Xiaomi 12",
-        size: "256GB",
-        description: "A compact and powerful phone with a 120Hz AMOLED display.",
-        price: "549.99",
-        id: "50d5ec49f4d3f915b4e47f0b",
-        date: '16 Mar, 2019',
-        paymentMethod: "M-PESA",
-        address: "Cotton Avenue, Kilimani."
-    }
-];
-
-
 
 interface ToggleCustomThemeProps {
     showCustomTheme: Boolean;
@@ -138,10 +69,36 @@ export default function Marketplace() {
     const { mode, toggleColorMode } = useThemeContext();
     const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
+    const [products, setProducts] = React.useState<Product[]>([]);
+    const [loading, setLoading] = React.useState(true);
 
     const toggleCustomTheme = () => {
         setShowCustomTheme((prev) => !prev);
     };
+
+    React.useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch('/api/product');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch products');
+                }
+                const data: Product[] = await response.json();
+                setProducts(data);
+                console.log(data);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
@@ -152,7 +109,7 @@ export default function Marketplace() {
                     <MainLayout>
                         <Container >
                             <Grid container justifyContent="center">
-                                {productData.map((product) => (
+                                {products.map((product) => (
                                     <Grid item xs={12} sm={6} md={4} lg={3} key={product.productName}>
                                         <ProductCard product={product} />
                                     </Grid>

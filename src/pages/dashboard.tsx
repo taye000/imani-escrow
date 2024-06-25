@@ -100,7 +100,7 @@ function Dashboard() {
         };
 
         try {
-            const response = await fetch("api/products", {
+            const response = await fetch("products", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
