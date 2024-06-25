@@ -16,6 +16,7 @@ import toast from 'react-hot-toast';
 import { currencies } from '@/components/Hero';
 import withAuth from '@/components/withAuth';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import router from 'next/router';
 
 interface ToggleCustomThemeProps {
     showCustomTheme: Boolean;
@@ -111,6 +112,8 @@ function Escrow() {
             }
             const data = await response.json();
             toast.success(`${data.productName} added successfully`);
+            router.push("/marketplace")
+
         } catch (error) {
             console.error("There was a problem submitting the form:", error);
             toast.error("There was a problem submitting the form");

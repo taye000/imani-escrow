@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import CircularProgress from '@mui/material/CircularProgress';
 import { TextField, Grid } from '@mui/material';
+import toast from 'react-hot-toast';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -33,6 +34,7 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
     const [transactionType, setTransactionType] = React.useState("selling");
     const [price, setPrice] = React.useState("");
     const [isLoading, setIsLoading] = React.useState(false);
+    const [currency, setCurrency] = React.useState("USD");
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -45,7 +47,9 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
             paymentMethod,
             category,
             transactionType,
+            currency,
         };
+        console.log(productData);
 
         try {
             const response = await fetch("api/product", {
@@ -59,18 +63,15 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
+            const data = await response.json();
+            onSubmit(data); // Trigger the parent component callback with the new product data
+            toast.success(`${data.productName} added successfully`);
 
             handleClose();
-            onSubmit({
-                productName,
-                description,
-                paymentMethod,
-                price,
-                category,
-                transactionType,
-            });
+
         } catch (error) {
             console.error("There was a problem submitting the form:", error);
+            toast.error("There was a problem submitting the form");
         } finally {
             setIsLoading(false);
         }

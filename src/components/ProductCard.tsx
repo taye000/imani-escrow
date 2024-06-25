@@ -157,7 +157,7 @@ function ProductCard({ product }: ProductCardProps) {
   return (
     <ProductCardContainer>
       <FavoriteIconStyled onClick={handleFavoriteClick} />
-      <ProductImage image={product.image} />
+      <ProductImage image={product.image || 'iphone11.jpg'} />
       <Divider />
       <ProductContent>
         <ProductTitle variant="h6">{product.productName}</ProductTitle>
