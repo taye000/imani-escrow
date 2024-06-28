@@ -9,7 +9,6 @@ import { Box, createTheme, ThemeProvider } from '@mui/material';
 import useSWR from 'swr';
 import styled from 'styled-components';
 import Title from './Title';
-import getLPTheme from '@/getLPTheme';
 import { useThemeContext } from '@/context/ThemeContext';
 import OrderDetailModal from './OrderDetailModal';
 import { Product } from '@/pages/marketplace';
@@ -38,7 +37,8 @@ const CenteredBox = styled(Box)`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  flex-direction: column;
+  height: 60vh;
 `;
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -75,11 +75,7 @@ export default function Orders() {
     }
 
     if (!products) {
-        return (
-            <CenteredBox>
-                <Loading />
-            </CenteredBox>
-        );
+        return <Loading />;
     }
 
     return (

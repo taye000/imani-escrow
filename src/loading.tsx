@@ -1,23 +1,18 @@
-import React from "react";
+import * as React from 'react';
+import { CircularProgress, Box } from '@mui/material';
+import styled from 'styled-components';
 
-const Loading = () => {
-  return (
-    <main>
-      <div className="flex-col gap-4 w-full flex items-center justify-center">
-        <div className="w-28 h-28 border-8 text-blue-800 text-4xl animate-spin border-gray-300 flex items-center justify-center border-t-blue-800 rounded-full">
-          <svg
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            height="1em"
-            width="1em"
-            className="animate-ping"
-          >
-            <img src="/imanilogo.png" alt="Loading..." className="w-8 h-8 animate-spin" />
-          </svg>
-        </div>
-      </div>
-    </main>
-  );
-};
+const CenteredBox = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+`;
+
+const Loading = () => (
+  <CenteredBox>
+    <CircularProgress style={{ color: 'blue' }} />
+  </CenteredBox>
+);
 
 export default Loading;

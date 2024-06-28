@@ -66,13 +66,6 @@ const MainLayout = styled.div`
   margin-bottom: 20px;
 `;
 
-const CenteredBox = styled(Box)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-`;
-
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Marketplace() {
@@ -81,22 +74,6 @@ export default function Marketplace() {
     const defaultTheme = createTheme({ palette: { mode } });
 
     const { data: products, error } = useSWR<Product[]>('/api/product', fetcher);
-
-    if (error) {
-        return (
-            <CenteredBox>
-                <div>Error loading products</div>
-            </CenteredBox>
-        );
-    }
-
-    if (!products) {
-        return (
-            <CenteredBox>
-                <Loading />
-            </CenteredBox>
-        );
-    }
 
     return (
         <ThemeProvider theme={LPtheme}>
@@ -107,11 +84,29 @@ export default function Marketplace() {
                     <MainLayout>
                         <Container>
                             <Grid container justifyContent="center">
-                                {products.map((product: Product) => (
-                                    <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-                                        <ProductCard product={product} />
+                                {error ? (
+                                    <div
+                                        style={{
+                                            fontSize: '18px',
+                                            fontWeight: 'bold',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        Error loading products
+                                    </div>
+                                ) : !products ? (
+                                    <Loading />
+                                ) : (
+                                    <Grid container justifyContent="center">
+                                        {products.map((product) => (
+                                            <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
+                                                <ProductCard product={product} />
+                                            </Grid>
+                                        ))}
                                     </Grid>
-                                ))}
+                                )}
                             </Grid>
                         </Container>
                     </MainLayout>
