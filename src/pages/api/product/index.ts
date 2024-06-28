@@ -7,17 +7,15 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log("req.body", req.body);
-
-  const session = await getSession(req, res);
-
-  if (!session || typeof session !== "object" || !("user" in session)) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  const user = session.user;
 
   if (req.method === "POST") {
+    const session = await getSession(req, res);
+
+    if (!session || typeof session !== "object" || !("user" in session)) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const user = session.user;
     try {
       const productData = req.body;
       console.log("req.body", req.body);
@@ -59,6 +57,7 @@ export default async function handler(
   } else if (req.method === "GET") {
     try {
       await connectToDatabase();
+      console.log("Connected to db");
 
       const products = await Product.find({});
       return res.status(200).json(products);

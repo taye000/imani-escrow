@@ -5,13 +5,15 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Title from './Title';
+import { Box, createTheme, ThemeProvider } from '@mui/material';
+import useSWR from 'swr';
 import styled from 'styled-components';
-import { createTheme, ThemeProvider } from '@mui/material';
+import Title from './Title';
 import getLPTheme from '@/getLPTheme';
 import { useThemeContext } from '@/context/ThemeContext';
 import OrderDetailModal from './OrderDetailModal';
 import { Product } from '@/pages/marketplace';
+import Loading from '@/loading';
 
 const StyledTableRow = styled(TableRow)`
   margin-bottom: 16px;
@@ -32,17 +34,22 @@ function preventDefault(event: React.MouseEvent) {
     event.preventDefault();
 }
 
+const CenteredBox = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+`;
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export default function Orders() {
-    const { mode, toggleColorMode } = useThemeContext();
-    const [showCustomTheme, setShowCustomTheme] = React.useState(true);
-    const LPtheme = createTheme(getLPTheme(mode));
+    const { mode } = useThemeContext();
     const defaultTheme = createTheme({ palette: { mode } });
     const [selectedOrder, setSelectedOrder] = React.useState<Product | null>(null);
-    const [products, setProducts] = React.useState<Product[]>([]);
-    const [loading, setLoading] = React.useState(true);
-
-    const [open, setOpen] = React.useState(false);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+    const { data: products, error } = useSWR<Product[]>('/api/product/user', fetcher);
 
     const handleOpenModal = (productData: Product) => {
         setIsModalOpen(true);
@@ -59,32 +66,20 @@ export default function Orders() {
         handleCloseModal();
     };
 
-    const toggleCustomTheme = () => {
-        setShowCustomTheme((prev) => !prev);
-    };
+    if (error) {
+        return (
+            <CenteredBox>
+                <div>Error loading user products</div>
+            </CenteredBox>
+        );
+    }
 
-    React.useEffect(() => {
-        const fetchUserProducts = async () => {
-            try {
-                const response = await fetch('/api/product/user');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch user products');
-                }
-                const data: Product[] = await response.json();
-                setProducts(data);
-                console.log('Fetched user products:', data);
-            } catch (error) {
-                console.error('Error fetching user products:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchUserProducts();
-    }, []);
-
-    if (loading) {
-        return <div>Loading...</div>;
+    if (!products) {
+        return (
+            <CenteredBox>
+                <Loading />
+            </CenteredBox>
+        );
     }
 
     return (

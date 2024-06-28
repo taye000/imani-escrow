@@ -12,7 +12,7 @@ const Loading = () => {
             width="1em"
             className="animate-ping"
           >
-            <path d="/imanilogo.png"></path>
+            <img src="/imanilogo.png" alt="Loading..." className="w-8 h-8 animate-spin" />
           </svg>
         </div>
       </div>
