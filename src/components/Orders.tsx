@@ -12,7 +12,7 @@ import Title from './Title';
 import { useThemeContext } from '@/context/ThemeContext';
 import OrderDetailModal from './OrderDetailModal';
 import { Product } from '@/pages/marketplace';
-import Loading from '@/loading';
+import OrderSkeleton from './orderskeleton';
 
 const StyledTableRow = styled(TableRow)`
   margin-bottom: 16px;
@@ -29,10 +29,6 @@ const StyledTableRow = styled(TableRow)`
   }
 `;
 
-function preventDefault(event: React.MouseEvent) {
-    event.preventDefault();
-}
-
 const CenteredBox = styled(Box)`
   display: flex;
   justify-content: center;
@@ -40,6 +36,10 @@ const CenteredBox = styled(Box)`
   flex-direction: column;
   height: 60vh;
 `;
+
+function preventDefault(event: React.MouseEvent) {
+    event.preventDefault();
+}
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -74,35 +74,35 @@ export default function Orders() {
         );
     }
 
-    if (!products) {
-        return <Loading />;
-    }
-
     return (
         <ThemeProvider theme={defaultTheme}>
             <Title>Recent Orders</Title>
-            <Table size="small">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Date</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Address</TableCell>
-                        <TableCell>Payment Method</TableCell>
-                        <TableCell align="right">Sale Amount</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {products.map((order) => (
-                        <StyledTableRow key={order.id} onClick={() => handleOpenModal(order)}>
-                            <TableCell>{order.createdAt}</TableCell>
-                            <TableCell>{order.productName}</TableCell>
-                            <TableCell>{order.address}</TableCell>
-                            <TableCell>{order.paymentMethod}</TableCell>
-                            <TableCell align="right">{`$${order.price}`}</TableCell>
-                        </StyledTableRow>
-                    ))}
-                </TableBody>
-            </Table>
+            {!products ? (
+                <OrderSkeleton />
+            ) : (
+                <Table size="small">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Date</TableCell>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Address</TableCell>
+                            <TableCell>Payment Method</TableCell>
+                            <TableCell align="right">Sale Amount</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {products.map((order) => (
+                            <StyledTableRow key={order.id} onClick={() => handleOpenModal(order)}>
+                                <TableCell>{order.createdAt}</TableCell>
+                                <TableCell>{order.productName}</TableCell>
+                                <TableCell>{order.address}</TableCell>
+                                <TableCell>{order.paymentMethod}</TableCell>
+                                <TableCell align="right">{`$${order.price}`}</TableCell>
+                            </StyledTableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            )}
             <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
                 See more orders
             </Link>

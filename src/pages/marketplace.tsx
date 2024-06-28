@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import useSWR from 'swr';
 import { Grid, Container } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,7 +11,7 @@ import getLPTheme from '@/getLPTheme';
 import ProductCard from '@/components/ProductCard';
 import styled from 'styled-components';
 import { useThemeContext } from '@/context/ThemeContext';
-import Loading from '@/loading';
+import ProductCardSkeleton from '@/components/productcardskeleton';
 
 export interface Product {
     image: string;
@@ -97,7 +97,13 @@ export default function Marketplace() {
                                         Error loading products
                                     </div>
                                 ) : !products ? (
-                                    <Loading />
+                                    <Grid container justifyContent="center">
+                                        {Array.from(new Array(8)).map((_, index) => (
+                                            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                                                <ProductCardSkeleton />
+                                            </Grid>
+                                        ))}
+                                    </Grid>
                                 ) : (
                                     <Grid container justifyContent="center">
                                         {products.map((product) => (
@@ -114,7 +120,6 @@ export default function Marketplace() {
                     <Footer />
                 </Box>
             </Container>
-            <ToggleCustomTheme showCustomTheme={true} toggleCustomTheme={() => { }} />
         </ThemeProvider>
     );
 }
