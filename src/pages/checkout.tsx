@@ -13,16 +13,12 @@ import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import styled from 'styled-components';
-import { ICartItem } from '@/models/cart';
+import { ICart, ICartItem } from '@/models/cart';
 import { Types } from 'mongoose';
 import toast from 'react-hot-toast';
 import withAuth from '@/components/withAuth';
-
-const sampleCart = {
-    userId: new Types.ObjectId(), // Replace with an actual ObjectId if available
-    // items: productData,
-    totalAmount: "1000"
-};
+import useSWR from 'swr';
+import Loading from '@/loading';
 
 const ProductCardContainer = styled.div`
   display: flex;
@@ -128,13 +124,14 @@ const updateCart = async (cartItems: ICartItem[]) => {
     }
 };
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 function Checkout() {
     const { mode, toggleColorMode } = useThemeContext();
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
     const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState('card');
-    const [cartItems, setCartItems] = React.useState<ICartItem[]>([]);
     const [mpesaPhoneNumber, setMpesaPhoneNumber] = React.useState('');
     const [cardDetailsFilled, setCardDetailsFilled] = React.useState(false);
     const [cardDetails, setCardDetails] = React.useState<CardDetails>({
@@ -144,26 +141,31 @@ function Checkout() {
         cvc: '',
     });
 
-    // React.useEffect(() => {
-    //     // Initialize cart items from product data or fetch from backend if necessary
-    //     const initialCartItems = sampleCart.items.map(product => ({
-    //         productId: new Types.ObjectId(product.id),
-    //         quantity: 1, // Default quantity
-    //     }));
-    //     setCartItems(initialCartItems);
-    // }, []);
+    const { data: cart, isLoading, error } = useSWR<ICart[]>('/api/cart', fetcher);
 
-    const handleUpdateCart = (productId: string, quantity: number) => {
-        setCartItems(prevItems => {
-            const updatedItems = prevItems.map(item =>
-                item.productId.toString() === productId
-                    ? { ...item, quantity }
-                    : item
-            ).filter(item => item.quantity > 0); // Remove items with 0 quantity
-            updateCart(updatedItems);
-            return updatedItems;
-        });
-    };
+    if (isLoading) {
+        return <Loading />
+    } else if (error) {
+        return <div>Error Fetching the Data</div>
+    }
+
+    if (!cart) {
+        return <div>No Data</div>
+    }
+
+    console.log("checkout data", cart)
+
+    // const handleUpdateCart = (productId: string, quantity: number) => {
+    //     setCart(prevItems => {
+    //         const updatedItems = prevItems.map(item =>
+    //             item.productId.toString() === productId
+    //                 ? { ...item, quantity }
+    //                 : item
+    //         ).filter(item => item.quantity > 0); // Remove items with 0 quantity
+    //         updateCart(updatedItems);
+    //         return updatedItems;
+    //     });
+    // };
 
     const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedPaymentMethod(event.target.value);
@@ -190,19 +192,19 @@ function Checkout() {
     };
 
 
-    const handlePayNow = () => {
-        if (cartItems.length === 0) {
-            toast.error("Please add products to your cart before proceeding.");
-        } else if (selectedPaymentMethod === 'mpesa' && !mpesaPhoneNumber) {
-            toast.error("Please enter your M-pesa phone number.");
-        } else if (selectedPaymentMethod === 'card' && !cardDetailsFilled) {
-            toast.error("Please fill in your card details.");
-        } else {
-            // Proceed with payment logic
-            console.log("Payment processed successfully!");
-            toast.success("Payment processed successfully!");
-        }
-    };
+    // const handlePayNow = () => {
+    //     if (cart.length === 0) {
+    //         toast.error("Please add products to your cart before proceeding.");
+    //     } else if (selectedPaymentMethod === 'mpesa' && !mpesaPhoneNumber) {
+    //         toast.error("Please enter your M-pesa phone number.");
+    //     } else if (selectedPaymentMethod === 'card' && !cardDetailsFilled) {
+    //         toast.error("Please fill in your card details.");
+    //     } else {
+    //         // Proceed with payment logic
+    //         console.log("Payment processed successfully!");
+    //         toast.success("Payment processed successfully!");
+    //     }
+    // };
 
     const toggleCustomTheme = () => {
         setShowCustomTheme((prev) => !prev);
@@ -216,29 +218,32 @@ function Checkout() {
                 <Box sx={{ bgcolor: 'background.default', p: 4, pt: 12 }}>
                     <CheckoutContainer>
                         <Grid container spacing={3}>
-                            <Grid item xs={12} md={6}>
+                            {/* <Grid item xs={12} md={6}>
                                 <SectionTitle variant="h6">Check out</SectionTitle>
-                                {/* {productData.map((product) => (
-                                    <ProductCardContainer key={product.id}>
-                                        <ProductImage image={product.image} />
-                                        <ProductDetails>
-                                            <TitlePriceContainer>
-                                                <Typography variant="body1">{product.productName}</Typography>
-                                                <Typography variant="body1">{product.price}</Typography>
-                                            </TitlePriceContainer>
-                                            <Typography variant="body2">{product.description}</Typography>
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <IconButton onClick={() => handleUpdateCart(product.id, 0)} color="secondary">
+                                {cart.map((cartObj: ICart) => (
+                                    cartObj.items.map((cartItem: ICartItem) => (
+                                        <ProductCardContainer key={cartItem.id}>
+                                            <ProductImage image={cartItem.productId.additionalImages[0] || '/default-image.jpg'} />
+                                            <ProductDetails>
+                                                <TitlePriceContainer>
+                                                    <Typography variant="body1">{cartItem.productId.productName}</Typography>
+                                                    <Typography variant="body1">{cartItem.productId.price} {cartItem.productId.currency}</Typography>
+                                                </TitlePriceContainer>
+                                                <Typography variant="body2">{cartItem.productId.description}</Typography>
+                                                <Typography variant="body2">Quantity: {cartItem.quantity}</Typography>
+                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                <IconButton onClick={() => handleUpdateCart(cartItem.id, 0)} color="secondary">
                                                     <RemoveIcon />
                                                 </IconButton>
-                                                <IconButton onClick={() => handleUpdateCart(product.id, 1)} color="primary">
+                                                <IconButton onClick={() => handleUpdateCart(cartItem.id, 1)} color="primary">
                                                     <AddIcon />
                                                 </IconButton>
                                             </Box>
-                                        </ProductDetails>
-                                    </ProductCardContainer>
-                                ))} */}
-                            </Grid>
+                                            </ProductDetails>
+                                        </ProductCardContainer>
+                                    ))
+                                ))}
+                            </Grid> */}
 
                             <Grid item xs={12} md={6}>
                                 <SectionTitle variant="h6">Payment method</SectionTitle>
@@ -292,10 +297,10 @@ function Checkout() {
                                 <SectionTitle variant="h6" sx={{ mt: 3 }}>Order Details</SectionTitle>
                                 <OrderSummaryItem>
                                     <Typography variant="body2">Subtotal</Typography>
-                                    <Typography variant="body2">${sampleCart.totalAmount}</Typography>
+                                    {/* <Typography variant="body2">${cart.totalAmount}</Typography> */}
                                 </OrderSummaryItem>
 
-                                <Button variant="contained" fullWidth sx={{ mt: 2 }} onClick={handlePayNow}>Pay now</Button>
+                                {/* <Button variant="contained" fullWidth sx={{ mt: 2 }} onClick={handlePayNow}>Pay now</Button> */}
                             </Grid>
                         </Grid>
                     </CheckoutContainer>

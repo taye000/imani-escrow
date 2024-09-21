@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { connectToDatabase } from "../../utils/db";
 import Cart from "@/models/cart";
 import { Types } from "mongoose";
+import { connectToDatabase } from "@/utils/db";
 // import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(

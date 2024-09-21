@@ -19,7 +19,6 @@ const style = {
     p: 4,
 };
 
-
 interface AddProductModalProps {
     open: boolean;
     handleClose: () => void;
@@ -49,7 +48,6 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
             transactionType,
             currency,
         };
-        console.log(productData);
 
         try {
             const response = await fetch("api/product", {
@@ -64,11 +62,9 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            onSubmit(data); // Trigger the parent component callback with the new product data
+            onSubmit(data);
             toast.success(`${data.productName} added successfully`);
-
             handleClose();
-
         } catch (error) {
             console.error("There was a problem submitting the form:", error);
             toast.error("There was a problem submitting the form");
@@ -77,83 +73,80 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
         }
     };
 
-
     return (
-        <div>
-            <Modal open={open} onClose={handleClose}>
-                <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Add Product
-                    </Typography>
-                    <form onSubmit={handleSubmit}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    label="Product Name"
-                                    value={productName}
-                                    name="productName"
-                                    onChange={(e) => setProductName(e.target.value)}
-                                    margin="normal"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    label="Category"
-                                    value={category}
-                                    name="category"
-                                    onChange={(e) => setCategory(e.target.value)}
-                                    margin="normal"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    label="Price"
-                                    value={price}
-                                    name="price"
-                                    onChange={(e) => setPrice(e.target.value)}
-                                    margin="normal"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    label="Payment Method"
-                                    value={paymentMethod}
-                                    name="paymentMethod"
-                                    onChange={(e) => setPaymentMethod(e.target.value)}
-                                    margin="normal"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    label="Description"
-                                    value={description}
-                                    name="description"
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    margin="normal"
-                                    multiline
-                                    rows={4}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sx={{ textAlign: 'center' }}>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    disabled={isLoading}
-                                    endIcon={isLoading && <CircularProgress size={20} />}
-                                >
-                                    Add Product
-                                </Button>
-                            </Grid>
+        <Modal open={open} onClose={handleClose}>
+            <Box sx={style}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                    Add Product
+                </Typography>
+                <form onSubmit={handleSubmit}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                label="Product Name"
+                                value={productName}
+                                name="productName"
+                                onChange={(e) => setProductName(e.target.value)}
+                                margin="normal"
+                            />
                         </Grid>
-                    </form>
-                </Box>
-            </Modal>
-        </div>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                label="Category"
+                                value={category}
+                                name="category"
+                                onChange={(e) => setCategory(e.target.value)}
+                                margin="normal"
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                label="Price"
+                                value={price}
+                                name="price"
+                                onChange={(e) => setPrice(e.target.value)}
+                                margin="normal"
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                label="Payment Method"
+                                value={paymentMethod}
+                                name="paymentMethod"
+                                onChange={(e) => setPaymentMethod(e.target.value)}
+                                margin="normal"
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                label="Description"
+                                value={description}
+                                name="description"
+                                onChange={(e) => setDescription(e.target.value)}
+                                margin="normal"
+                                multiline
+                                rows={4}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sx={{ textAlign: 'center' }}>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                                disabled={isLoading}
+                                endIcon={isLoading && <CircularProgress size={20} />}
+                            >
+                                Add Product
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </form>
+            </Box>
+        </Modal>
     );
 }

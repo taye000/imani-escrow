@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { connectToDatabase } from "../../utils/db";
+import { connectToDatabase } from "../../../utils/db";
 import Product from "@/models/product";
 import Cart from "@/models/cart";
 import { getSession } from "@auth0/nextjs-auth0";
@@ -17,6 +17,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const session = await getSession(req, res);
+
   if (!session || typeof session !== "object" || !("user" in session)) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -25,7 +26,7 @@ export default async function handler(
   const user = session.user;
   const userId = user.sub;
   console.log("userId", userId);
-  console.log("user", user);
+
   if (!user) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -40,6 +41,13 @@ export default async function handler(
         return res.status(400).json({ message: "Missing productId" });
       }
 
+      const payload = {
+        userId: user.sub,
+        productId,
+        quantity,
+      };
+      console.log("payload", payload);
+
       try {
         // Get the database connection
         await connectToDatabase();
@@ -49,10 +57,7 @@ export default async function handler(
           auth0Id: userId,
         });
         if (!cart) {
-          cart = new Cart({
-            auth0Id: userId,
-            items: [],
-          });
+          cart = new Cart(payload);
         }
         // Update or Add Item
         const existingItemIndex = cart.items.findIndex(

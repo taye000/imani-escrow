@@ -7,7 +7,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-
   if (req.method === "POST") {
     const session = await getSession(req, res);
 
@@ -16,6 +15,12 @@ export default async function handler(
     }
 
     const user = session.user;
+    const userId = user.sub;
+    console.log("userId", userId);
+
+    if (!user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
     try {
       const productData = req.body;
       console.log("req.body", req.body);
@@ -61,9 +66,11 @@ export default async function handler(
 
       const products = await Product.find({});
       return res.status(200).json(products);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      return res.status(500).json({ message: "Failed to fetch products" });
+    } catch (error: any) {
+      console.error("Error fetching products:", error.message);
+      return res
+        .status(500)
+        .json({ message: "Failed to fetch products", error: error.message });
     }
   } else {
     return res.status(405).end();

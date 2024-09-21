@@ -9,7 +9,7 @@ export interface ICartItem {
 
 // Interface for Cart
 export interface ICart {
-  userId: Types.ObjectId | string;
+  userId: string;
   items: ICartItem[];
   totalAmount: number;
 }
@@ -17,7 +17,7 @@ export interface ICart {
 const cartSchema = new Schema<ICart>(
   {
     userId: {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: "User",
       required: true,
     },
@@ -45,23 +45,21 @@ const cartSchema = new Schema<ICart>(
   }
 );
 
-// Virtual to calculate total amount (optional)
-cartSchema
-  .virtual("totalAmount")
-  .get(function (this: ICart, cb: (err: any, total: number) => void) {
-    const total = this.items.reduce(async (totalPromise, item) => {
-      const total = await totalPromise; // Get the current total from the previous async operation
-      const product: IProduct | null = await Product.findById(item.productId);
+// Virtual to calculate total amount
+cartSchema.virtual("totalAmount").get(async function (this: ICart) {
+  const total = await this.items.reduce(async (totalPromise, item) => {
+    const total = await totalPromise;
+    const product: IProduct | null = await Product.findById(item.productId);
 
-      if (!product) {
-        throw new Error("Product not found");
-      }
+    if (!product) {
+      throw new Error("Product not found");
+    }
 
-      return total + Number(product.price) * item.quantity;
-    }, Promise.resolve(0)); // Start the reduce function with a promise resolving to 0
+    return total + Number(product.price) * item.quantity;
+  }, Promise.resolve(0));
 
-    total.then((result) => cb(null, result)).catch((error) => cb(error, 0));
-  });
+  return total;
+});
 
 export const Cart: Model<ICart> =
   models.Cart || model<ICart>("Cart", cartSchema);

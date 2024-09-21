@@ -117,7 +117,7 @@ function ProductCard({ product }: ProductCardProps) {
 
   const handleAddtoCart = async () => {
     try {
-      const response = await fetch('/api/add-to-cart', {
+      const response = await fetch('/api/cart/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
