@@ -173,7 +173,7 @@ function ProductDetail({ product, onBack }: ProductDetailProps) {
 
     const handleAddtoCart = async () => {
         try {
-            const response = await fetch('/api/add-to-cart', {
+            const response = await fetch('/api/cart/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -209,21 +209,21 @@ function ProductDetail({ product, onBack }: ProductDetailProps) {
                             <Grid item xs={12} md={6}>
                                 {" "}
                                 <ImageContainer>
-                                    <MainImage src={`/${selectedImage}`} alt={product.productName} />
+                                    <MainImage
+                                        src={`/${selectedImage || (product.image ? product.image : 'iphone11.jpg')}`}
+                                        alt={product.productName}
+                                    />
                                     <ThumbnailsContainer>
-                                        {[product.image, ...product.additionalImages].map(
-                                            (img, index) => (
-                                                <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
-                                                    <Thumbnail
-                                                        key={index}
-                                                        src={`/${img}`}
-                                                        alt={`thumbnail-${index}`}
-                                                        onClick={() => handleThumbnailClick(img)}
-                                                        selected={img === selectedImage}
-                                                    />
-                                                </ThemeProvider>
-                                            )
-                                        )}
+                                        {[(product.image || 'iphone11.jpg'), ...product.additionalImages].map((img, index) => (
+                                            <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme} key={index}>
+                                                <Thumbnail
+                                                    src={`/${img || 'iphone11.jpg'}`}
+                                                    alt={`thumbnail-${index}`}
+                                                    onClick={() => handleThumbnailClick(img || 'iphone11.jpg')}
+                                                    selected={img === selectedImage}
+                                                />
+                                            </ThemeProvider>
+                                        ))}
                                     </ThumbnailsContainer>
                                 </ImageContainer>
                             </Grid>
@@ -231,14 +231,14 @@ function ProductDetail({ product, onBack }: ProductDetailProps) {
                                 <ProductDetailsContainer>
                                     <DetailsContent>
                                         <Title variant="h4">{product.productName}</Title>
-                                        <Title variant="h6">{product.category}</Title>
+                                        <Title variant="h6">Category: {product.category}</Title>
                                         <PriceSizeContainer>
-                                            <PriceTag variant="h6">${product.price}</PriceTag>
+                                            <PriceTag variant="h6">Price: ${product.price}</PriceTag>
                                             <Typography variant="subtitle1" color="white">
                                                 Size: {product.size}
                                             </Typography>
                                         </PriceSizeContainer>
-                                        <Description variant="body1">{product.description}</Description>
+                                        <Description variant="body1">Description: {product.description}</Description>
                                         <Divider />
                                         <Grid container spacing={2}>
                                             <Grid item xs={12}>
