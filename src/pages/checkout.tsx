@@ -171,13 +171,16 @@ function Checkout() {
         return <div>No Data</div>
     }
 
-    const handleUpdateCart = (productId: string, quantity: number) => {
+    const handleUpdateCart = (productId: string, change: number) => {
         setCartItems(prevItems => {
-            const updatedItems = prevItems.map(item =>
-                item.productId.toString() === productId
-                    ? { ...item, quantity }
-                    : item
-            ).filter(item => item.quantity > 0); // Remove items with 0 quantity
+            const updatedItems = prevItems.map(item => {
+                if (item.productId.toString() === productId) {
+                    const newQuantity = item.quantity + change;
+                    return { ...item, quantity: Math.max(newQuantity, 0) }; // Prevent negative quantity
+                }
+                return item;
+            }).filter(item => item.quantity > 0); // Remove items with 0 quantity
+
             updateCart(updatedItems);
             return updatedItems;
         });
@@ -247,13 +250,15 @@ function Checkout() {
                                             <Typography variant="body2">Description: {cartItem.productId.description}</Typography>
                                             <Typography variant="body2">Quantity: {cartItem.quantity}</Typography>
                                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <IconButton onClick={() => handleUpdateCart(cartItem.id, 0)} color="secondary">
+                                                <IconButton onClick={() => handleUpdateCart(cartItem.productId.toString(), -1)} color="secondary">
                                                     <RemoveIcon />
                                                 </IconButton>
-                                                <IconButton onClick={() => handleUpdateCart(cartItem.id, 1)} color="primary">
+                                                <Typography variant="body2">{cartItem.quantity}</Typography> {/* Display current quantity */}
+                                                <IconButton onClick={() => handleUpdateCart(cartItem.productId.toString(), 1)} color="primary">
                                                     <AddIcon />
                                                 </IconButton>
                                             </Box>
+
                                         </ProductDetails>
                                     </ProductCardContainer>
                                 ))}
