@@ -1,16 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../utils/db";
-import Product from "@/models/product";
 import Cart from "@/models/cart";
 import { getSession } from "@auth0/nextjs-auth0";
-
-interface ProductData {
-  productName: string;
-  price: string;
-  paymentMethod: string;
-  description: string;
-  // Add more fields here as needed (e.g., image, additionalImages)
-}
 
 export default async function handler(
   req: NextApiRequest,

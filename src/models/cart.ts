@@ -8,10 +8,11 @@ export interface ICartItem {
 }
 
 // Interface for Cart
-export interface ICart {
+export interface ICart extends Document {
   userId: string;
   items: ICartItem[];
   totalAmount: number;
+  calculateTotalAmount: () => Promise<number>;
 }
 
 const cartSchema = new Schema<ICart>(
@@ -31,6 +32,7 @@ const cartSchema = new Schema<ICart>(
         quantity: { type: Number, required: true, default: 1 },
       },
     ],
+    totalAmount: { type: Number, default: 0 },
   },
   {
     toJSON: {
@@ -45,20 +47,31 @@ const cartSchema = new Schema<ICart>(
   }
 );
 
-// Virtual to calculate total amount
-cartSchema.virtual("totalAmount").get(async function (this: ICart) {
-  const total = await this.items.reduce(async (totalPromise, item) => {
-    const total = await totalPromise;
-    const product: IProduct | null = await Product.findById(item.productId);
+// Method to calculate total amount
+cartSchema.methods.calculateTotalAmount = async function (): Promise<number> {
+  const total = await this.items.reduce(
+    async (totalPromise: any, item: any) => {
+      const total = await totalPromise;
+      const product: IProduct | null = await Product.findById(item.productId);
 
-    if (!product) {
-      throw new Error("Product not found");
-    }
+      if (!product) {
+        throw new Error("Product not found");
+      }
 
-    return total + Number(product.price) * item.quantity;
-  }, Promise.resolve(0));
+      return total + Number(product.price) * item.quantity;
+    },
+    Promise.resolve(0)
+  );
 
+  this.totalAmount = total; // Store the total amount in the field
   return total;
+};
+
+// Pre-save middleware to calculate total before saving
+cartSchema.pre("save", async function (next) {
+  const cart = this as ICart;
+  cart.totalAmount = await cart.calculateTotalAmount(); // Automatically set totalAmount before saving
+  next();
 });
 
 export const Cart: Model<ICart> =

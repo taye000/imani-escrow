@@ -2,23 +2,23 @@ import { NextApiRequest, NextApiResponse } from "next";
 import Cart from "@/models/cart";
 import { Types } from "mongoose";
 import { connectToDatabase } from "@/utils/db";
-// import { getSession } from "@auth0/nextjs-auth0";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // const session = await getSession();
-  // if (!session || typeof session !== "object" || !("user" in session)) {
-  //   return res.status(401).json({ message: "Unauthorized" });
-  // }
+  const session = await getSession();
+  if (!session || typeof session !== "object" || !("user" in session)) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
-  // const user = session.user;
-  const userId = "sampleUserId"; // Replace with dynamic user ID from session
-  // console.log("user", user);
-  // if (!user) {
-  //   return res.status(401).json({ message: "Unauthorized" });
-  // }
+  const user = session.user;
+  const userId = user.sub;
+  console.log("user", user);
+  if (!user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
   if (req.method === "POST") {
     try {
