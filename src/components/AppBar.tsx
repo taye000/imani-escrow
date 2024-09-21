@@ -15,6 +15,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Link from 'next/link';
 import router from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import Loading from '@/loading';
 
 const activeStyle = {
     fontWeight: 'bold',
@@ -28,6 +29,9 @@ interface AppAppBarProps {
 
 function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
     const { user, isLoading, error } = useUser();
+
+    if (isLoading) return <Loading />;
+    if (error) return <div>{error.message}</div>;
 
     const [open, setOpen] = React.useState(false);
 
@@ -169,11 +173,16 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                 </Button>
                             ) : (
                                 <>
-                                    <Link href="/profile">
-                                        <Typography variant="body2" color="text.primary">
-                                            {user.name}
-                                        </Typography>
-                                    </Link>
+                                    <MenuItem
+                                        onClick={() => scrollToSection('faq')}
+                                        sx={{ py: '6px', px: '12px' }}
+                                    >
+                                        <Link href="/profile">
+                                            <Typography variant="body2" color="text.primary">
+                                                {user.name}
+                                            </Typography>
+                                        </Link>
+                                    </MenuItem>
                                     <Box sx={{ marginLeft: '10px' }}>
                                         <Button
                                             color="primary"
