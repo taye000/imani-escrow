@@ -13,7 +13,6 @@ import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import styled from 'styled-components';
-import { productData } from './marketplace';
 import { ICartItem } from '@/models/cart';
 import { Types } from 'mongoose';
 import toast from 'react-hot-toast';
@@ -21,7 +20,7 @@ import withAuth from '@/components/withAuth';
 
 const sampleCart = {
     userId: new Types.ObjectId(), // Replace with an actual ObjectId if available
-    items: productData,
+    // items: productData,
     totalAmount: "1000"
 };
 
@@ -145,14 +144,14 @@ function Checkout() {
         cvc: '',
     });
 
-    React.useEffect(() => {
-        // Initialize cart items from product data or fetch from backend if necessary
-        const initialCartItems = sampleCart.items.map(product => ({
-            productId: new Types.ObjectId(product.id),
-            quantity: 1, // Default quantity
-        }));
-        setCartItems(initialCartItems);
-    }, []);
+    // React.useEffect(() => {
+    //     // Initialize cart items from product data or fetch from backend if necessary
+    //     const initialCartItems = sampleCart.items.map(product => ({
+    //         productId: new Types.ObjectId(product.id),
+    //         quantity: 1, // Default quantity
+    //     }));
+    //     setCartItems(initialCartItems);
+    // }, []);
 
     const handleUpdateCart = (productId: string, quantity: number) => {
         setCartItems(prevItems => {
@@ -219,7 +218,7 @@ function Checkout() {
                         <Grid container spacing={3}>
                             <Grid item xs={12} md={6}>
                                 <SectionTitle variant="h6">Check out</SectionTitle>
-                                {productData.map((product) => (
+                                {/* {productData.map((product) => (
                                     <ProductCardContainer key={product.id}>
                                         <ProductImage image={product.image} />
                                         <ProductDetails>
@@ -238,7 +237,7 @@ function Checkout() {
                                             </Box>
                                         </ProductDetails>
                                     </ProductCardContainer>
-                                ))}
+                                ))} */}
                             </Grid>
 
                             <Grid item xs={12} md={6}>

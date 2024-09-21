@@ -1,4 +1,4 @@
-import { Schema, model, Model } from "mongoose";
+import { Schema, model, Model, models } from "mongoose";
 
 export interface IUser extends Document {
   _id: Schema.Types.ObjectId;
@@ -67,6 +67,7 @@ userSchema.statics.build = (attr: IUser) => {
   return new User(attr);
 };
 
-const User = model<IUser, UserModel>("User", userSchema);
+export const User: Model<IUser> =
+  models.User || model<IUser, UserModel>("User", userSchema);
 
 export default User;

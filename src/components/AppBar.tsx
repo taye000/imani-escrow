@@ -109,15 +109,15 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                                         </Typography>
                                     </Link>
                                 </MenuItem>
-                                <MenuItem
-                                    sx={{ py: '6px', px: '12px' }}
-                                >
-                                    <Link href="/dashboard">
-                                        <Typography variant="body2" color="text.primary">
-                                            Dashboard
-                                        </Typography>
-                                    </Link>
-                                </MenuItem>
+                                {user && (
+                                    <MenuItem sx={{ py: '6px', px: '12px' }}>
+                                        <Link href="/dashboard">
+                                            <Typography variant="body2" color="text.primary">
+                                                Dashboard
+                                            </Typography>
+                                        </Link>
+                                    </MenuItem>
+                                )}
                                 <MenuItem
                                     onClick={() => scrollToSection('highlights')}
                                     sx={{ py: '6px', px: '12px' }}

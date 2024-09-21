@@ -1,18 +1,23 @@
-import * as React from 'react';
-import { CircularProgress, Box } from '@mui/material';
-import styled from 'styled-components';
+import { ClipLoader } from "react-spinners";
+import styled from "styled-components";
+import { useThemeContext } from "./context/ThemeContext";
 
-const CenteredBox = styled(Box)`
+const LoadingContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  height: 100vh;
 `;
 
-const Loading = () => (
-  <CenteredBox>
-    <CircularProgress style={{ color: 'blue' }} />
-  </CenteredBox>
-);
+const Loading = () => {
+  const { mode } = useThemeContext();
+  const spinnerColor = mode === "light" ? "#000" : "#fff";
+
+  return (
+    <LoadingContainer>
+      <ClipLoader color={spinnerColor} size={50} />
+    </LoadingContainer>
+  );
+};
 
 export default Loading;

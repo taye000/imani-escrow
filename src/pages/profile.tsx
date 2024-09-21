@@ -14,6 +14,7 @@ import { useThemeContext } from '@/context/ThemeContext';
 import EditProfileModal from '@/components/EditProfileModal';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import withAuth from '@/components/withAuth';
+import Loading from '@/loading';
 
 interface ToggleCustomThemeProps {
     showCustomTheme: Boolean;
@@ -98,7 +99,7 @@ const handleEditProfile = () => {
 function Profile() {
     const { user, isLoading, error } = useUser();
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <Loading />;
     if (error) return <div>{error.message}</div>;
     if (!user) return <div>Please sign in to view your profile.</div>;
 

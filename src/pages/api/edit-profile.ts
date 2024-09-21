@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../utils/db";
-import { sampleUser } from "../profile";
 import User from "@/models/user";
 // import { getSession } from "@auth0/nextjs-auth0";
 

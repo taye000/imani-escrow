@@ -1,4 +1,4 @@
-import { Model, model, Schema, Types } from "mongoose";
+import { Model, model, Schema, Types, models } from "mongoose";
 import Product, { IProduct } from "./product";
 
 // Interface for Cart Items
@@ -63,5 +63,7 @@ cartSchema
     total.then((result) => cb(null, result)).catch((error) => cb(error, 0));
   });
 
-export const Cart: Model<ICart> = model<ICart>("Cart", cartSchema);
+export const Cart: Model<ICart> =
+  models.Cart || model<ICart>("Cart", cartSchema);
+
 export default Cart;

@@ -1,4 +1,4 @@
-import { Model, model, Schema } from "mongoose";
+import { Model, model, Schema, models } from "mongoose";
 
 export interface IProduct {
   _id: Schema.Types.ObjectId;
@@ -44,8 +44,7 @@ const productSchema = new Schema<IProduct>(
   }
 );
 
-export const Product: Model<IProduct> = model<IProduct>(
-  "Product",
-  productSchema
-);
+export const Product: Model<IProduct> =
+  models.Product || model<IProduct>("Product", productSchema);
+
 export default Product;
