@@ -8,7 +8,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await getSession();
+  const session = await getSession(req, res);
   if (!session || typeof session !== "object" || !("user" in session)) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -60,26 +60,18 @@ export default async function handler(
       // Save the updated cart
       const updatedCart = await cart.save();
 
-      // Calculate the total amount using the model's virtual field
-      updatedCart.totalAmount = await new Promise<number>((resolve, reject) => {
-        updatedCart.populate(
-          "items.productId",
-          (
-            err: any,
-            populatedCart: { totalAmount: number | PromiseLike<number> }
-          ) => {
-            if (err) return reject(err);
-            resolve(populatedCart.totalAmount);
-          }
-        );
-      });
+      // Calculate the total amount
+      await updatedCart.populate("items.productId");
+      updatedCart.totalAmount = await updatedCart.calculateTotalAmount();
 
       return res
         .status(200)
         .json({ message: "Cart updated successfully", data: updatedCart });
-    } catch (error) {
-      console.error("Error updating cart:", error);
-      return res.status(500).json({ message: "Failed to update cart" });
+    } catch (error: any) {
+      console.error("Error updating cart:", error.message);
+      return res
+        .status(500)
+        .json({ message: "Failed to update cart", error: error.message });
     }
   } else {
     return res.status(405).end(); // Method Not Allowed

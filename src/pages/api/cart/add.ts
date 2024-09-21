@@ -77,9 +77,11 @@ export default async function handler(
         console.error("Error saving product:", error);
         return res.status(500).json({ message: "Failed to add product" });
       }
-    } catch (error) {
-      console.error("Error adding product:", error);
-      return res.status(500).json({ message: "Error adding product" });
+    } catch (error: any) {
+      console.error("Error adding product:", error.message);
+      return res
+        .status(500)
+        .json({ message: "Error adding product", error: error.message });
     }
   } else {
     return res.status(405).end();
