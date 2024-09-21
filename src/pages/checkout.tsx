@@ -238,7 +238,7 @@ function Checkout() {
                                 <SectionTitle variant="h6">Check out</SectionTitle>
                                 {cartItems.map((cartItem: any) => (
                                     <ProductCardContainer key={cartItem.id}>
-                                        <ProductImage image={cartItem.productId.additionalImages[0] || '/iphone11.png'} />
+                                        <ProductImage image={cartItem.productId.additionalImages[0] || 'iphone11.jpg'} />
                                         <ProductDetails>
                                             <TitlePriceContainer>
                                                 <Typography variant="body1">Item: {cartItem.productId.productName}</Typography>
