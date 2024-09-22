@@ -123,6 +123,7 @@ function Checkout() {
 
     const handleRemoveItem = (productId: string) => {
         removeItem(productId);
+        console.log("Removing item from cart", productId);
     };
 
     const { mode, toggleColorMode } = useThemeContext();
@@ -210,7 +211,7 @@ function Checkout() {
                                                 <IconButton onClick={() => handleUpdateCart(cartItem.productId.toString(), 1)} color="primary">
                                                     <AddIcon />
                                                 </IconButton>
-                                                <IconButton onClick={() => handleRemoveItem(cartItem.productId.toString())} color="secondary">
+                                                <IconButton onClick={() => handleRemoveItem(cartItem.id.toString())} color="secondary">
                                                     <DeleteOutlineIcon />
                                                 </IconButton>
                                             </Box>

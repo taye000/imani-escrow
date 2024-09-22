@@ -19,8 +19,10 @@ interface CartContextProps {
     cart: ICart | null;
     isLoading: boolean;
     error: any;
+    totalItems: number;
     updateCart: (productId: string, change: number) => void;
     removeItem: (productId: string) => void;
+    clearCart: () => void;
 }
 
 // Fetcher function for SWR
@@ -107,8 +109,59 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         dispatch({ type: "UPDATE_ITEM", payload: { productId, change } });
     };
 
-    const removeItem = (productId: string) => {
+    // Calculate total items in the cart
+    const totalItems = cartState.items.reduce((acc, item) => acc + item.quantity, 0);
+
+    const removeItem = async (productId: string) => {
+        // Optimistically remove the item from the UI by dispatching the REMOVE_ITEM action
         dispatch({ type: "REMOVE_ITEM", payload: { productId } });
+
+        try {
+            // Send the removal request to the backend
+            const response = await fetch("/api/cart/remove", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ productId }),
+            });
+
+            if (response.ok) {
+                // If the removal is successful, revalidate the cart data using SWR
+                mutate();
+                toast.success("Item removed successfully");
+            } else {
+                // If there's an error from the server, show an error message and rollback the change
+                toast.error("Failed to remove item from cart");
+                mutate(); // Revalidate cart to revert the optimistic update if needed
+            }
+        } catch (error) {
+            // Handle any network or unexpected errors
+            toast.error("Failed to remove item, please try again later.");
+            mutate(); // Revalidate cart to revert the optimistic update if needed
+        }
+    };
+
+
+    const clearCart = async () => {
+        try {
+            const response = await fetch("/api/cart/clear", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (response.ok) {
+                dispatch({ type: "CLEAR_CART" });
+                toast.success("Cart cleared successfully");
+                mutate(); // Revalidate SWR data
+            } else {
+                toast.error("Failed to clear cart");
+            }
+        } catch (error) {
+            toast.error("Error clearing cart");
+        }
     };
 
     return (
@@ -117,8 +170,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
                 cart: cartState,
                 isLoading,
                 error,
+                totalItems,
                 updateCart,
                 removeItem,
+                clearCart,
             }}
         >
             {children}
