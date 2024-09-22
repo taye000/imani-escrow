@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IconButton, PaletteMode } from '@mui/material';
+import { Badge, IconButton, PaletteMode } from '@mui/material';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,6 +16,7 @@ import Link from 'next/link';
 import router from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import Loading from '@/loading';
+import { useCartContext } from '@/context/CartContext';
 
 const activeStyle = {
     fontWeight: 'bold',
@@ -29,6 +30,7 @@ interface AppAppBarProps {
 
 function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
     const { user, isLoading, error } = useUser();
+    const { totalItems } = useCartContext();
 
     if (isLoading) return <Loading />;
     if (error) return <div>{error.message}</div>;
@@ -158,7 +160,9 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                             <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
                             <Link href="/checkout">
                                 <IconButton color="primary" aria-label="shopping cart">
-                                    <ShoppingCartIcon />
+                                    <Badge badgeContent={totalItems} color="error">
+                                        <ShoppingCartIcon />
+                                    </Badge>
                                 </IconButton>
                             </Link>
                             {!user ? (
