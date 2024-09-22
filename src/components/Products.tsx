@@ -17,25 +17,34 @@ import { IProduct, useProductContext } from '@/context/ProductContext';
 const StyledTableRow = styled(TableRow)`
   transition: all 0.3s ease;
   &:hover {
-    background-color: primary.dark};
+    background-color: primary.dark;
     cursor: pointer;
     transform: translateY(-2px);
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
   }
 `;
 
-const CenteredBox = styled(Box)`
+const CenteredBox = styled(Box) <{ hasProducts: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60vh;
+  ${({ hasProducts }) => (hasProducts ? 'min-height: 60vh;' : 'min-height: 30vh;')}
   color: primary.dark;
+  text-align: center;
 `;
 
 const TableContainer = styled(Box)`
   margin-top: 16px;
   border-radius: 8px;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const FunMessage = styled(Typography)`
+  font-size: 1.2rem;
+  color: primary.main;
+  margin: 16px;
+  line-height: 1.5;
+  text-align: center;
 `;
 
 function preventDefault(event: React.MouseEvent) {
@@ -49,21 +58,20 @@ export default function Products() {
     const [selectedProduct, setSelectedProduct] = React.useState<IProduct | null>(null);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-
     const handleOpenModal = (productData: IProduct) => {
         setIsModalOpen(true);
         setSelectedProduct(productData);
-        console.log('order detail Modal opened');
+        console.log('Product detail modal opened');
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        console.log('order detailModal closed');
+        console.log('Product detail modal closed');
     };
 
     if (error) {
         return (
-            <CenteredBox>
+            <CenteredBox hasProducts={false}>
                 <Typography variant="h6">Error loading user products</Typography>
             </CenteredBox>
         );
@@ -72,8 +80,16 @@ export default function Products() {
     return (
         <ThemeProvider theme={defaultTheme}>
             <Title>Added Products</Title>
-            {!products ? (
+            {isLoading ? (
                 <OrderSkeleton />
+            ) : products?.length === 0 ? (
+                <CenteredBox hasProducts={false}>
+                    <FunMessage>
+                        Oops! Looks like you haven't added any products yet.
+                        <br />
+                        Go ahead and add some — your inventory is feeling a bit lonely! 🛒
+                    </FunMessage>
+                </CenteredBox>
             ) : (
                 <TableContainer>
                     <Table size="small" aria-label="products table">
@@ -87,7 +103,7 @@ export default function Products() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {products.map((product) => (
+                            {products?.map((product) => (
                                 <StyledTableRow key={product.id} onClick={() => handleOpenModal(product)}>
                                     <TableCell>{formatDate(product.createdAt)}</TableCell>
                                     <TableCell>{product.productName}</TableCell>

@@ -5,107 +5,119 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { Box, createTheme, ThemeProvider } from '@mui/material';
-import useSWR from 'swr';
+import { Box, createTheme, ThemeProvider, Typography } from '@mui/material';
 import styled from 'styled-components';
 import Title from './Title';
 import { useThemeContext } from '@/context/ThemeContext';
-import { Product } from '@/pages/marketplace';
 import OrderSkeleton from './orderskeleton';
 import ProductDetailModal from './ProductDetailModal';
 import { formatDate } from '@/utils/formatDate';
+import { IProduct, useProductContext } from '@/context/ProductContext';
 
 const StyledTableRow = styled(TableRow)`
-  margin-bottom: 16px;
-  border-radius: 8px;
-  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
-  padding: '10px';
-  transition: all 0.2s ease-in-out;
-
+  transition: all 0.3s ease;
   &:hover {
-    background-color: primary.dark}; 
+    background-color: primary.dark;
     cursor: pointer;
     transform: translateY(-2px);
-    box-shadow: 0px 4px 4px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 2px 6px 0px rgba(0,0,0,0.12);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
   }
 `;
 
-const CenteredBox = styled(Box)`
+const CenteredBox = styled(Box) <{ hasProducts: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  height: 60vh;
+  ${({ hasProducts }) => (hasProducts ? 'min-height: 60vh;' : 'min-height: 30vh;')}
+  color: primary.dark;
+  text-align: center;
+`;
+
+const TableContainer = styled(Box)`
+  margin-top: 16px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const FunMessage = styled(Typography)`
+  font-size: 1.2rem;
+  color: primary.main;
+  margin: 16px;
+  line-height: 1.5;
+  text-align: center;
 `;
 
 function preventDefault(event: React.MouseEvent) {
     event.preventDefault();
 }
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
 export default function Orders() {
+    const { products, isLoading, error, addProduct, updateProduct, deleteProduct } = useProductContext();
     const { mode } = useThemeContext();
     const defaultTheme = createTheme({ palette: { mode } });
-    const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
+    const [selectedProduct, setSelectedProduct] = React.useState<IProduct | null>(null);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-    const { data: products, error } = useSWR<Product[]>('/api/product/user', fetcher);
-
-    const handleOpenModal = (productData: Product) => {
+    const handleOpenModal = (productData: IProduct) => {
         setIsModalOpen(true);
         setSelectedProduct(productData);
-        console.log('order detail Modal opened');
+        console.log('Product detail modal opened');
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        console.log('order detailModal closed');
-    };
-
-    const handleBackdropClick = () => {
-        handleCloseModal();
+        console.log('Product detail modal closed');
     };
 
     if (error) {
         return (
-            <CenteredBox>
-                <div>Error loading user products</div>
+            <CenteredBox hasProducts={false}>
+                <Typography variant="h6">Error loading user products</Typography>
             </CenteredBox>
         );
     }
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Title>Added Products</Title>
-            {!products ? (
+            <Title>Orders</Title>
+            {isLoading ? (
                 <OrderSkeleton />
+            ) : products?.length === 0 ? (
+                <CenteredBox hasProducts={false}>
+                    <FunMessage>
+                        Oops! Looks like you haven't added any products yet.
+                        <br />
+                        Go ahead and add some — your inventory is feeling a bit lonely! 🛒
+                    </FunMessage>
+                </CenteredBox>
             ) : (
-                <Table size="small">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Date</TableCell>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Category</TableCell>
-                            <TableCell>Payment Method</TableCell>
-                            <TableCell align="right">Price</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {products.map((product) => (
-                            <StyledTableRow key={product.id} onClick={() => handleOpenModal(product)}>
-                                <TableCell>{formatDate(product.createdAt)}</TableCell>
-                                <TableCell>{product.productName}</TableCell>
-                                <TableCell>{product.category}</TableCell>
-                                <TableCell>{product.paymentMethod}</TableCell>
-                                <TableCell align="right">{`$${product.price}`}</TableCell>
-                            </StyledTableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                <TableContainer>
+                    <Table size="small" aria-label="products table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Date</TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Category</TableCell>
+                                <TableCell>Payment Method</TableCell>
+                                <TableCell align="right">Price</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {products?.map((product) => (
+                                <StyledTableRow key={product.id} onClick={() => handleOpenModal(product)}>
+                                    <TableCell>{formatDate(product.createdAt)}</TableCell>
+                                    <TableCell>{product.productName}</TableCell>
+                                    <TableCell>{product.category}</TableCell>
+                                    <TableCell>{product.paymentMethod}</TableCell>
+                                    <TableCell align="right">{`$${product.price}`}</TableCell>
+                                </StyledTableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             )}
-            <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
-                See more products
+            <Link href="#" onClick={preventDefault} sx={{ mt: 3 }} underline="hover">
+                See more orders
             </Link>
             {selectedProduct && (
                 <ProductDetailModal
