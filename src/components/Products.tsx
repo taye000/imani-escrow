@@ -105,7 +105,7 @@ export default function Products() {
                         <TableBody>
                             {products?.map((product) => (
                                 <StyledTableRow key={product.id} onClick={() => handleOpenModal(product)}>
-                                    <TableCell>{formatDate(product.createdAt)}</TableCell>
+                                    <TableCell>{formatDate((product.createdAt) ?? new Date().toISOString())}</TableCell>
                                     <TableCell>{product.productName}</TableCell>
                                     <TableCell>{product.category}</TableCell>
                                     <TableCell>{product.paymentMethod}</TableCell>

@@ -193,7 +193,7 @@ function Dashboard() {
                 showCustomTheme={showCustomTheme}
                 toggleCustomTheme={toggleCustomTheme}
             />
-            <AddProductModal open={isModalOpen} handleClose={handleCloseModal} onSubmit={handleSubmit} />
+            <AddProductModal open={isModalOpen} handleClose={handleCloseModal} />
         </ThemeProvider>
     );
 }

@@ -6,6 +6,7 @@ import Modal from '@mui/material/Modal';
 import CircularProgress from '@mui/material/CircularProgress';
 import { TextField, Grid } from '@mui/material';
 import toast from 'react-hot-toast';
+import { useProductContext } from '@/context/ProductContext';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -22,10 +23,9 @@ const style = {
 interface AddProductModalProps {
     open: boolean;
     handleClose: () => void;
-    onSubmit: (productData: any) => void;
 }
 
-export default function AddProductModal({ open, handleClose, onSubmit }: AddProductModalProps) {
+export default function AddProductModal({ open, handleClose }: AddProductModalProps) {
     const [productName, setProductName] = React.useState("");
     const [paymentMethod, setPaymentMethod] = React.useState("");
     const [description, setDescription] = React.useState("");
@@ -34,6 +34,8 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
     const [price, setPrice] = React.useState("");
     const [isLoading, setIsLoading] = React.useState(false);
     const [currency, setCurrency] = React.useState("USD");
+
+    const { addProduct } = useProductContext();
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -50,24 +52,9 @@ export default function AddProductModal({ open, handleClose, onSubmit }: AddProd
         };
 
         try {
-            const response = await fetch("api/product", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(productData)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            onSubmit(data);
-            toast.success(`${data.productName} added successfully`);
+            await addProduct(productData);
             handleClose();
-        } catch (error) {
-            console.error("There was a problem submitting the form:", error);
-            toast.error("There was a problem submitting the form");
+            console.error("There was a problem submitting the form:", Error);
         } finally {
             setIsLoading(false);
         }

@@ -4,7 +4,6 @@ import {
     Typography,
     Button,
     Box,
-    PaletteMode,
     CssBaseline,
     Divider,
     Grid,
@@ -121,14 +120,17 @@ const BackButton = styled(Button)`
 
 interface ProductDetailProps {
     product: {
-        id: string;
-        image: string;
-        additionalImages: string[];
+        image?: string;
+        additionalImages?: string[];
         category: string;
         productName: string;
-        size: string;
+        size?: string;
         description: string;
         price: string;
+        id?: string;
+        createdAt: string;
+        paymentMethod: string;
+        updatedAt: string;
     };
     onBack: () => void; // Function to handle "Back" button click
 }
@@ -214,7 +216,7 @@ function ProductDetail({ product, onBack }: ProductDetailProps) {
                                         alt={product.productName}
                                     />
                                     <ThumbnailsContainer>
-                                        {[(product.image || 'iphone11.jpg'), ...product.additionalImages].map((img, index) => (
+                                        {[(product.image || 'iphone11.jpg'), ...product.additionalImages!].map((img, index) => (
                                             <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme} key={index}>
                                                 <Thumbnail
                                                     src={`/${img || 'iphone11.jpg'}`}

@@ -10,17 +10,17 @@ interface ProductDetailProps {
     open: boolean;
     handleClose: () => void;
     product: {
-        image: string;
-        additionalImages: string[];
+        image?: string;
+        additionalImages?: string[];
         category: string;
         productName: string;
-        size: string;
+        size?: string;
         description: string;
         price: string;
-        id: string;
-        createdAt: string;
+        id?: string;
+        createdAt?: string;
         paymentMethod: string;
-        updatedAt: string;
+        updatedAt?: string;
     };
 }
 
@@ -43,7 +43,7 @@ export default function ProductDetailModal({ open, handleClose, product }: Produ
 
     const handleDeleteProduct = (productId: string) => {
         deleteProduct(productId);
-        handleClose(); // Close modal after delete
+        handleClose();
     };
 
     return (
@@ -58,7 +58,7 @@ export default function ProductDetailModal({ open, handleClose, product }: Produ
                 <Divider sx={{ mb: 2 }} />
 
                 <Typography variant="body1" color="textSecondary" gutterBottom>
-                    Date: {formatDate(product.createdAt)}
+                    Date: {formatDate(product.createdAt!)}
                 </Typography>
                 <Typography variant="body1" color="textSecondary" gutterBottom>
                     Price: $ {product.price}
@@ -77,7 +77,7 @@ export default function ProductDetailModal({ open, handleClose, product }: Produ
                     <Button onClick={handleClose} variant="outlined" color="primary">
                         Close
                     </Button>
-                    <Button onClick={() => handleDeleteProduct(product.id)} variant="contained" color="error">
+                    <Button onClick={() => handleDeleteProduct(product.id!)} variant="contained" color="error">
                         Delete
                     </Button>
                 </Stack>

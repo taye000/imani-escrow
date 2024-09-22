@@ -3,20 +3,19 @@ import { toast } from "react-hot-toast";
 import useSWR from "swr";
 
 export interface IProduct {
-    id: string;
     productName: string;
     price: string;
     description: string;
     paymentMethod: string;
-    image: string;
-    additionalImages: string[];
     category: string;
-    size: string;
-    color: string;
-    transactionType: string;
-    currency: string;
-    createdAt: string;
-    updatedAt: string;
+    image?: string;
+    additionalImages?: string[];
+    size?: string;
+    color?: string;
+    currency?: string;
+    id?: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 // Product Context Interface
