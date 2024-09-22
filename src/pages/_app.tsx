@@ -4,6 +4,7 @@ import type { AppProps } from "next/app";
 import React from 'react';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { Toaster } from 'react-hot-toast'; // Import toast from react-hot-toast
+import { CartProvider } from '@/context/CartContext';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [isComponentRendered, setIsComponentRendered] = React.useState(false);
@@ -17,10 +18,12 @@ export default function App({ Component, pageProps }: AppProps) {
   }
   return (
     <UserProvider>
-      <ThemeProvider>
-        <Component {...pageProps} />
-        <Toaster />
-      </ThemeProvider>
+      <CartProvider>
+        <ThemeProvider>
+          <Component {...pageProps} />
+          <Toaster />
+        </ThemeProvider>
+      </CartProvider>
     </UserProvider>
   );
 }

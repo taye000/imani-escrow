@@ -12,6 +12,7 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import styled from 'styled-components';
 import { Types } from 'mongoose';
 import toast from 'react-hot-toast';
@@ -19,17 +20,7 @@ import withAuth from '@/components/withAuth';
 import useSWR from 'swr';
 import Loading from '@/loading';
 import { useEffect } from 'react';
-
-interface ICartItem {
-    id: string;
-    productId: Types.ObjectId;
-    quantity: number;
-}
-interface ICart {
-    _id: string;
-    items: ICartItem[];
-    totalAmount: number;
-}
+import { useCartContext } from '@/context/CartContext';
 
 const ProductCardContainer = styled.div`
   display: flex;
@@ -111,41 +102,28 @@ function ToggleCustomTheme({
     );
 }
 
-const updateCart = async (cartItems: ICartItem[]) => {
-    try {
-        const response = await fetch("/api/cart/edit", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ items: cartItems }),
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-            console.log("Cart updated successfully:", result);
-            toast.success("Cart updated successfully");
-        } else {
-            console.error("Failed to update cart");
-            toast.error("Failed to update cart");
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        toast.error("Failed to update cart, try again later.");
-    }
-};
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
 function Checkout() {
-    const { data: cart, isLoading, error } = useSWR<ICart>('/api/cart', fetcher);
-    const [cartItems, setCartItems] = React.useState<ICartItem[]>([]);
+    const { cart, isLoading, error, updateCart, removeItem } = useCartContext();
 
-    useEffect(() => {
-        if (cart && !isLoading && !error) {
-            setCartItems(cart.items);
-        }
-    }, [cart, isLoading, error]);
+    if (isLoading) {
+        return <Loading />;
+    }
+
+    if (error) {
+        return <div>Error Fetching the Data</div>;
+    }
+
+    if (!cart || cart.items.length === 0) {
+        return <div>No items in the cart</div>;
+    }
+
+    const handleUpdateCart = (productId: string, change: number) => {
+        updateCart(productId, change);
+    };
+
+    const handleRemoveItem = (productId: string) => {
+        removeItem(productId);
+    };
 
     const { mode, toggleColorMode } = useThemeContext();
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
@@ -160,31 +138,6 @@ function Checkout() {
         expiryDate: '',
         cvc: '',
     });
-
-    if (isLoading) {
-        return <Loading />
-    } else if (error) {
-        return <div>Error Fetching the Data</div>
-    }
-
-    if (!cart) {
-        return <div>No Data</div>
-    }
-
-    const handleUpdateCart = (productId: string, change: number) => {
-        setCartItems(prevItems => {
-            const updatedItems = prevItems.map(item => {
-                if (item.productId.toString() === productId) {
-                    const newQuantity = item.quantity + change;
-                    return { ...item, quantity: Math.max(newQuantity, 0) }; // Prevent negative quantity
-                }
-                return item;
-            }).filter(item => item.quantity > 0); // Remove items with 0 quantity
-
-            updateCart(updatedItems);
-            return updatedItems;
-        });
-    };
 
     const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedPaymentMethod(event.target.value);
@@ -212,7 +165,7 @@ function Checkout() {
 
 
     const handlePayNow = () => {
-        if (cartItems.length === 0) {
+        if (cart.items.length === 0) {
             toast.error("Please add products to your cart before proceeding.");
         } else if (selectedPaymentMethod === 'mpesa' && !mpesaPhoneNumber) {
             toast.error("Please enter your M-pesa phone number.");
@@ -239,7 +192,7 @@ function Checkout() {
                         <Grid container spacing={3}>
                             <Grid item xs={12} md={6}>
                                 <SectionTitle variant="h6">Check out</SectionTitle>
-                                {cartItems.map((cartItem: any) => (
+                                {cart.items.map((cartItem: any) => (
                                     <ProductCardContainer key={cartItem.id}>
                                         <ProductImage image={cartItem.productId.additionalImages[0] || 'iphone11.jpg'} />
                                         <ProductDetails>
@@ -256,6 +209,9 @@ function Checkout() {
                                                 <Typography variant="body2">{cartItem.quantity}</Typography> {/* Display current quantity */}
                                                 <IconButton onClick={() => handleUpdateCart(cartItem.productId.toString(), 1)} color="primary">
                                                     <AddIcon />
+                                                </IconButton>
+                                                <IconButton onClick={() => handleRemoveItem(cartItem.productId.toString())} color="secondary">
+                                                    <DeleteOutlineIcon />
                                                 </IconButton>
                                             </Box>
 
