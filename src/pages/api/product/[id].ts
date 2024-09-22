@@ -15,21 +15,51 @@ export default async function handler(
 
   const { id } = req.query;
 
-  if (req.method === "GET") {
-    try {
-      await connectToDatabase();
+  await connectToDatabase();
 
-      const product = await Product.findById(id);
-      if (!product) {
-        return res.status(404).json({ message: "Product not found" });
+  switch (req.method) {
+    case "GET":
+      try {
+        const product = await Product.findById(id);
+        if (!product) {
+          return res.status(404).json({ message: "Product not found" });
+        }
+        return res.status(200).json(product);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        return res.status(500).json({ message: "Failed to fetch product" });
       }
 
-      return res.status(200).json(product);
-    } catch (error) {
-      console.error("Error fetching product:", error);
-      return res.status(500).json({ message: "Failed to fetch product" });
-    }
-  } else {
-    return res.status(405).end();
+    case "PUT":
+      // Update an existing product
+      try {
+        const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {
+          new: true,
+          runValidators: true,
+        });
+        if (!updatedProduct) {
+          return res.status(404).json({ message: "Product not found" });
+        }
+        return res.status(200).json(updatedProduct);
+      } catch (error) {
+        console.error("Error updating product:", error);
+        return res.status(500).json({ message: "Failed to update product" });
+      }
+
+    case "DELETE":
+      // Delete an existing product
+      try {
+        const deletedProduct = await Product.findByIdAndDelete(id);
+        if (!deletedProduct) {
+          return res.status(404).json({ message: "Product not found" });
+        }
+        return res.status(204).end(); // No content to return after deletion
+      } catch (error) {
+        console.error("Error deleting product:", error);
+        return res.status(500).json({ message: "Failed to delete product" });
+      }
+
+    default:
+      return res.status(405).end(); // Method Not Allowed
   }
 }

@@ -30,7 +30,7 @@ interface ProductDetailProps {
         id: string;
         createdAt: string;
         paymentMethod: string;
-        address: string;
+        updatedAt: string;
     };
 }
 

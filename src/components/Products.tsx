@@ -6,14 +6,13 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Box, createTheme, ThemeProvider } from '@mui/material';
-import useSWR from 'swr';
 import styled from 'styled-components';
 import Title from './Title';
 import { useThemeContext } from '@/context/ThemeContext';
-import { Product } from '@/pages/marketplace';
 import OrderSkeleton from './orderskeleton';
 import ProductDetailModal from './ProductDetailModal';
 import { formatDate } from '@/utils/formatDate';
+import { IProduct, useProductContext } from '@/context/ProductContext';
 
 const StyledTableRow = styled(TableRow)`
   margin-bottom: 16px;
@@ -42,17 +41,16 @@ function preventDefault(event: React.MouseEvent) {
     event.preventDefault();
 }
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Products() {
+    const { products, isLoading, error, addProduct, updateProduct, deleteProduct } = useProductContext();
     const { mode } = useThemeContext();
     const defaultTheme = createTheme({ palette: { mode } });
-    const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
+    const [selectedProduct, setSelectedProduct] = React.useState<IProduct | null>(null);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-    const { data: products, error } = useSWR<Product[]>('/api/product/user', fetcher);
 
-    const handleOpenModal = (productData: Product) => {
+    const handleOpenModal = (productData: IProduct) => {
         setIsModalOpen(true);
         setSelectedProduct(productData);
         console.log('order detail Modal opened');

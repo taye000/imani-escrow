@@ -5,6 +5,7 @@ import React from 'react';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { Toaster } from 'react-hot-toast'; // Import toast from react-hot-toast
 import { CartProvider } from '@/context/CartContext';
+import { ProductProvider } from '@/context/ProductContext';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [isComponentRendered, setIsComponentRendered] = React.useState(false);
@@ -18,12 +19,14 @@ export default function App({ Component, pageProps }: AppProps) {
   }
   return (
     <UserProvider>
-      <CartProvider>
-        <ThemeProvider>
-          <Component {...pageProps} />
-          <Toaster />
-        </ThemeProvider>
-      </CartProvider>
+      <ProductProvider>
+        <CartProvider>
+          <ThemeProvider>
+            <Component {...pageProps} />
+            <Toaster />
+          </ThemeProvider>
+        </CartProvider>
+      </ProductProvider>
     </UserProvider>
   );
 }
