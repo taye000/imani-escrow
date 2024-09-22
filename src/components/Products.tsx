@@ -5,7 +5,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { Box, createTheme, ThemeProvider } from '@mui/material';
+import { Box, createTheme, ThemeProvider, Typography } from '@mui/material';
 import styled from 'styled-components';
 import Title from './Title';
 import { useThemeContext } from '@/context/ThemeContext';
@@ -15,17 +15,12 @@ import { formatDate } from '@/utils/formatDate';
 import { IProduct, useProductContext } from '@/context/ProductContext';
 
 const StyledTableRow = styled(TableRow)`
-  margin-bottom: 16px;
-  border-radius: 8px;
-  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
-  padding: '10px';
-  transition: all 0.2s ease-in-out;
-
+  transition: all 0.3s ease;
   &:hover {
-    background-color: primary.dark}; 
+    background-color: primary.dark};
     cursor: pointer;
     transform: translateY(-2px);
-    box-shadow: 0px 4px 4px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 2px 6px 0px rgba(0,0,0,0.12);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
   }
 `;
 
@@ -33,14 +28,19 @@ const CenteredBox = styled(Box)`
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
   height: 60vh;
+  color: primary.dark;
+`;
+
+const TableContainer = styled(Box)`
+  margin-top: 16px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
 `;
 
 function preventDefault(event: React.MouseEvent) {
     event.preventDefault();
 }
-
 
 export default function Products() {
     const { products, isLoading, error, addProduct, updateProduct, deleteProduct } = useProductContext();
@@ -61,14 +61,10 @@ export default function Products() {
         console.log('order detailModal closed');
     };
 
-    const handleBackdropClick = () => {
-        handleCloseModal();
-    };
-
     if (error) {
         return (
             <CenteredBox>
-                <div>Error loading user products</div>
+                <Typography variant="h6">Error loading user products</Typography>
             </CenteredBox>
         );
     }
@@ -79,30 +75,32 @@ export default function Products() {
             {!products ? (
                 <OrderSkeleton />
             ) : (
-                <Table size="small">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Date</TableCell>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Category</TableCell>
-                            <TableCell>Payment Method</TableCell>
-                            <TableCell align="right">Price</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {products.map((product) => (
-                            <StyledTableRow key={product.id} onClick={() => handleOpenModal(product)}>
-                                <TableCell>{formatDate(product.createdAt)}</TableCell>
-                                <TableCell>{product.productName}</TableCell>
-                                <TableCell>{product.category}</TableCell>
-                                <TableCell>{product.paymentMethod}</TableCell>
-                                <TableCell align="right">{`$${product.price}`}</TableCell>
-                            </StyledTableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                <TableContainer>
+                    <Table size="small" aria-label="products table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Date</TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Category</TableCell>
+                                <TableCell>Payment Method</TableCell>
+                                <TableCell align="right">Price</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {products.map((product) => (
+                                <StyledTableRow key={product.id} onClick={() => handleOpenModal(product)}>
+                                    <TableCell>{formatDate(product.createdAt)}</TableCell>
+                                    <TableCell>{product.productName}</TableCell>
+                                    <TableCell>{product.category}</TableCell>
+                                    <TableCell>{product.paymentMethod}</TableCell>
+                                    <TableCell align="right">{`$${product.price}`}</TableCell>
+                                </StyledTableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             )}
-            <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
+            <Link href="#" onClick={preventDefault} sx={{ mt: 3 }} underline="hover">
                 See more products
             </Link>
             {selectedProduct && (
