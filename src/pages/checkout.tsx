@@ -122,18 +122,6 @@ function ToggleCustomTheme({
 function Checkout() {
     const { cart, isLoading, error, updateCart, removeItem } = useCartContext();
 
-    if (isLoading) {
-        return <Loading />;
-    }
-
-    if (error) {
-        return <div>Error Fetching the Data</div>;
-    }
-
-    if (!cart || cart.items.length === 0) {
-        return <div>No items in the cart</div>;
-    }
-
     const handleUpdateCart = (productId: string, change: number) => {
         updateCart(productId, change);
     };
@@ -183,7 +171,7 @@ function Checkout() {
 
 
     const handlePayNow = () => {
-        if (cart.items.length === 0) {
+        if (cart?.items.length === 0) {
             toast.error("Please add products to your cart before proceeding.");
         } else if (selectedPaymentMethod === 'mpesa' && !mpesaPhoneNumber) {
             toast.error("Please enter your M-pesa phone number.");
@@ -210,32 +198,39 @@ function Checkout() {
                         <Grid container spacing={3}>
                             <Grid item xs={12} md={6}>
                                 <SectionTitle variant="h6">Check out</SectionTitle>
-                                {cart.items.map((cartItem: any) => (
-                                    <ProductCardContainer key={cartItem.id}>
-                                        <ProductImage image={cartItem.productId.additionalImages[0] || 'iphone11.jpg'} />
-                                        <ProductDetails>
-                                            <TitlePriceContainer>
-                                                <Typography variant="body1">Item: {cartItem.productId.productName}</Typography>
-                                                <Typography variant="body1">Price: {cartItem.productId.price} {cartItem.productId.currency}</Typography>
-                                            </TitlePriceContainer>
-                                            <Typography variant="body2">Description: {cartItem.productId.description}</Typography>
-                                            <Typography variant="body2">Quantity: {cartItem.quantity}</Typography>
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <IconButton onClick={() => handleUpdateCart(cartItem.productId.toString(), -1)} color="secondary">
-                                                    <RemoveIcon />
-                                                </IconButton>
-                                                <Typography variant="body2">{cartItem.quantity}</Typography> {/* Display current quantity */}
-                                                <IconButton onClick={() => handleUpdateCart(cartItem.productId.toString(), 1)} color="primary">
-                                                    <AddIcon />
-                                                </IconButton>
-                                                <IconButton onClick={() => handleRemoveItem(cartItem.id.toString())} color="secondary">
-                                                    <DeleteOutlineIcon />
-                                                </IconButton>
-                                            </Box>
-
-                                        </ProductDetails>
-                                    </ProductCardContainer>
-                                ))}
+                                {isLoading ? (
+                                    <Loading />
+                                ) : error ? (
+                                    <div>Error Fetching the Data</div>
+                                ) : cart?.items.length === 0 ? (
+                                    <div>No items in the cart, continue shopping</div>
+                                ) : (
+                                    cart?.items.map((cartItem: any) => (
+                                        <ProductCardContainer key={cartItem.id}>
+                                            <ProductImage image={cartItem.productId.additionalImages[0] || 'iphone11.jpg'} />
+                                            <ProductDetails>
+                                                <TitlePriceContainer>
+                                                    <Typography variant="body1">Item: {cartItem.productId.productName}</Typography>
+                                                    <Typography variant="body1">Price: {cartItem.productId.price} {cartItem.productId.currency}</Typography>
+                                                </TitlePriceContainer>
+                                                <Typography variant="body2">Description: {cartItem.productId.description}</Typography>
+                                                <Typography variant="body2">Quantity: {cartItem.quantity}</Typography>
+                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                    <IconButton onClick={() => handleUpdateCart(cartItem.productId.toString(), -1)} color="secondary">
+                                                        <RemoveIcon />
+                                                    </IconButton>
+                                                    <Typography variant="body2">{cartItem.quantity}</Typography>
+                                                    <IconButton onClick={() => handleUpdateCart(cartItem.productId.toString(), 1)} color="primary">
+                                                        <AddIcon />
+                                                    </IconButton>
+                                                    <IconButton onClick={() => handleRemoveItem(cartItem.id.toString())} color="secondary">
+                                                        <DeleteOutlineIcon />
+                                                    </IconButton>
+                                                </Box>
+                                            </ProductDetails>
+                                        </ProductCardContainer>
+                                    ))
+                                )}
                             </Grid>
 
                             <Grid item xs={12} md={6}>
@@ -306,7 +301,7 @@ function Checkout() {
                                 <SectionTitle variant="h6" sx={{ mt: 3 }}>Order Details</SectionTitle>
                                 <OrderSummaryItem>
                                     <Typography variant="body2">Subtotal</Typography>
-                                    <Typography variant="body2">${cart.totalAmount}</Typography>
+                                    <Typography variant="body2">${cart?.totalAmount}</Typography>
                                 </OrderSummaryItem>
 
                                 <Button variant="contained" fullWidth sx={{ mt: 2 }} onClick={handlePayNow}>Pay now</Button>
