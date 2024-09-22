@@ -19,6 +19,7 @@ import toast from 'react-hot-toast';
 import withAuth from '@/components/withAuth';
 import Loading from '@/loading';
 import { useCartContext } from '@/context/CartContext';
+import router from 'next/router';
 
 const ProductCardContainer = styled.div`
   display: flex;
@@ -85,6 +86,28 @@ const ConnectWalletButton = styled(Button)`
   
   &:hover {
     background-color: primary.dark};
+  }
+`;
+
+const NoItemsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  color: #333;
+  text-align: center;
+
+  & > p {
+    margin: 10px 0;
+    font-size: 18px;
+  }
+
+  & > button {
+    margin-top: 20px;
   }
 `;
 
@@ -203,7 +226,17 @@ function Checkout() {
                                 ) : error ? (
                                     <div>Error Fetching the Data</div>
                                 ) : cart?.items.length === 0 ? (
-                                    <div>No items in the cart, continue shopping</div>
+                                    <NoItemsContainer>
+                                        <Typography variant="h6">
+                                            Uh-oh! Looks like your cart is as empty as a techie's coffee cup at 3 PM.
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            Continue shopping and find something fabulous!
+                                        </Typography>
+                                        <Button variant="contained" onClick={() => router.push("/marketplace")}>
+                                            Continue Shopping
+                                        </Button>
+                                    </NoItemsContainer>
                                 ) : (
                                     cart?.items.map((cartItem: any) => (
                                         <ProductCardContainer key={cartItem.id}>
