@@ -4,7 +4,6 @@ import {
     Typography,
     Button,
     Box,
-    PaletteMode,
     CssBaseline,
     Divider,
     Grid,
@@ -15,8 +14,6 @@ import AppAppBar from "@/components/AppBar";
 import Footer from "@/components/Footer";
 import getLPTheme from "@/getLPTheme";
 import { useThemeContext } from '@/context/ThemeContext';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import toast from 'react-hot-toast';
 
 const DetailContainer = styled.div`
   display: flex;

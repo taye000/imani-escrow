@@ -13,8 +13,10 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import AddProductModal from '@/components/AddProductModal';
 import Chart from '@/components/Chart';
 import Deposits from '@/components/Deposits';
-import Orders from '@/components/Products';
+import Products from '@/components/Products';
 import withAuth from '@/components/withAuth';
+import { Tabs, Tab } from '@mui/material';
+import Orders from '@/components/Orders';
 
 interface ToggleCustomThemeProps {
     showCustomTheme: Boolean;
@@ -53,6 +55,7 @@ function Dashboard() {
     const { mode, toggleColorMode } = useThemeContext();
     const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
+    const [selectedTab, setSelectedTab] = React.useState('products');
 
     // Get data from URL query parameters
     const urlParams = new URLSearchParams(window.location.search);
@@ -79,6 +82,10 @@ function Dashboard() {
     const handleCloseModal = () => {
         setIsModalOpen(false);
         console.log('Modal closed');
+    };
+
+    const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+        setSelectedTab(newValue);
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -166,9 +173,15 @@ function Dashboard() {
                                 <Deposits />
                             </Paper>
                         </Grid>
+                        <Grid item xs={12} sx={{ mt: 4 }}> {/* Adjust mt value as needed */}
+                            <Tabs value={selectedTab} onChange={handleTabChange} centered>
+                                <Tab label="Products" value="products" />
+                                <Tab label="Orders" value="orders" />
+                            </Tabs>
+                        </Grid>
                         <Grid item xs={12}>
                             <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                                <Orders />
+                                {selectedTab === 'products' ? <Products /> : <Orders />}
                             </Paper>
                         </Grid>
                     </Grid>

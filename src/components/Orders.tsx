@@ -44,7 +44,7 @@ function preventDefault(event: React.MouseEvent) {
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default function Products() {
+export default function Orders() {
     const { mode } = useThemeContext();
     const defaultTheme = createTheme({ palette: { mode } });
     const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
