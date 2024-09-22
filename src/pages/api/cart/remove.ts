@@ -38,7 +38,7 @@ export default async function handler(
 
       // Find the index of the item in the cart and remove it
       const itemIndex = cart.items.findIndex(
-        (item) => item._id.toString() === productId.toString()
+        (item) => item._id!.toString() === productId.toString()
       );
 
       if (itemIndex === -1) {
