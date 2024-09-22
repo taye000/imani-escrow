@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Grid, Typography, Button, IconButton, RadioGroup, FormControlLabel, Radio, TextField, Card, CardMedia, Container } from '@mui/material';
+import { Grid, Typography, Button, IconButton, RadioGroup, FormControlLabel, Radio, TextField, CardMedia, Container } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -13,13 +13,11 @@ import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import WalletIcon from '@mui/icons-material/Wallet';
 import styled from 'styled-components';
-import { Types } from 'mongoose';
 import toast from 'react-hot-toast';
 import withAuth from '@/components/withAuth';
-import useSWR from 'swr';
 import Loading from '@/loading';
-import { useEffect } from 'react';
 import { useCartContext } from '@/context/CartContext';
 
 const ProductCardContainer = styled.div`
@@ -69,6 +67,25 @@ const OrderSummaryItem = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
+`;
+
+const ConnectWalletContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+    padding: 16px;
+`;
+
+const ConnectWalletButton = styled(Button)`
+  width: 50%;
+  padding: 16px;
+  margin-top: 16px;
+  background-color: primary.light};
+  color: white;
+  
+  &:hover {
+    background-color: primary.dark};
+  }
 `;
 
 export interface CardDetails {
@@ -130,7 +147,7 @@ function Checkout() {
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState('card');
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState('wallet');
     const [mpesaPhoneNumber, setMpesaPhoneNumber] = React.useState('');
     const [cardDetailsFilled, setCardDetailsFilled] = React.useState(false);
     const [cardDetails, setCardDetails] = React.useState<CardDetails>({
@@ -242,6 +259,15 @@ function Checkout() {
                                             </Box>
                                         }
                                     />
+                                    <FormControlLabel
+                                        value="wallet"
+                                        control={<Radio />}
+                                        label={
+                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                <WalletIcon sx={{ mr: 1 }} /> Wallet
+                                            </Box>
+                                        }
+                                    />
                                 </RadioGroup>
 
                                 {selectedPaymentMethod === 'mpesa' ? (
@@ -249,6 +275,13 @@ function Checkout() {
                                         fullWidth margin="normal"
                                         value={mpesaPhoneNumber}
                                         onChange={handleMpesaPhoneNumberChange} />
+                                ) : selectedPaymentMethod === 'wallet' ? (
+                                    <ConnectWalletContainer>
+                                        <ConnectWalletButton variant="contained">
+                                            Connect Wallet
+                                        </ConnectWalletButton>
+                                    </ConnectWalletContainer>
+
                                 ) : (
                                     <>
                                         <TextField label="Cardholder name"
