@@ -188,7 +188,6 @@ function ProductDetail({ product, onBack }: ProductDetailProps) {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log('Product added to cart:', data);
                 toast.success(`${product.productName} added to cart`);
             } else {
                 console.error('Error adding to cart:', response.status);

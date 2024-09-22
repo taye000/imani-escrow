@@ -23,12 +23,10 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const { name, email, phone, address, photo } = req.body;
-      console.log("req.body", req.body);
 
       try {
         // Get the database connection
         await connectToDatabase();
-        console.log("Connected to db");
 
         // Find the user by ID
         const user = await User.findById(userId);

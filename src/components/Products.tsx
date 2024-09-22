@@ -61,12 +61,10 @@ export default function Products() {
     const handleOpenModal = (productData: IProduct) => {
         setIsModalOpen(true);
         setSelectedProduct(productData);
-        console.log('Product detail modal opened');
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        console.log('Product detail modal closed');
     };
 
     if (error) {

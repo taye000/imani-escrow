@@ -12,11 +12,9 @@ export default async function handler(
   if (!session || typeof session !== "object" || !("user" in session)) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  console.log("session", session);
 
   const user = session.user;
   const userId = user.sub;
-  console.log("userId", userId);
 
   if (!user) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -25,7 +23,6 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const { productId, quantity = 1 } = req.body;
-      console.log("req.body", req.body);
 
       // Data Validation
       if (!productId) {
@@ -37,12 +34,10 @@ export default async function handler(
         productId,
         quantity,
       };
-      console.log("payload", payload);
 
       try {
         // Get the database connection
         await connectToDatabase();
-        console.log("Connected to db");
 
         let cart = await Cart.findOne({
           auth0Id: userId,
@@ -61,8 +56,6 @@ export default async function handler(
           // If not, add it as a new item
           cart.items.push({ productId, quantity });
         }
-
-        console.log("cart", cart);
 
         // Save the updated cart
         await cart.save();

@@ -4,12 +4,12 @@ import { toast } from "react-hot-toast";
 import useSWR from "swr";
 
 export interface ICartItem {
-    id: string;
+    id?: string;
     productId: Types.ObjectId;
     quantity: number;
 }
 export interface ICart {
-    _id: string;
+    id?: string;
     items: ICartItem[];
     totalAmount: number;
 }
@@ -69,7 +69,7 @@ const cartReducer = (state: ICart, action: any): ICart => {
 // Cart Provider Component
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const { data: cart, isLoading, error, mutate } = useSWR<ICart>("/api/cart", fetcher);
-    const [cartState, dispatch] = useReducer(cartReducer, { _id: "", items: [], totalAmount: 0 });
+    const [cartState, dispatch] = useReducer(cartReducer, { id: "", items: [], totalAmount: 0 });
 
     // Sync SWR cart data with the reducer state
     useEffect(() => {

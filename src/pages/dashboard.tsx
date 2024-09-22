@@ -76,12 +76,10 @@ function Dashboard() {
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
-        console.log('Modal opened');
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        console.log('Modal closed');
     };
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {

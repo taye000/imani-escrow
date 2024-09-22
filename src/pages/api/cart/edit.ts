@@ -15,7 +15,6 @@ export default async function handler(
 
   const user = session.user;
   const userId = user.sub;
-  console.log("user", user);
   if (!user) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -23,10 +22,8 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const { items } = req.body;
-      console.log("req.body", req.body);
 
       await connectToDatabase();
-      console.log("Connected to db");
 
       // Find the cart by user ID
       const cart = await Cart.findOne({ userId });

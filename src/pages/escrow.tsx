@@ -97,7 +97,6 @@ function Escrow() {
             transactionType: selectedTransactionType,
             currency: selectedCurrency,
         };
-        console.log(productData);
         try {
             const response = await fetch("api/product", {
                 method: "POST",

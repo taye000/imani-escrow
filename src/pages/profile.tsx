@@ -112,12 +112,10 @@ function Profile() {
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
-        console.log('Modal opened');
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        console.log('Modal closed');
     };
 
     const toggleCustomTheme = () => {

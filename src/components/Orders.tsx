@@ -61,12 +61,10 @@ export default function Orders() {
     const handleOpenModal = (productData: IProduct) => {
         setIsModalOpen(true);
         setSelectedProduct(productData);
-        console.log('Product detail modal opened');
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        console.log('Product detail modal closed');
     };
 
     if (error) {
@@ -105,7 +103,7 @@ export default function Orders() {
                         <TableBody>
                             {products?.map((product) => (
                                 <StyledTableRow key={product.id} onClick={() => handleOpenModal(product)}>
-                                    <TableCell>{formatDate(product.createdAt)}</TableCell>
+                                    <TableCell>{formatDate(product.createdAt!)}</TableCell>
                                     <TableCell>{product.productName}</TableCell>
                                     <TableCell>{product.category}</TableCell>
                                     <TableCell>{product.paymentMethod}</TableCell>

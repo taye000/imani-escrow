@@ -16,14 +16,12 @@ export default async function handler(
 
     const user = session.user;
     const userId = user.sub;
-    console.log("userId", userId);
 
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
     try {
       const productData = req.body;
-      console.log("req.body", req.body);
 
       if (
         !productData.productName ||
@@ -44,10 +42,8 @@ export default async function handler(
 
       try {
         await connectToDatabase();
-        console.log("Connected to db");
 
         const newProduct = await Product.create(payload);
-        console.log("Product saved to database:", newProduct);
         return res
           .status(201)
           .json({ message: "Product added successfully", data: newProduct });
@@ -62,7 +58,6 @@ export default async function handler(
   } else if (req.method === "GET") {
     try {
       await connectToDatabase();
-      console.log("Connected to db");
 
       const products = await Product.find({});
       return res.status(200).json(products);

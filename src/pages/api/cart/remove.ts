@@ -20,7 +20,6 @@ export default async function handler(
   // Only allow DELETE requests
   if (req.method === "DELETE") {
     const { productId } = req.body;
-    console.log("productId in endpoint", productId.toString());
 
     // Ensure productId is provided
     if (!productId) {
@@ -32,7 +31,6 @@ export default async function handler(
 
       // Find the user's cart
       const cart = await Cart.findOne({ auth0Id: userId });
-      console.log("cart in endpoint", cart);
 
       if (!cart) {
         return res.status(404).json({ message: "Cart not found" });

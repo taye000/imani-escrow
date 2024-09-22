@@ -151,7 +151,6 @@ function Checkout() {
 
     const handleRemoveItem = (productId: string) => {
         removeItem(productId);
-        console.log("Removing item from cart", productId);
     };
 
     const { mode, toggleColorMode } = useThemeContext();
@@ -202,7 +201,6 @@ function Checkout() {
             toast.error("Please fill in your card details.");
         } else {
             // Proceed with payment logic
-            console.log("Payment processed successfully!");
             toast.success("Payment processed successfully!");
         }
     };

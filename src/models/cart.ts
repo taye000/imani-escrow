@@ -5,7 +5,7 @@ import Product, { IProduct } from "./product";
 export interface ICartItem {
   productId: Types.ObjectId;
   quantity: number;
-  _id: Types.ObjectId;
+  _id?: Types.ObjectId;
 }
 
 // Interface for Cart
