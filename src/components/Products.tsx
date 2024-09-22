@@ -86,9 +86,9 @@ export default function Orders() {
                         <TableRow>
                             <TableCell>Date</TableCell>
                             <TableCell>Name</TableCell>
-                            <TableCell>Address</TableCell>
+                            <TableCell>Category</TableCell>
                             <TableCell>Payment Method</TableCell>
-                            <TableCell align="right">Sale Amount</TableCell>
+                            <TableCell align="right">Price</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -96,7 +96,7 @@ export default function Orders() {
                             <StyledTableRow key={product.id} onClick={() => handleOpenModal(product)}>
                                 <TableCell>{formatDate(product.createdAt)}</TableCell>
                                 <TableCell>{product.productName}</TableCell>
-                                <TableCell>{product.address}</TableCell>
+                                <TableCell>{product.category}</TableCell>
                                 <TableCell>{product.paymentMethod}</TableCell>
                                 <TableCell align="right">{`$${product.price}`}</TableCell>
                             </StyledTableRow>
