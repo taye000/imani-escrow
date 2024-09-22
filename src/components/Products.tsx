@@ -10,9 +10,10 @@ import useSWR from 'swr';
 import styled from 'styled-components';
 import Title from './Title';
 import { useThemeContext } from '@/context/ThemeContext';
-import OrderDetailModal from './OrderDetailModal';
 import { Product } from '@/pages/marketplace';
 import OrderSkeleton from './orderskeleton';
+import ProductDetailModal from './ProductDetailModal';
+import { formatDate } from '@/utils/formatDate';
 
 const StyledTableRow = styled(TableRow)`
   margin-bottom: 16px;
@@ -46,14 +47,14 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export default function Orders() {
     const { mode } = useThemeContext();
     const defaultTheme = createTheme({ palette: { mode } });
-    const [selectedOrder, setSelectedOrder] = React.useState<Product | null>(null);
+    const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
 
     const { data: products, error } = useSWR<Product[]>('/api/product/user', fetcher);
 
     const handleOpenModal = (productData: Product) => {
         setIsModalOpen(true);
-        setSelectedOrder(productData);
+        setSelectedProduct(productData);
         console.log('order detail Modal opened');
     };
 
@@ -76,7 +77,7 @@ export default function Orders() {
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Title>Recent Orders</Title>
+            <Title>Added Products</Title>
             {!products ? (
                 <OrderSkeleton />
             ) : (
@@ -91,13 +92,13 @@ export default function Orders() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {products.map((order) => (
-                            <StyledTableRow key={order.id} onClick={() => handleOpenModal(order)}>
-                                <TableCell>{order.createdAt}</TableCell>
-                                <TableCell>{order.productName}</TableCell>
-                                <TableCell>{order.address}</TableCell>
-                                <TableCell>{order.paymentMethod}</TableCell>
-                                <TableCell align="right">{`$${order.price}`}</TableCell>
+                        {products.map((product) => (
+                            <StyledTableRow key={product.id} onClick={() => handleOpenModal(product)}>
+                                <TableCell>{formatDate(product.createdAt)}</TableCell>
+                                <TableCell>{product.productName}</TableCell>
+                                <TableCell>{product.address}</TableCell>
+                                <TableCell>{product.paymentMethod}</TableCell>
+                                <TableCell align="right">{`$${product.price}`}</TableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>
@@ -106,11 +107,11 @@ export default function Orders() {
             <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
                 See more orders
             </Link>
-            {selectedOrder && (
-                <OrderDetailModal
+            {selectedProduct && (
+                <ProductDetailModal
                     open={isModalOpen}
                     handleClose={handleCloseModal}
-                    order={selectedOrder}
+                    product={selectedProduct}
                 />
             )}
         </ThemeProvider>

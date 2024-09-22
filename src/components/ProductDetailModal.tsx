@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import { formatDate } from '@/utils/formatDate';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -15,10 +16,10 @@ const style = {
     p: 4,
 };
 
-interface OrderDetailProps {
+interface ProductDetailProps {
     open: boolean;
     handleClose: () => void;
-    order: {
+    product: {
         image: string;
         additionalImages: string[];
         category: string;
@@ -27,37 +28,40 @@ interface OrderDetailProps {
         description: string;
         price: string;
         id: string;
-        date: string;
+        createdAt: string;
         paymentMethod: string;
         address: string;
     };
 }
 
-export default function OrderDetailModal({ open, handleClose, order }: OrderDetailProps) {
+export default function ProductDetailModal({ open, handleClose, product }: ProductDetailProps) {
     return (
         <div>
             <Modal open={open} onClose={handleClose} >
                 <Box sx={style} onClick={(e) => e.stopPropagation()}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Order Details
+                        Product Details
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Order ID: {order.id}
+                        ID: {product.id}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Order Date: {order.date}
+                        Date Added: {formatDate(product.createdAt)}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Name: {order.productName}
+                        Name: {product.productName}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Order Total: $ {order.price}
+                        Price: $ {product.price}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Shipping Address: {order.address}
+                        Category: {product.category}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Payment Method: {order.paymentMethod}
+                        Payment Method: {product.paymentMethod}
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Description: {product.description}
                     </Typography>
                 </Box>
             </Modal>

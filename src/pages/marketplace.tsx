@@ -27,8 +27,8 @@ export interface Product {
     address: string;
     currency?: string;
     transactionType?: string;
-    createdAt?: string;
-    updatedAt?: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 interface ToggleCustomThemeProps {

@@ -13,7 +13,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import AddProductModal from '@/components/AddProductModal';
 import Chart from '@/components/Chart';
 import Deposits from '@/components/Deposits';
-import Orders from '@/components/Orders';
+import Orders from '@/components/Products';
 import withAuth from '@/components/withAuth';
 
 interface ToggleCustomThemeProps {
