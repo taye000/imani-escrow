@@ -10,9 +10,9 @@ import styled from 'styled-components';
 import Title from './Title';
 import { useThemeContext } from '@/context/ThemeContext';
 import OrderSkeleton from './orderskeleton';
-import ProductDetailModal from './ProductDetailModal';
 import { formatDate } from '@/utils/formatDate';
-import { IProduct, useProductContext } from '@/context/ProductContext';
+import { useOrderContext } from '@/context/OrderContext';
+import OrderDetailModal from './OrderDetailModal';  // Import the modal
 
 const StyledTableRow = styled(TableRow)`
   transition: all 0.3s ease;
@@ -24,11 +24,11 @@ const StyledTableRow = styled(TableRow)`
   }
 `;
 
-const CenteredBox = styled(Box) <{ hasProducts: boolean }>`
+const CenteredBox = styled(Box) <{ hasOrders: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  ${({ hasProducts }) => (hasProducts ? 'min-height: 60vh;' : 'min-height: 30vh;')}
+  ${({ hasOrders }) => (hasOrders ? 'min-height: 60vh;' : 'min-height: 30vh;')}
   color: primary.dark;
   text-align: center;
 `;
@@ -52,15 +52,18 @@ function preventDefault(event: React.MouseEvent) {
 }
 
 export default function Orders() {
-    const { products, isLoading, error, addProduct, updateProduct, deleteProduct } = useProductContext();
+    // Fetch orders from OrderContext
+    const { orders, isLoading, error } = useOrderContext();
     const { mode } = useThemeContext();
     const defaultTheme = createTheme({ palette: { mode } });
-    const [selectedProduct, setSelectedProduct] = React.useState<IProduct | null>(null);
+
+    // Modal state
+    const [selectedOrder, setSelectedOrder] = React.useState<any | null>(null);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-    const handleOpenModal = (productData: IProduct) => {
+    const handleOpenOrderDetails = (orderData: any) => {
+        setSelectedOrder(orderData);
         setIsModalOpen(true);
-        setSelectedProduct(productData);
     };
 
     const handleCloseModal = () => {
@@ -69,8 +72,8 @@ export default function Orders() {
 
     if (error) {
         return (
-            <CenteredBox hasProducts={false}>
-                <Typography variant="h6">Error loading user products</Typography>
+            <CenteredBox hasOrders={false}>
+                <Typography variant="h6">Error loading user orders</Typography>
             </CenteredBox>
         );
     }
@@ -80,48 +83,51 @@ export default function Orders() {
             <Title>Orders</Title>
             {isLoading ? (
                 <OrderSkeleton />
-            ) : products?.length === 0 ? (
-                <CenteredBox hasProducts={false}>
+            ) : orders?.length === 0 ? (
+                <CenteredBox hasOrders={false}>
                     <FunMessage>
-                        Oops! Looks like you haven't added any products yet.
+                        Oops! It seems like you have no orders yet.
                         <br />
-                        Go ahead and add some — your inventory is feeling a bit lonely! 🛒
+                        Place an order and check back later! 📦
                     </FunMessage>
                 </CenteredBox>
             ) : (
                 <TableContainer>
-                    <Table size="small" aria-label="products table">
+                    <Table size="small" aria-label="orders table">
                         <TableHead>
                             <TableRow>
                                 <TableCell>Date</TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Category</TableCell>
+                                <TableCell>Order ID</TableCell>
+                                <TableCell>Status</TableCell>
                                 <TableCell>Payment Method</TableCell>
-                                <TableCell align="right">Price</TableCell>
+                                <TableCell align="right">Total Amount</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {products?.map((product) => (
-                                <StyledTableRow key={product.id} onClick={() => handleOpenModal(product)}>
-                                    <TableCell>{formatDate(product.createdAt!)}</TableCell>
-                                    <TableCell>{product.productName}</TableCell>
-                                    <TableCell>{product.category}</TableCell>
-                                    <TableCell>{product.paymentMethod}</TableCell>
-                                    <TableCell align="right">{`$${product.price}`}</TableCell>
+                            {orders?.map((order) => (
+                                <StyledTableRow key={order.id} onClick={() => handleOpenOrderDetails(order)}>
+                                    <TableCell>{formatDate(order.createdAt ?? new Date().toISOString())}</TableCell>
+                                    <TableCell>{order.id}</TableCell>
+                                    <TableCell>{order.status}</TableCell>
+                                    <TableCell>{order.paymentDetails.method}</TableCell>
+                                    <TableCell align="right">{`$${order.totalAmount.toFixed(2)}`}</TableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
             )}
+
             <Link href="#" onClick={preventDefault} sx={{ mt: 3 }} underline="hover">
                 See more orders
             </Link>
-            {selectedProduct && (
-                <ProductDetailModal
+
+            {/* Add OrderDetailModal here */}
+            {selectedOrder && (
+                <OrderDetailModal
                     open={isModalOpen}
                     handleClose={handleCloseModal}
-                    product={selectedProduct}
+                    order={selectedOrder}
                 />
             )}
         </ThemeProvider>
