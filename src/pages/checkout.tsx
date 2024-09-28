@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Grid, Typography, Button, IconButton, RadioGroup, FormControlLabel, Radio, TextField, CardMedia, Container } from '@mui/material';
+import { Grid, Typography, Button, IconButton, RadioGroup, FormControlLabel, Radio, TextField, CardMedia, Container, Collapse, CircularProgress } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -13,6 +13,8 @@ import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import WalletIcon from '@mui/icons-material/Wallet';
 import styled from 'styled-components';
 import toast from 'react-hot-toast';
@@ -144,20 +146,16 @@ function ToggleCustomTheme({
 
 function Checkout() {
     const { cart, isLoading, error, updateCart, removeItem } = useCartContext();
-
-    const handleUpdateCart = (productId: string, change: number) => {
-        updateCart(productId, change);
-    };
-
-    const handleRemoveItem = (productId: string) => {
-        removeItem(productId);
-    };
-
     const { mode, toggleColorMode } = useThemeContext();
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
     const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState('wallet');
+    const [fullName, setFullName] = React.useState('');
+    const [address, setAddress] = React.useState('');
+    const [country, setCountry] = React.useState('');
+    const [city, setCity] = React.useState('');
+    const [phone, setPhone] = React.useState('');
     const [mpesaPhoneNumber, setMpesaPhoneNumber] = React.useState('');
     const [cardDetailsFilled, setCardDetailsFilled] = React.useState(false);
     const [cardDetails, setCardDetails] = React.useState<CardDetails>({
@@ -166,6 +164,27 @@ function Checkout() {
         expiryDate: '',
         cvc: '',
     });
+
+    const [isShippingOpen, setIsShippingOpen] = React.useState(false);
+    const [isPaymentOpen, setIsPaymentOpen] = React.useState(false);
+
+    const toggleShippingSection = () => {
+        setIsShippingOpen((prev) => !prev);
+        if (isPaymentOpen) setIsPaymentOpen(false); // Collapse payment when expanding shipping
+    };
+
+    const togglePaymentSection = () => {
+        setIsPaymentOpen((prev) => !prev);
+        if (isShippingOpen) setIsShippingOpen(false); // Collapse shipping when expanding payment
+    };
+
+    const handleUpdateCart = (productId: string, change: number) => {
+        updateCart(productId, change);
+    };
+
+    const handleRemoveItem = (productId: string) => {
+        removeItem(productId);
+    };
 
     const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedPaymentMethod(event.target.value);
@@ -190,7 +209,6 @@ function Checkout() {
             cardDetails.cvc !== ''
         );
     };
-
 
     const handlePayNow = () => {
         if (cart?.items.length === 0) {
@@ -265,77 +283,165 @@ function Checkout() {
                             </Grid>
 
                             <Grid item xs={12} md={6}>
-                                <SectionTitle variant="h6">Payment method</SectionTitle>
-                                <RadioGroup defaultValue="card" onChange={handlePaymentMethodChange} value={selectedPaymentMethod}>
-                                    <FormControlLabel
-                                        value="mpesa"
-                                        control={<Radio />}
-                                        label={
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <PhoneIphoneIcon sx={{ mr: 1 }} /> M-pesa
-                                            </Box>
-                                        }
-                                    />
-                                    <FormControlLabel
-                                        value="card"
-                                        control={<Radio />}
-                                        label={
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <CreditCardIcon sx={{ mr: 1 }} /> Debit/Credit card
-                                            </Box>
-                                        }
-                                    />
-                                    <FormControlLabel
-                                        value="wallet"
-                                        control={<Radio />}
-                                        label={
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <WalletIcon sx={{ mr: 1 }} /> Wallet
-                                            </Box>
-                                        }
-                                    />
-                                </RadioGroup>
+                                <Box>
+                                    <SectionTitle variant="h6" onClick={toggleShippingSection} sx={{ cursor: 'pointer' }}>
+                                        Delivery/Shipping
+                                        <IconButton sx={{ marginLeft: 1 }}>
+                                            {isShippingOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                        </IconButton>
+                                    </SectionTitle>
+                                    <Collapse in={isShippingOpen}>
+                                        <form
+                                        // onSubmit={handleSubmit}
+                                        >
+                                            <Grid container spacing={2}>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        fullWidth
+                                                        label="Full Name"
+                                                        value={fullName}
+                                                        name="fullName"
+                                                        onChange={(e) => setFullName(e.target.value)}
+                                                        margin="normal"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        fullWidth
+                                                        label="Address"
+                                                        value={address}
+                                                        name="address"
+                                                        onChange={(e) => setAddress(e.target.value)}
+                                                        margin="normal"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        fullWidth
+                                                        label="City"
+                                                        value={city}
+                                                        name="city"
+                                                        onChange={(e) => setCity(e.target.value)}
+                                                        margin="normal"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        fullWidth
+                                                        label="Country"
+                                                        value={country}
+                                                        name="country"
+                                                        onChange={(e) => setCountry(e.target.value)}
+                                                        margin="normal"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <TextField
+                                                        fullWidth
+                                                        label="Phone"
+                                                        value={phone}
+                                                        name="phone"
+                                                        onChange={(e) => setPhone(e.target.value)}
+                                                        margin="normal"
+                                                        rows={4}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sx={{ textAlign: 'center' }}>
+                                                    <Button
+                                                        type="submit"
+                                                        variant="contained"
+                                                        color="primary"
+                                                        disabled={isLoading}
+                                                        endIcon={isLoading && <CircularProgress size={20} />}
+                                                    >
+                                                        Save
+                                                    </Button>
+                                                </Grid>
+                                            </Grid>
+                                        </form>
+                                    </Collapse>
+                                </Box>
 
-                                {selectedPaymentMethod === 'mpesa' ? (
-                                    <TextField label="Phone Number"
-                                        fullWidth margin="normal"
-                                        value={mpesaPhoneNumber}
-                                        onChange={handleMpesaPhoneNumberChange} />
-                                ) : selectedPaymentMethod === 'wallet' ? (
-                                    <ConnectWalletContainer>
-                                        <ConnectWalletButton variant="contained">
-                                            Connect Wallet
-                                        </ConnectWalletButton>
-                                    </ConnectWalletContainer>
+                                <Box sx={{ mt: 2 }}>
+                                    <SectionTitle variant="h6" onClick={togglePaymentSection} sx={{ cursor: 'pointer' }}>
+                                        Payment method
+                                        <IconButton sx={{ marginLeft: 1 }}>
+                                            {isPaymentOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                        </IconButton>
+                                    </SectionTitle>
+                                    <Collapse in={isPaymentOpen}>
+                                        <RadioGroup defaultValue="card" onChange={handlePaymentMethodChange} value={selectedPaymentMethod}>
+                                            <FormControlLabel
+                                                value="mpesa"
+                                                control={<Radio />}
+                                                label={
+                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                        <PhoneIphoneIcon sx={{ mr: 1 }} /> M-pesa
+                                                    </Box>
+                                                }
+                                            />
+                                            <FormControlLabel
+                                                value="card"
+                                                control={<Radio />}
+                                                label={
+                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                        <CreditCardIcon sx={{ mr: 1 }} /> Debit/Credit card
+                                                    </Box>
+                                                }
+                                            />
+                                            <FormControlLabel
+                                                value="wallet"
+                                                control={<Radio />}
+                                                label={
+                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                        <WalletIcon sx={{ mr: 1 }} /> Wallet
+                                                    </Box>
+                                                }
+                                            />
+                                        </RadioGroup>
 
-                                ) : (
-                                    <>
-                                        <TextField label="Cardholder name"
-                                            name='CardholderName'
-                                            fullWidth margin="normal"
-                                            onChange={handleCardDetailsChange} />
-                                        <TextField label="Card number"
-                                            name='CardNumber'
-                                            fullWidth margin="normal"
-                                            onChange={handleCardDetailsChange} />
-                                        <TextField label="Expiry date"
-                                            name='ExpiryDate'
-                                            fullWidth margin="normal"
-                                            onChange={handleCardDetailsChange} />
-                                        <TextField label="CVC"
-                                            name='cvc'
-                                            fullWidth margin="normal"
-                                            onChange={handleCardDetailsChange} />
-                                    </>
-                                )}
+                                        {selectedPaymentMethod === 'mpesa' ? (
+                                            <TextField label="Phone Number"
+                                                fullWidth margin="normal"
+                                                value={mpesaPhoneNumber}
+                                                onChange={handleMpesaPhoneNumberChange} />
+                                        ) : selectedPaymentMethod === 'wallet' ? (
+                                            <ConnectWalletContainer>
+                                                <ConnectWalletButton variant="contained">
+                                                    Connect Wallet
+                                                </ConnectWalletButton>
+                                            </ConnectWalletContainer>
 
-                                <SectionTitle variant="h6" sx={{ mt: 3 }}>Order Details</SectionTitle>
-                                <OrderSummaryItem>
-                                    <Typography variant="body2">Subtotal</Typography>
-                                    <Typography variant="body2">${cart?.totalAmount}</Typography>
-                                </OrderSummaryItem>
+                                        ) : (
+                                            <>
+                                                <TextField label="Cardholder name"
+                                                    name='CardholderName'
+                                                    fullWidth margin="normal"
+                                                    onChange={handleCardDetailsChange} />
+                                                <TextField label="Card number"
+                                                    name='CardNumber'
+                                                    fullWidth margin="normal"
+                                                    onChange={handleCardDetailsChange} />
+                                                <TextField label="Expiry date"
+                                                    name='ExpiryDate'
+                                                    fullWidth margin="normal"
+                                                    onChange={handleCardDetailsChange} />
+                                                <TextField label="CVC"
+                                                    name='cvc'
+                                                    fullWidth margin="normal"
+                                                    onChange={handleCardDetailsChange} />
+                                            </>
+                                        )}
 
-                                <Button variant="contained" fullWidth sx={{ mt: 2 }} onClick={handlePayNow}>Pay now</Button>
+                                        <SectionTitle variant="h6" sx={{ mt: 3 }}>Order Details</SectionTitle>
+                                        <OrderSummaryItem>
+                                            <Typography variant="body2">Subtotal</Typography>
+                                            <Typography variant="body2">${cart?.totalAmount}</Typography>
+                                        </OrderSummaryItem>
+
+                                        <Button variant="contained" fullWidth sx={{ mt: 2 }} onClick={handlePayNow}>Pay now</Button>
+                                    </Collapse>
+                                </Box>
                             </Grid>
                         </Grid>
                     </CheckoutContainer>
