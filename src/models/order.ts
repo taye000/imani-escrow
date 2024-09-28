@@ -18,7 +18,7 @@ interface IPaymentDetails {
 }
 
 // Interface for Order
-export interface IOrder extends Document {
+interface IOrder extends Document {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
   cartId: Types.ObjectId; // Reference to the cart

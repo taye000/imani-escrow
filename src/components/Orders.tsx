@@ -11,8 +11,8 @@ import Title from './Title';
 import { useThemeContext } from '@/context/ThemeContext';
 import OrderSkeleton from './orderskeleton';
 import { formatDate } from '@/utils/formatDate';
-import { useOrderContext } from '@/context/OrderContext';
-import OrderDetailModal from './OrderDetailModal';  // Import the modal
+import { useOrderContext, IOrder } from '@/context/OrderContext';
+import OrderDetailModal from './OrderDetailModal';
 
 const StyledTableRow = styled(TableRow)`
   transition: all 0.3s ease;
@@ -58,10 +58,10 @@ export default function Orders() {
     const defaultTheme = createTheme({ palette: { mode } });
 
     // Modal state
-    const [selectedOrder, setSelectedOrder] = React.useState<any | null>(null);
+    const [selectedOrder, setSelectedOrder] = React.useState<IOrder | null>(null);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-    const handleOpenOrderDetails = (orderData: any) => {
+    const handleOpenOrderDetails = (orderData: IOrder) => {
         setSelectedOrder(orderData);
         setIsModalOpen(true);
     };
@@ -106,7 +106,7 @@ export default function Orders() {
                         <TableBody>
                             {orders?.map((order) => (
                                 <StyledTableRow key={order.id} onClick={() => handleOpenOrderDetails(order)}>
-                                    <TableCell>{formatDate(order.createdAt ?? new Date().toISOString())}</TableCell>
+                                    <TableCell>{formatDate((order.createdAt) ?? new Date().toISOString())}</TableCell>
                                     <TableCell>{order.id}</TableCell>
                                     <TableCell>{order.status}</TableCell>
                                     <TableCell>{order.paymentDetails.method}</TableCell>

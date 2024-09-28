@@ -5,15 +5,15 @@ import {
     Button,
     Box,
     CssBaseline,
-    Divider,
     Grid,
     Container,
 } from "@mui/material";
-import { ThemeProvider, createTheme, useTheme } from "@mui/material/styles";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import AppAppBar from "@/components/AppBar";
 import Footer from "@/components/Footer";
 import getLPTheme from "@/getLPTheme";
 import { useThemeContext } from '@/context/ThemeContext';
+import { IProduct } from "@/context/ProductContext";
 
 const DetailContainer = styled.div`
   display: flex;
@@ -22,154 +22,81 @@ const DetailContainer = styled.div`
   border-radius: 8px;
 `;
 
-const ProductDetailsContainer = styled.div`
+const SectionTitle = styled(Typography)`
+  font-weight: bold;
+  margin-bottom: 16px;
+`;
+
+const OrderInfoContainer = styled.div`
   flex: 1;
-  padding-left: 24px;
   display: flex;
   flex-direction: column;
+  gap: 16px;
 `;
 
-const ImageContainer = styled.div`
-  display: flex; /* Use flexbox for layout */
-  flex-direction: column; /* Stack children vertically */
-  align-items: center; /* Center thumbnails horizontally */
-`;
-
-const DetailsContent = styled.div`
-  flex: 1; 
-`;
-
-const MainImage = styled.img`
-  width: 100%; /* Take full width */
-  border-radius: 8px; 
-  height: 300px;
-  object-fit: cover;
-  margin-bottom: 16px; /* Add spacing between main image and thumbnails */
-`;
-
-const ThumbnailsContainer = styled.div`
-  display: flex;
-  justify-content: center; /* Center thumbnails horizontally */
-  flex-wrap: wrap;
-  gap: 8px;
-  width: 100%;
-  margin-top: 16px;
-`;
-
-const Thumbnail = styled.img<{ selected: boolean }>`
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  margin-bottom: 8px;
-  border-radius: 8px; 
-  cursor: pointer; // Make thumbnails clickable (later)
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  ${({ selected }) => {
-        const theme = useTheme();
-        return selected && `border: 2px solid ${theme.palette.primary.main};`
-    }}
-`;
-
-const Title = styled(Typography)`
-  font-weight: bold;
-  color: primary;
-  margin-top: 16px;
-`;
-
-const Description = styled(Typography)`
-  color: primary;
-  font-size: 14px;
+const InfoItem = styled(Typography)`
   margin-top: 8px;
 `;
 
-const PriceSizeContainer = styled.div`
+const OrderItemContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+`;
+
+const OrderItem = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-top: 16px;
-  padding: 8px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 8px;
 `;
 
 const PriceTag = styled(Typography)`
   font-weight: bold;
-  color: primary;
-`;
-
-const AddToCartButton = styled(Button)`
-  width: 100%;
-  margin-top: 16px;
-  text-transform: none;
-  padding: 8px 16px;
-  font-size: 14px;
 `;
 
 const BackButton = styled(Button)`
   width: 100%;
   margin-top: 16px;
   text-transform: none;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  margin-top: 16px;
+  padding: 8px;
 `;
 
 interface OrderDetailProps {
     order: {
         id: string;
-        image: string;
-        additionalImages: string[];
-        category: string;
-        productName: string;
-        size: string;
-        description: string;
-        price: string;
+        items: {
+            productId: string;
+            quantity: number;
+            productDetails?: IProduct;
+        }[];
+        totalAmount: number;
+        paymentDetails: {
+            method: string;
+            status: string;
+            transactionId?: string;
+        };
+        deliveryAddress: {
+            fullName: string;
+            address: string;
+            city: string;
+            country: string;
+            phone: string;
+        };
+        status: string;
+        createdAt: string;
+        updatedAt: string;
     };
-    onBack: () => void; // Function to handle "Back" button click
-}
-
-interface ToggleCustomThemeProps {
-    showCustomTheme: Boolean;
-    toggleCustomTheme: () => void;
-}
-
-function ToggleCustomTheme({
-    showCustomTheme,
-    toggleCustomTheme,
-}: ToggleCustomThemeProps) {
-    return (
-        <Box
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                width: "100dvw",
-                position: "fixed",
-                bottom: 24,
-            }}
-        ></Box>
-    );
+    onBack: () => void;
 }
 
 function OrderDetail({ order, onBack }: OrderDetailProps) {
-    const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const { mode, toggleColorMode } = useThemeContext();
-    const LPtheme = createTheme(getLPTheme(mode));
-    const defaultTheme = createTheme({ palette: { mode } });
-    const [selectedImage, setSelectedImage] = React.useState(order.image);
-
-    const toggleCustomTheme = () => {
-        setShowCustomTheme((prev) => !prev);
-    };
-
-    const handleThumbnailClick = (image: string) => {
-        setSelectedImage(image);
-    };
+    const theme = createTheme(getLPTheme(mode));
 
     return (
-        <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
+        <ThemeProvider theme={theme}>
             <CssBaseline />
             <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
             <Container maxWidth="lg">
@@ -177,61 +104,61 @@ function OrderDetail({ order, onBack }: OrderDetailProps) {
                     <DetailContainer>
                         <Grid container spacing={3}>
                             <Grid item xs={12} md={6}>
-                                {" "}
-                                <ImageContainer>
-                                    <MainImage
-                                        src={`/${selectedImage || (order.image ? order.image : 'iphone11.jpg')}`}
-                                        alt={order.productName}
-                                    />
-                                    <ThumbnailsContainer>
-                                        {[(order.image || 'iphone11.jpg'), ...order.additionalImages].map((img, index) => (
-                                            <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme} key={index}>
-                                                <Thumbnail
-                                                    src={`/${img || 'iphone11.jpg'}`}
-                                                    alt={`thumbnail-${index}`}
-                                                    onClick={() => handleThumbnailClick(img || 'iphone11.jpg')}
-                                                    selected={img === selectedImage}
-                                                />
-                                            </ThemeProvider>
+                                {/* Order Items */}
+                                <OrderInfoContainer>
+                                    <SectionTitle variant="h5">Order Items</SectionTitle>
+                                    <OrderItemContainer>
+                                        {order.items.map((item, index) => (
+                                            <OrderItem key={index}>
+                                                <Typography>
+                                                    {item.productDetails?.productName} (x{item.quantity})
+                                                </Typography>
+                                                <PriceTag>${(Number(item.productDetails?.price) * item.quantity).toFixed(2)}</PriceTag>
+                                            </OrderItem>
                                         ))}
-                                    </ThumbnailsContainer>
-                                </ImageContainer>
+                                    </OrderItemContainer>
+                                    <Typography variant="h6" sx={{ mt: 2 }}>
+                                        Total: ${order.totalAmount.toFixed(2)}
+                                    </Typography>
+                                </OrderInfoContainer>
                             </Grid>
+
                             <Grid item xs={12} md={6}>
-                                <ProductDetailsContainer>
-                                    <DetailsContent>
-                                        <Title variant="h4">{order.productName}</Title>
-                                        <Title variant="h6">Category: {order.category}</Title>
-                                        <PriceSizeContainer>
-                                            <PriceTag variant="h6">Price: ${order.price}</PriceTag>
-                                            <Typography variant="subtitle1" color="white">
-                                                Size: {order.size}
-                                            </Typography>
-                                        </PriceSizeContainer>
-                                        <Description variant="body1">Description: {order.description}</Description>
-                                        <Divider />
-                                        <Grid container spacing={2}>
-                                            <Divider />
-                                            <Grid item xs={12}>
-                                                <BackButton variant="outlined" color="inherit" onClick={onBack}>
-                                                    Back to Marketplace
-                                                </BackButton>
-                                            </Grid>
-                                        </Grid>
-                                    </DetailsContent>
-                                </ProductDetailsContainer>
+                                {/* Delivery and Payment Details */}
+                                <OrderInfoContainer>
+                                    <SectionTitle variant="h5">Delivery Address</SectionTitle>
+                                    <InfoItem>Full Name: {order.deliveryAddress.fullName}</InfoItem>
+                                    <InfoItem>Address: {order.deliveryAddress.address}</InfoItem>
+                                    <InfoItem>City: {order.deliveryAddress.city}</InfoItem>
+                                    <InfoItem>Country: {order.deliveryAddress.country}</InfoItem>
+                                    <InfoItem>Phone: {order.deliveryAddress.phone}</InfoItem>
+
+                                    <SectionTitle variant="h5" sx={{ mt: 4 }}>
+                                        Payment Details
+                                    </SectionTitle>
+                                    <InfoItem>Method: {order.paymentDetails.method}</InfoItem>
+                                    <InfoItem>Status: {order.paymentDetails.status}</InfoItem>
+                                    {order.paymentDetails.transactionId && (
+                                        <InfoItem>Transaction ID: {order.paymentDetails.transactionId}</InfoItem>
+                                    )}
+
+                                    <SectionTitle variant="h5" sx={{ mt: 4 }}>
+                                        Order Status
+                                    </SectionTitle>
+                                    <InfoItem>Status: {order.status}</InfoItem>
+                                    <InfoItem>Created At: {new Date(order.createdAt).toLocaleString()}</InfoItem>
+                                    <InfoItem>Updated At: {new Date(order.updatedAt).toLocaleString()}</InfoItem>
+                                </OrderInfoContainer>
                             </Grid>
                         </Grid>
                     </DetailContainer>
-                    <Divider />
+
+                    <BackButton variant="outlined" color="inherit" onClick={onBack}>
+                        Back to Orders
+                    </BackButton>
                     <Footer />
                 </Box>
             </Container>
-
-            <ToggleCustomTheme
-                showCustomTheme={showCustomTheme}
-                toggleCustomTheme={toggleCustomTheme}
-            />
         </ThemeProvider>
     );
 }

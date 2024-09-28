@@ -3,18 +3,34 @@ import { toast } from "react-hot-toast";
 import useSWR from "swr";
 
 // Order Item Interface
-interface IOrderItem {
-    productId: string;
-    quantity: number;
-    updatedAt?: string;
-    createdAt?: string;
+interface IProduct {
+    id: string;
+    userId: string;
+    productName: string;
+    price: string;
+    description: string;
+    paymentMethod: string;
+    image: string;
+    additionalImages: string[];
+    category: string;
+    size: string;
+    color: string;
+    transactionType: string;
+    currency: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 // Order Interface
 export interface IOrder {
-    id?: string;
+    id: string;
+    createdAt: string;
     userId: string;
-    items: IOrderItem[];
+    items: {
+        productId: string;
+        quantity: number;
+        productDetails?: IProduct;
+    }[];
     totalAmount: number;
     status: string; // Example statuses: 'pending', 'confirmed', 'shipped', 'delivered', etc.
     paymentDetails: {
@@ -30,6 +46,7 @@ export interface IOrder {
         phone: string;
     };
 }
+
 
 // Order Context Interface
 interface OrderContextProps {
