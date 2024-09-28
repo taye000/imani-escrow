@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Grid, Typography, Button, IconButton, RadioGroup, FormControlLabel, Radio, TextField, CardMedia, Container, Collapse, CircularProgress } from '@mui/material';
+import { Grid, Typography, Button, IconButton, RadioGroup, FormControlLabel, Radio, TextField, CardMedia, Container, Collapse, CircularProgress, Modal } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -91,6 +91,19 @@ const ConnectWalletButton = styled(Button)`
   }
 `;
 
+const ConfirmationModal = styled(Modal)({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+});
+
+const ModalContent = styled(Box)`
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    outline: none;
+`;
+
 const NoItemsContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -167,6 +180,7 @@ function Checkout() {
 
     const [isShippingOpen, setIsShippingOpen] = React.useState(false);
     const [isPaymentOpen, setIsPaymentOpen] = React.useState(false);
+    const [confirmationOpen, setConfirmationOpen] = React.useState(false);
 
     const toggleShippingSection = () => {
         setIsShippingOpen((prev) => !prev);
@@ -211,6 +225,10 @@ function Checkout() {
     };
 
     const handlePayNow = () => {
+        setConfirmationOpen(true);
+    };
+
+    const handleConfirmPayment = () => {
         if (cart?.items.length === 0) {
             toast.error("Please add products to your cart before proceeding.");
         } else if (selectedPaymentMethod === 'mpesa' && !mpesaPhoneNumber) {
@@ -220,6 +238,8 @@ function Checkout() {
         } else {
             // Proceed with payment logic
             toast.success("Payment processed successfully!");
+            setConfirmationOpen(false);
+            router.push("/marketplace");
         }
     };
 
@@ -449,6 +469,29 @@ function Checkout() {
                     <Footer />
                 </Box>
             </Container>
+            {/* Confirmation Modal */}
+            <ConfirmationModal
+                open={confirmationOpen}
+                onClose={() => setConfirmationOpen(false)}
+            >
+                <ModalContent>
+                    <Typography variant="h6">Confirm Payment</Typography>
+                    <Typography variant="body1">Are you sure you want to proceed with the payment?</Typography>
+                    <Button
+                        variant="contained"
+                        onClick={handleConfirmPayment}
+                        sx={{ marginRight: 2 }}
+                    >
+                        Confirm
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        onClick={() => setConfirmationOpen(false)}
+                    >
+                        Cancel
+                    </Button>
+                </ModalContent>
+            </ConfirmationModal>
             <ToggleCustomTheme showCustomTheme={showCustomTheme} toggleCustomTheme={toggleCustomTheme} />
         </ThemeProvider>
     );
