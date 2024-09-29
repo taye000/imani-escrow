@@ -51,7 +51,7 @@ function preventDefault(event: React.MouseEvent) {
     event.preventDefault();
 }
 
-export default function Orders() {
+export default function OrdersComponent() {
     // Fetch orders from OrderContext
     const { orders, isLoading, error } = useOrderContext();
     const { mode } = useThemeContext();

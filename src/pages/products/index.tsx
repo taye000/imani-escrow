@@ -15,7 +15,7 @@ import Footer from "@/components/Footer";
 import getLPTheme from "@/getLPTheme";
 import styled from "styled-components";
 import AddProductModal from "@/components/AddProductModal";
-import Products from "@/components/Products";
+import ProductsComponent from "@/components/Products";
 import withAuth from "@/components/withAuth";
 
 interface ToggleCustomThemeProps {
@@ -52,7 +52,7 @@ function ToggleCustomTheme({
   );
 }
 
-function Dashboard() {
+function Products() {
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
   const { mode, toggleColorMode } = useThemeContext();
   const LPtheme = createTheme(getLPTheme(mode));
@@ -88,7 +88,7 @@ function Dashboard() {
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                <Products />
+                <ProductsComponent />
               </Paper>
             </Grid>
           </Grid>
@@ -105,4 +105,4 @@ function Dashboard() {
   );
 }
 
-export default withAuth(Dashboard);
+export default withAuth(Products);

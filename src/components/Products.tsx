@@ -51,7 +51,7 @@ function preventDefault(event: React.MouseEvent) {
     event.preventDefault();
 }
 
-export default function Products() {
+export default function ProductsComponent() {
     const { products, isLoading, error } = useProductContext();
     const { mode } = useThemeContext();
     const defaultTheme = createTheme({ palette: { mode } });

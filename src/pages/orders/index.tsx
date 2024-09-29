@@ -10,7 +10,7 @@ import getLPTheme from '@/getLPTheme';
 import styled from 'styled-components';
 import AddProductModal from '@/components/AddProductModal';
 import withAuth from '@/components/withAuth';
-import Orders from '@/components/Orders';
+import OrdersComponent from '@/components/Orders';
 
 interface ToggleCustomThemeProps {
     showCustomTheme: Boolean;
@@ -44,7 +44,7 @@ function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }: ToggleCustomT
     );
 }
 
-function Dashboard() {
+function Orders() {
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const { mode, toggleColorMode } = useThemeContext();
     const LPtheme = createTheme(getLPTheme(mode));
@@ -74,7 +74,7 @@ function Dashboard() {
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                                <Orders />
+                                <OrdersComponent />
                             </Paper>
                         </Grid>
                     </Grid>
@@ -91,4 +91,4 @@ function Dashboard() {
     );
 }
 
-export default withAuth(Dashboard);
+export default withAuth(Orders);
