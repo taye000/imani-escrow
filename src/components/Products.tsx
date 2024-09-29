@@ -114,7 +114,7 @@ export default function Products() {
                     </Table>
                 </TableContainer>
             )}
-            <Link href="#" onClick={preventDefault} sx={{ mt: 3 }} underline="hover">
+            <Link href="/products" sx={{ mt: 3 }} underline="hover">
                 See more products
             </Link>
             {selectedProduct && (

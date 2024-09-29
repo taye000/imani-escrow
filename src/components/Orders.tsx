@@ -118,7 +118,7 @@ export default function Orders() {
                 </TableContainer>
             )}
 
-            <Link href="/orders" onClick={preventDefault} sx={{ mt: 3 }} underline="hover">
+            <Link href="/orders" sx={{ mt: 3 }} underline="hover">
                 See more orders
             </Link>
 
