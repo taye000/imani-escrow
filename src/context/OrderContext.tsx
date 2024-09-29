@@ -4,7 +4,6 @@ import useSWR from "swr";
 
 // Order Item Interface
 interface IProduct {
-    id: string;
     userId: string;
     productName: string;
     price: string;
@@ -17,14 +16,10 @@ interface IProduct {
     color: string;
     transactionType: string;
     currency: string;
-    createdAt: string;
-    updatedAt: string;
 }
 
 // Order Interface
 export interface IOrder {
-    id: string;
-    createdAt: string;
     userId: string;
     items: {
         productId: string;
@@ -34,9 +29,17 @@ export interface IOrder {
     totalAmount: number;
     status: string; // Example statuses: 'pending', 'confirmed', 'shipped', 'delivered', etc.
     paymentDetails: {
-        method: string;
-        status: string;
-        transactionId?: string;
+        method: 'wallet' | 'mpesa' | 'card'; // Payment method options
+        status: string; // Payment status like 'pending', 'completed', etc.
+        transactionId?: string; // Optional transaction ID (may not be available at the time of order creation)
+        mpesaPhoneNumber?: string; // Required if using M-Pesa
+        walletAddress?: string; // Required if using a crypto wallet
+        cardDetails?: {
+            cardholderName: string;
+            cardNumber: string;
+            expiryDate: string;
+            cvc: string;
+        }; // Required if using a credit card
     };
     deliveryAddress: {
         fullName: string;
@@ -47,11 +50,17 @@ export interface IOrder {
     };
 }
 
+export interface IFetchOrder extends IOrder {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 
 // Order Context Interface
 interface OrderContextProps {
-    orders: IOrder[] | null;
-    currentOrder: IOrder | null;
+    orders: IFetchOrder[] | null;
+    currentOrder: IFetchOrder | null;
     isLoading: boolean;
     error: any;
     createOrder: (orderData: IOrder) => Promise<void>;

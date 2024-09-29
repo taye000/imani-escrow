@@ -11,7 +11,7 @@ import Title from './Title';
 import { useThemeContext } from '@/context/ThemeContext';
 import OrderSkeleton from './orderskeleton';
 import { formatDate } from '@/utils/formatDate';
-import { useOrderContext, IOrder } from '@/context/OrderContext';
+import { useOrderContext, IFetchOrder } from '@/context/OrderContext';
 import OrderDetailModal from './OrderDetailModal';
 
 const StyledTableRow = styled(TableRow)`
@@ -58,10 +58,10 @@ export default function Orders() {
     const defaultTheme = createTheme({ palette: { mode } });
 
     // Modal state
-    const [selectedOrder, setSelectedOrder] = React.useState<IOrder | null>(null);
+    const [selectedOrder, setSelectedOrder] = React.useState<IFetchOrder | null>(null);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-    const handleOpenOrderDetails = (orderData: IOrder) => {
+    const handleOpenOrderDetails = (orderData: IFetchOrder) => {
         setSelectedOrder(orderData);
         setIsModalOpen(true);
     };

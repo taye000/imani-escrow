@@ -4,24 +4,12 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { Stack, Divider, Button } from '@mui/material';
 import { formatDate } from '@/utils/formatDate';
+import { IFetchOrder } from '@/context/OrderContext'; // Import the correct interface
 
 interface OrderDetailProps {
     open: boolean;
     handleClose: () => void;
-    order: {
-        id: string;
-        createdAt: string;
-        status: string;
-        totalAmount: number;
-        paymentDetails: {
-            method: string;
-        };
-        items: Array<{
-            productName: string;
-            quantity: number;
-            price: number;
-        }>;
-    };
+    order: IFetchOrder; // Use the IFetchOrder interface here
 }
 
 const modalStyle = {
@@ -72,10 +60,10 @@ export default function OrderDetailModal({ open, handleClose, order }: OrderDeta
                 {order.items.map((item, index) => (
                     <Box key={index} sx={{ mb: 2 }}>
                         <Typography variant="body1">
-                            {item.productName} (x{item.quantity})
+                            {item.productDetails?.productName || 'Unknown Product'} (x{item.quantity})
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                            Price: ${item.price.toFixed(2)}
+                            Price: ${parseFloat(item.productDetails?.price ?? '0').toFixed(2)}
                         </Typography>
                     </Box>
                 ))}

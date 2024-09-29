@@ -21,7 +21,9 @@ import toast from 'react-hot-toast';
 import withAuth from '@/components/withAuth';
 import Loading from '@/loading';
 import { useCartContext } from '@/context/CartContext';
+import { IOrder, useOrderContext } from '@/context/OrderContext';
 import router from 'next/router';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 const ProductCardContainer = styled.div`
   display: flex;
@@ -158,18 +160,25 @@ function ToggleCustomTheme({
 }
 
 function Checkout() {
+    const { user } = useUser();
+    if (!user) return <div>Please sign in to view this page.</div>;
+
     const { cart, isLoading, error, updateCart, removeItem } = useCartContext();
+    const { createOrder } = useOrderContext();
+
     const { mode, toggleColorMode } = useThemeContext();
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState('wallet');
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState<'wallet' | 'mpesa' | 'card'>('wallet');
     const [fullName, setFullName] = React.useState('');
     const [address, setAddress] = React.useState('');
     const [country, setCountry] = React.useState('');
     const [city, setCity] = React.useState('');
     const [phone, setPhone] = React.useState('');
+    const [status, setStatus] = React.useState('Pending');
     const [mpesaPhoneNumber, setMpesaPhoneNumber] = React.useState('');
+    const [walletAddress, setWalletAddress] = React.useState('');
     const [cardDetailsFilled, setCardDetailsFilled] = React.useState(false);
     const [cardDetails, setCardDetails] = React.useState<CardDetails>({
         cardholderName: '',
@@ -201,7 +210,8 @@ function Checkout() {
     };
 
     const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedPaymentMethod(event.target.value);
+        const method = event.target.value as 'wallet' | 'mpesa' | 'card'; // Cast the value
+        setSelectedPaymentMethod(method);
     };
 
     const handleMpesaPhoneNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -229,17 +239,67 @@ function Checkout() {
     };
 
     const handleConfirmPayment = () => {
-        if (cart?.items.length === 0) {
+        if (!cart || cart.items.length === 0) {
             toast.error("Please add products to your cart before proceeding.");
         } else if (selectedPaymentMethod === 'mpesa' && !mpesaPhoneNumber) {
             toast.error("Please enter your M-pesa phone number.");
         } else if (selectedPaymentMethod === 'card' && !cardDetailsFilled) {
             toast.error("Please fill in your card details.");
         } else {
-            // Proceed with payment logic
+            // Create a snapshot of the cart
+            const cartSnapshot: {
+                items: { productId: string; quantity: number }[];
+                totalAmount: number;
+            } = {
+                items: cart.items.map(item => ({
+                    productId: item.productId.toString(), // Ensure the ID is a string
+                    quantity: item.quantity,
+                })),
+                totalAmount: cart.totalAmount,
+            };
+
             toast.success("Payment processed successfully!");
             setConfirmationOpen(false);
+            setStatus('Paid');
+            handleSaveOrder(cartSnapshot); // Pass the local snapshot
             router.push("/marketplace");
+        }
+    };
+
+    const handleSaveOrder = async (cartSnapshot: { items: { productId: string; quantity: number }[]; totalAmount: number }) => {
+        if (!user?.sub) {
+            toast.error("User is not authenticated");
+            return;
+        }
+
+        const orderData: IOrder = {
+            deliveryAddress: {
+                fullName,
+                address,
+                city,
+                country,
+                phone,
+            },
+            paymentDetails: {
+                method: selectedPaymentMethod,
+                status: status,
+                transactionId: undefined, // Update with actual transaction ID after payment.
+                ...(selectedPaymentMethod === 'mpesa' && { mpesaPhoneNumber }),
+                ...(selectedPaymentMethod === 'card' && { cardDetails }),
+                ...(selectedPaymentMethod === 'wallet' && { wallet: walletAddress }),
+            },
+            items: cartSnapshot.items,
+            totalAmount: cartSnapshot.totalAmount,
+            status: 'pending',
+            userId: user.sub,
+        };
+
+        try {
+            await createOrder(orderData);
+            toast.success("Order saved successfully!");
+        } catch (error) {
+            console.error("There was a problem submitting the form:", error);
+            toast.error("There was an issue processing your order.");
         }
     };
 
