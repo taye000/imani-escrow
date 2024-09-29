@@ -5,6 +5,7 @@ import Modal from '@mui/material/Modal';
 import { Stack, Divider, Button } from '@mui/material';
 import { formatDate } from '@/utils/formatDate';
 import { IFetchOrder } from '@/context/OrderContext'; // Import the correct interface
+import { useRouter } from 'next/router';
 
 interface OrderDetailProps {
     open: boolean;
@@ -27,7 +28,11 @@ const modalStyle = {
 };
 
 export default function OrderDetailModal({ open, handleClose, order }: OrderDetailProps) {
-    console.log("order details", order.items);
+    const router = useRouter();
+    const handleGoToDetailPage = () => {
+        router.push(`/orders/${order.id}`);
+    };
+
     return (
         <Modal open={open} onClose={handleClose} aria-labelledby="order-modal-title">
             <Box sx={modalStyle} onClick={(e) => e.stopPropagation()}>
@@ -72,6 +77,9 @@ export default function OrderDetailModal({ open, handleClose, order }: OrderDeta
                 <Stack direction="row" justifyContent="flex-end" spacing={2} mt={3}>
                     <Button onClick={handleClose} variant="outlined" color="primary">
                         Close
+                    </Button>
+                    <Button onClick={handleGoToDetailPage} variant="contained" color="primary">
+                        View Details
                     </Button>
                 </Stack>
             </Box>
