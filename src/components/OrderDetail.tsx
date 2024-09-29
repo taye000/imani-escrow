@@ -54,7 +54,7 @@ const OrderItem = styled(Box)`
 
 const PriceTag = styled(Typography)`
   font-weight: bold;
-  color: #3f51b5; /* Example color */
+  color: #3f51b5; 
 `;
 
 const BackButton = styled(Button)`

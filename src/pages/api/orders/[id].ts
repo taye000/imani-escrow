@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../utils/db";
-import Order from "@/models/order";
+import Order, { IOrder } from "@/models/order";
 import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function handler(
@@ -31,12 +31,33 @@ export default async function handler(
       }
 
     case "PUT":
-      // Update an existing order (e.g., status or delivery details)
       try {
-        const updatedOrder = await Order.findByIdAndUpdate(id, req.body, {
-          new: true,
-          runValidators: true,
-        });
+        // Create an object to hold the fields to update
+        const updateFields: Partial<IOrder> = {};
+
+        // Only add fields that are present in the request body
+        if (req.body.status) {
+          updateFields.status = req.body.status;
+        }
+        if (req.body.comment) {
+          updateFields.comment = req.body.comment;
+        }
+        if (req.body.paymentDetails) {
+          updateFields.paymentDetails = req.body.paymentDetails;
+        }
+        if (req.body.deliveryAddress) {
+          updateFields.deliveryAddress = req.body.deliveryAddress;
+        }
+
+        const updatedOrder = await Order.findByIdAndUpdate(
+          id,
+          { $set: updateFields },
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+
         if (!updatedOrder) {
           return res.status(404).json({ message: "Order not found" });
         }

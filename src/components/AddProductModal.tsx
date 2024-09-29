@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import CircularProgress from '@mui/material/CircularProgress';
 import { TextField, Grid } from '@mui/material';
-import toast from 'react-hot-toast';
 import { useProductContext } from '@/context/ProductContext';
 
 const style = {
