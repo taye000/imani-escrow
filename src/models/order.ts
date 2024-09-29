@@ -30,6 +30,7 @@ interface IOrder extends Document {
   paymentDetails: IPaymentDetails;
   deliveryAddress: IDeliveryAddress;
   status: string; // e.g., "Pending", "Shipped", "Delivered", "Cancelled"
+  comment?: string;
 }
 
 const orderSchema = new Schema<IOrder>(
@@ -67,8 +68,12 @@ const orderSchema = new Schema<IOrder>(
     status: {
       type: String,
       required: true,
-      enum: ["Pending", "Shipped", "Delivered", "Cancelled"],
+      enum: ["Pending", "Confirmed", "Delivered", "Cancelled", "Discrepancy"],
       default: "Pending",
+    },
+    comment: {
+      type: String,
+      required: false,
     },
   },
   {

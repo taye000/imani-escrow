@@ -8,6 +8,8 @@ import {
     Grid,
     Container,
     Paper,
+    TextField,
+    MenuItem,
 } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import AppAppBar from "@/components/AppBar";
@@ -62,6 +64,11 @@ const BackButton = styled(Button)`
   padding: 8px;
 `;
 
+const UpdateButton = styled(Button)`
+  margin-top: 16px;
+  text-transform: none;
+`;
+
 interface OrderDetailProps {
     order: {
         id: string;
@@ -88,11 +95,19 @@ interface OrderDetailProps {
         updatedAt: string;
     };
     onBack: () => void;
+    onUpdateOrder: (status: string, comment?: string) => void; // Function to handle order update
 }
 
-function OrderDetail({ order, onBack }: OrderDetailProps) {
+function OrderDetail({ order, onBack, onUpdateOrder }: OrderDetailProps) {
     const { mode, toggleColorMode } = useThemeContext();
     const theme = createTheme(getLPTheme(mode));
+    const [newStatus, setNewStatus] = React.useState(order.status);
+    const [comment, setComment] = React.useState("");
+
+    const handleUpdateOrder = () => {
+        onUpdateOrder(newStatus, comment);
+        setComment("");
+    };
 
     return (
         <ThemeProvider theme={theme}>
@@ -103,7 +118,6 @@ function OrderDetail({ order, onBack }: OrderDetailProps) {
                     <DetailContainer elevation={3}>
                         <Grid container spacing={3}>
                             <Grid item xs={12} md={6}>
-                                {/* Order Items */}
                                 <OrderInfoContainer>
                                     <SectionTitle variant="h5">Order Items</SectionTitle>
                                     <OrderItemContainer>
@@ -147,6 +161,36 @@ function OrderDetail({ order, onBack }: OrderDetailProps) {
                                     <InfoItem>Status: {order.status}</InfoItem>
                                     <InfoItem>Created At: {new Date(order.createdAt).toLocaleString()}</InfoItem>
                                     <InfoItem>Updated At: {new Date(order.updatedAt).toLocaleString()}</InfoItem>
+
+                                    {/* Update Order Status */}
+                                    <SectionTitle variant="h5" sx={{ mt: 4 }}>
+                                        Update Order Status
+                                    </SectionTitle>
+                                    <TextField
+                                        select
+                                        label="New Status"
+                                        value={newStatus}
+                                        onChange={(e) => setNewStatus(e.target.value)}
+                                        fullWidth
+                                    >
+                                        <MenuItem value="Pending">Pending</MenuItem>
+                                        <MenuItem value="Delivered">Delivered</MenuItem>
+                                        <MenuItem value="Confirmed">Confirmed</MenuItem>
+                                        <MenuItem value="Discrepancy">Discrepancy</MenuItem>
+                                        <MenuItem value="Cancelled">Cancelled</MenuItem>
+                                    </TextField>
+                                    <TextField
+                                        label="Comment (optional)"
+                                        value={comment}
+                                        onChange={(e) => setComment(e.target.value)}
+                                        fullWidth
+                                        multiline
+                                        rows={4}
+                                        sx={{ mt: 2 }}
+                                    />
+                                    <UpdateButton variant="contained" color="primary" onClick={handleUpdateOrder}>
+                                        Update Order
+                                    </UpdateButton>
                                 </OrderInfoContainer>
                             </Grid>
                         </Grid>

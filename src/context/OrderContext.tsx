@@ -23,6 +23,7 @@ export interface IOrder {
     userId: string;
     cartId: string;
     totalAmount: number;
+    comment?: string;
     status: string; // Example statuses: 'pending', 'confirmed', 'shipped', 'delivered', etc.
     paymentDetails: {
         method: 'wallet' | 'mpesa' | 'card'; // Payment method options
@@ -57,6 +58,7 @@ export interface IFetchOrder {
         productDetails?: IProduct;
     }[];
     totalAmount: number;
+    comment?: string;
     status: string; // Example statuses: 'pending', 'confirmed', 'shipped', 'delivered', etc.
     paymentDetails: {
         method: 'wallet' | 'mpesa' | 'card'; // Payment method options

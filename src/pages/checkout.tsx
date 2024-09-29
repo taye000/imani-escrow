@@ -163,7 +163,7 @@ function Checkout() {
     const { user } = useUser();
     if (!user) return <div>Please sign in to view this page.</div>;
 
-    const { cart, isLoading, error, updateCart, removeItem } = useCartContext();
+    const { cart, isLoading, error, updateCart, removeItem, clearCart } = useCartContext();
     const { createOrder } = useOrderContext();
 
     const { mode, toggleColorMode } = useThemeContext();
@@ -238,7 +238,7 @@ function Checkout() {
         setConfirmationOpen(true);
     };
 
-    const handleConfirmPayment = () => {
+    const handleConfirmPayment = async () => {
         if (!cart || !cart.id) {
             toast.error("Please add products to your cart before proceeding.");
         } else if (selectedPaymentMethod === 'mpesa' && !mpesaPhoneNumber) {
@@ -249,7 +249,8 @@ function Checkout() {
             toast.success("Payment processed successfully!");
             setConfirmationOpen(false);
             setStatus('Paid');
-            handleSaveOrder(cart.id, cart.totalAmount); // Pass only the cart ID
+            await handleSaveOrder(cart.id, cart.totalAmount);
+            await clearCart();
             router.push("/marketplace");
         }
     };
@@ -286,6 +287,7 @@ function Checkout() {
             await createOrder(orderData);
         } catch (error) {
             console.error("There was a problem submitting the form:", error);
+            throw error;
         }
     };
 
