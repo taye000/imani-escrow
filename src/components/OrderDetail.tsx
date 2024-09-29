@@ -91,6 +91,7 @@ interface OrderDetailProps {
             phone: string;
         };
         status: string;
+        comment: string;
         createdAt: string;
         updatedAt: string;
     };
@@ -159,6 +160,7 @@ function OrderDetail({ order, onBack, onUpdateOrder }: OrderDetailProps) {
                                         Order Status
                                     </SectionTitle>
                                     <InfoItem>Status: {order.status}</InfoItem>
+                                    <InfoItem>Comment: {order.comment}</InfoItem>
                                     <InfoItem>Created At: {new Date(order.createdAt).toLocaleString()}</InfoItem>
                                     <InfoItem>Updated At: {new Date(order.updatedAt).toLocaleString()}</InfoItem>
 
