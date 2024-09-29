@@ -5,6 +5,7 @@ import Modal from '@mui/material/Modal';
 import { Stack, Divider, Button } from '@mui/material';
 import { useProductContext } from '@/context/ProductContext';
 import { formatDate } from '@/utils/formatDate';
+import { useRouter } from 'next/router';
 
 interface ProductDetailProps {
     open: boolean;
@@ -46,6 +47,11 @@ export default function ProductDetailModal({ open, handleClose, product }: Produ
         handleClose();
     };
 
+    const router = useRouter();
+    const handleGoToDetailPage = () => {
+        router.push(`/products/${product.id}`);
+    };
+
     return (
         <Modal open={open} onClose={handleClose} aria-labelledby="product-modal-title">
             <Box sx={modalStyle} onClick={(e) => e.stopPropagation()}>
@@ -76,6 +82,9 @@ export default function ProductDetailModal({ open, handleClose, product }: Produ
                 <Stack direction="row" justifyContent="flex-end" spacing={2} mt={3}>
                     <Button onClick={handleClose} variant="outlined" color="primary">
                         Close
+                    </Button>
+                    <Button onClick={handleGoToDetailPage} variant="contained" color="primary">
+                        View Details
                     </Button>
                     <Button onClick={() => handleDeleteProduct(product.id!)} variant="contained" color="error">
                         Delete

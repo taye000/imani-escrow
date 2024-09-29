@@ -7,6 +7,7 @@ import {
     CssBaseline,
     Grid,
     Container,
+    Paper,
 } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import AppAppBar from "@/components/AppBar";
@@ -15,11 +16,10 @@ import getLPTheme from "@/getLPTheme";
 import { useThemeContext } from '@/context/ThemeContext';
 import { IProduct } from "@/context/ProductContext";
 
-const DetailContainer = styled.div`
-  display: flex;
-  background-color: primary;
+const DetailContainer = styled(Paper)`
   padding: 24px;
   border-radius: 8px;
+  margin-bottom: 24px;
 `;
 
 const SectionTitle = styled(Typography)`
@@ -28,7 +28,6 @@ const SectionTitle = styled(Typography)`
 `;
 
 const OrderInfoContainer = styled.div`
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -42,18 +41,18 @@ const OrderItemContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 16px;
 `;
 
-const OrderItem = styled.div`
+const OrderItem = styled(Box)`
   display: flex;
   justify-content: space-between;
+  padding: 8px 0;
   border-bottom: 1px solid #ccc;
-  padding-bottom: 8px;
 `;
 
 const PriceTag = styled(Typography)`
   font-weight: bold;
+  color: #3f51b5; /* Example color */
 `;
 
 const BackButton = styled(Button)`
@@ -101,7 +100,7 @@ function OrderDetail({ order, onBack }: OrderDetailProps) {
             <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
             <Container maxWidth="lg">
                 <Box sx={{ bgcolor: "background.default", p: 4, pt: 12 }}>
-                    <DetailContainer>
+                    <DetailContainer elevation={3}>
                         <Grid container spacing={3}>
                             <Grid item xs={12} md={6}>
                                 {/* Order Items */}
@@ -111,13 +110,13 @@ function OrderDetail({ order, onBack }: OrderDetailProps) {
                                         {order.items.map((item, index) => (
                                             <OrderItem key={index}>
                                                 <Typography>
-                                                    {item.productDetails?.productName} (x{item.quantity})
+                                                    {item.productDetails?.productName || 'Unknown Product'} (x{item.quantity})
                                                 </Typography>
                                                 <PriceTag>${(Number(item.productDetails?.price) * item.quantity).toFixed(2)}</PriceTag>
                                             </OrderItem>
                                         ))}
                                     </OrderItemContainer>
-                                    <Typography variant="h6" sx={{ mt: 2 }}>
+                                    <Typography variant="h6" sx={{ mt: 2, fontWeight: 'bold' }}>
                                         Total: ${order.totalAmount.toFixed(2)}
                                     </Typography>
                                 </OrderInfoContainer>

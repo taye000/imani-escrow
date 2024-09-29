@@ -118,11 +118,10 @@ export default function Orders() {
                 </TableContainer>
             )}
 
-            <Link href="#" onClick={preventDefault} sx={{ mt: 3 }} underline="hover">
+            <Link href="/orders" onClick={preventDefault} sx={{ mt: 3 }} underline="hover">
                 See more orders
             </Link>
 
-            {/* Add OrderDetailModal here */}
             {selectedOrder && (
                 <OrderDetailModal
                     open={isModalOpen}
