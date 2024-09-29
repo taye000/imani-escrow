@@ -160,7 +160,7 @@ function OrderDetail({ order, onBack, onUpdateOrder }: OrderDetailProps) {
                                         Order Status
                                     </SectionTitle>
                                     <InfoItem>Status: {order.status}</InfoItem>
-                                    <InfoItem>Comment: {order.comment}</InfoItem>
+                                    {order.comment && <InfoItem>Comment: {order.comment}</InfoItem>}
                                     <InfoItem>Created At: {new Date(order.createdAt).toLocaleString()}</InfoItem>
                                     <InfoItem>Updated At: {new Date(order.updatedAt).toLocaleString()}</InfoItem>
 
