@@ -239,34 +239,22 @@ function Checkout() {
     };
 
     const handleConfirmPayment = () => {
-        if (!cart || cart.items.length === 0) {
+        if (!cart || !cart.id) {
             toast.error("Please add products to your cart before proceeding.");
         } else if (selectedPaymentMethod === 'mpesa' && !mpesaPhoneNumber) {
             toast.error("Please enter your M-pesa phone number.");
         } else if (selectedPaymentMethod === 'card' && !cardDetailsFilled) {
             toast.error("Please fill in your card details.");
         } else {
-            // Create a snapshot of the cart
-            const cartSnapshot: {
-                items: { productId: string; quantity: number }[];
-                totalAmount: number;
-            } = {
-                items: cart.items.map(item => ({
-                    productId: item.productId.toString(), // Ensure the ID is a string
-                    quantity: item.quantity,
-                })),
-                totalAmount: cart.totalAmount,
-            };
-
             toast.success("Payment processed successfully!");
             setConfirmationOpen(false);
             setStatus('Paid');
-            handleSaveOrder(cartSnapshot); // Pass the local snapshot
+            handleSaveOrder(cart.id, cart.totalAmount); // Pass only the cart ID
             router.push("/marketplace");
         }
     };
 
-    const handleSaveOrder = async (cartSnapshot: { items: { productId: string; quantity: number }[]; totalAmount: number }) => {
+    const handleSaveOrder = async (cartId: string, totalAmount: number) => {
         if (!user?.sub) {
             toast.error("User is not authenticated");
             return;
@@ -288,18 +276,16 @@ function Checkout() {
                 ...(selectedPaymentMethod === 'card' && { cardDetails }),
                 ...(selectedPaymentMethod === 'wallet' && { wallet: walletAddress }),
             },
-            items: cartSnapshot.items,
-            totalAmount: cartSnapshot.totalAmount,
+            cartId,
+            totalAmount,
             status: 'pending',
             userId: user.sub,
         };
 
         try {
             await createOrder(orderData);
-            toast.success("Order saved successfully!");
         } catch (error) {
             console.error("There was a problem submitting the form:", error);
-            toast.error("There was an issue processing your order.");
         }
     };
 
@@ -425,17 +411,6 @@ function Checkout() {
                                                         margin="normal"
                                                         rows={4}
                                                     />
-                                                </Grid>
-                                                <Grid item xs={12} sx={{ textAlign: 'center' }}>
-                                                    <Button
-                                                        type="submit"
-                                                        variant="contained"
-                                                        color="primary"
-                                                        disabled={isLoading}
-                                                        endIcon={isLoading && <CircularProgress size={20} />}
-                                                    >
-                                                        Save
-                                                    </Button>
                                                 </Grid>
                                             </Grid>
                                         </form>

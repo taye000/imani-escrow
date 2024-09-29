@@ -20,7 +20,7 @@ interface IPaymentDetails {
 // Interface for Order
 interface IOrder extends Document {
   _id: Types.ObjectId;
-  userId: Types.ObjectId;
+  userId: string;
   cartId: Types.ObjectId; // Reference to the cart
   items: {
     productId: Types.ObjectId;
@@ -34,7 +34,7 @@ interface IOrder extends Document {
 
 const orderSchema = new Schema<IOrder>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    userId: { type: String, required: true },
     cartId: { type: Schema.Types.ObjectId, ref: "Cart", required: true },
     items: [
       {

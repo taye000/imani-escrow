@@ -57,9 +57,11 @@ export default async function handler(
       return res
         .status(201)
         .json({ message: "Order created successfully", data: newOrder });
-    } catch (error) {
-      console.error("Error creating order:", error);
-      return res.status(500).json({ message: "Failed to create order" });
+    } catch (error: any) {
+      console.error("Error creating order:", error.message);
+      return res
+        .status(500)
+        .json({ message: "Failed to create order", error: error.message });
     }
   } else if (req.method === "GET") {
     try {

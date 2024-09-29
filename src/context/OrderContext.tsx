@@ -21,6 +21,36 @@ interface IProduct {
 // Order Interface
 export interface IOrder {
     userId: string;
+    cartId: string;
+    totalAmount: number;
+    status: string; // Example statuses: 'pending', 'confirmed', 'shipped', 'delivered', etc.
+    paymentDetails: {
+        method: 'wallet' | 'mpesa' | 'card'; // Payment method options
+        status: string; // Payment status like 'pending', 'completed', etc.
+        transactionId?: string; // Optional transaction ID (may not be available at the time of order creation)
+        mpesaPhoneNumber?: string; // Required if using M-Pesa
+        walletAddress?: string; // Required if using a crypto wallet
+        cardDetails?: {
+            cardholderName: string;
+            cardNumber: string;
+            expiryDate: string;
+            cvc: string;
+        }; // Required if using a credit card
+    };
+    deliveryAddress: {
+        fullName: string;
+        address: string;
+        city: string;
+        country: string;
+        phone: string;
+    };
+}
+
+export interface IFetchOrder {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    userId: string;
     items: {
         productId: string;
         quantity: number;
@@ -48,12 +78,6 @@ export interface IOrder {
         country: string;
         phone: string;
     };
-}
-
-export interface IFetchOrder extends IOrder {
-    id: string;
-    createdAt: string;
-    updatedAt: string;
 }
 
 
