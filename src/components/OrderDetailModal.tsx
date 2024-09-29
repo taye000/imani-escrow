@@ -27,6 +27,7 @@ const modalStyle = {
 };
 
 export default function OrderDetailModal({ open, handleClose, order }: OrderDetailProps) {
+    console.log("order details", order.items);
     return (
         <Modal open={open} onClose={handleClose} aria-labelledby="order-modal-title">
             <Box sx={modalStyle} onClick={(e) => e.stopPropagation()}>
