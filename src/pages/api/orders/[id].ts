@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../../utils/db";
 import Order, { IOrder } from "@/models/order";
 import { getSession } from "@auth0/nextjs-auth0";
+import { IFetchOrder } from "@/context/OrderContext";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,7 +21,7 @@ export default async function handler(
   switch (req.method) {
     case "GET":
       try {
-        const order = await Order.findById(id);
+        const order = await Order.findById(id).populate("items.productId");
         if (!order) {
           return res.status(404).json({ message: "Order not found" });
         }
