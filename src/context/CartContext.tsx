@@ -23,6 +23,7 @@ interface CartContextProps {
     updateCart: (productId: string, change: number) => void;
     removeItem: (productId: string) => void;
     clearCart: () => void;
+    mutate: () => Promise<ICart | undefined>;
 }
 
 // Fetcher function for SWR
@@ -174,6 +175,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
                 updateCart,
                 removeItem,
                 clearCart,
+                mutate,
             }}
         >
             {children}

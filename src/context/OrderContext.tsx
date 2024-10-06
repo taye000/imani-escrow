@@ -94,6 +94,7 @@ interface OrderContextProps {
     fetchOrders: () => void;
     fetchOrderById: (orderId: string) => void;
     clearOrders: () => void;
+    mutate: () => Promise<IOrder[] | undefined>;
 }
 
 // Fetcher function for SWR
@@ -220,6 +221,7 @@ export const OrderProvider = ({ children }: { children: React.ReactNode }) => {
                 fetchOrders,
                 fetchOrderById,
                 clearOrders,
+                mutate,
             }}
         >
             {children}

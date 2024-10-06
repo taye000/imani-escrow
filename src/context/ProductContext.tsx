@@ -26,6 +26,7 @@ interface ProductContextProps {
     addProduct: (productData: IProduct) => Promise<void>;
     updateProduct: (id: string, productData: Partial<IProduct>) => Promise<void>;
     deleteProduct: (id: string) => Promise<void>;
+    mutate: () => Promise<IProduct[] | undefined>;
 }
 
 // Fetcher function for SWR
@@ -111,7 +112,7 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
     };
 
     return (
-        <ProductContext.Provider value={{ products: productList, isLoading, error, addProduct, updateProduct, deleteProduct }}>
+        <ProductContext.Provider value={{ products: productList, isLoading, error, addProduct, updateProduct, deleteProduct, mutate }}>
             {children}
         </ProductContext.Provider>
     );
