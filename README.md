@@ -24,11 +24,15 @@ In today's digital marketplace, trust is essential. Imani Escrow bridges the gap
 
 ## Demo Images
 
-![Marketplace View](path_to_your_image_1)
-![Transaction Confirmation](path_to_your_image_2)
-![User Dashboard](path_to_your_image_3)
-
-(*Add images relevant to your project*)
+![Platform Landing page](./public/images/landing.png)
+![Marketplace View](./public/images/marketplace.png)
+![Product detail View](./public/images/productdetail.png)
+![Transaction Confirmation](./public/images/confirmtransaction.png)
+![User Dashboard Orders](./public/images/dashboardorders.png)
+![User Dashboard Products](./public/images/dashboardproducts.png)
+![User Connect wallet](./public/images/connectwallet.png)
+![User Delivery address](./public/images/deliveryaddress.png)
+![Updated order status](./public/images/updateorderstatus.png)
 
 ## Getting Started
 
