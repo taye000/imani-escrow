@@ -7,6 +7,7 @@ import { Toaster } from 'react-hot-toast'; // Import toast from react-hot-toast
 import { CartProvider } from '@/context/CartContext';
 import { ProductProvider } from '@/context/ProductContext';
 import { OrderProvider } from '@/context/OrderContext';
+import { CustomFuelProvider } from '@/context/WalletContext';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [isComponentRendered, setIsComponentRendered] = React.useState(false);
@@ -23,10 +24,12 @@ export default function App({ Component, pageProps }: AppProps) {
       <ProductProvider>
         <CartProvider>
           <OrderProvider>
-            <ThemeProvider>
-              <Component {...pageProps} />
-              <Toaster />
-            </ThemeProvider>
+            <CustomFuelProvider>
+              <ThemeProvider>
+                <Component {...pageProps} />
+                <Toaster />
+              </ThemeProvider>
+            </CustomFuelProvider>
           </OrderProvider>
         </CartProvider>
       </ProductProvider>
