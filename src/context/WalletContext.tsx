@@ -11,8 +11,8 @@ interface FuelContextType {
     walletAddress: string;
     connectWallet: () => Promise<boolean>;
     disconnectWallet: () => Promise<boolean>;
-    isConnecting?: boolean;
     isDisconnecting?: boolean;
+    isConnecting?: boolean;
 }
 
 // Create the context with a default value of undefined
