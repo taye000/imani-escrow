@@ -251,7 +251,7 @@ function Checkout() {
             setStatus('Paid');
             await handleSaveOrder(cart.id, cart.totalAmount);
             await clearCart();
-            router.push("/marketplace");
+            router.push("/dashboard");
         }
     };
 
@@ -512,22 +512,33 @@ function Checkout() {
                 onClose={() => setConfirmationOpen(false)}
             >
                 <ModalContent>
-                    <Typography variant="h6">Confirm Payment</Typography>
-                    <Typography variant="body1">Are you sure you want to proceed with the payment?</Typography>
-                    <Button
-                        variant="contained"
-                        onClick={handleConfirmPayment}
-                        sx={{ marginRight: 2 }}
+                    <Typography variant="h6" align="center">Confirm Payment</Typography>
+                    <Typography variant="body1" align="center">
+                        Are you sure you want to proceed with the payment?
+                    </Typography>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            gap: 2,
+                            mt: 2
+                        }}
                     >
-                        Confirm
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        onClick={() => setConfirmationOpen(false)}
-                    >
-                        Cancel
-                    </Button>
+                        <Button
+                            variant="contained"
+                            onClick={handleConfirmPayment}
+                        >
+                            Confirm
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            onClick={() => setConfirmationOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                    </Box>
                 </ModalContent>
+
             </ConfirmationModal>
             <ToggleCustomTheme showCustomTheme={showCustomTheme} toggleCustomTheme={toggleCustomTheme} />
         </ThemeProvider>
