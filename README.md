@@ -56,7 +56,7 @@ To get started with Imani Escrow, follow these simple steps:
 We welcome contributions! If you have suggestions for improvements or want to report issues, please feel free to submit a pull request or open an issue.
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for more information.
+This project is licensed under the MIT License.
 
 ## Acknowledgments
 A big shoutout to the developers and teams behind the tools and libraries that made this project possible!
