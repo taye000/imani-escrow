@@ -24,109 +24,7 @@ import { useCartContext } from '@/context/CartContext';
 import { IOrder, useOrderContext } from '@/context/OrderContext';
 import router from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
-
-const ProductCardContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 16px;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
-
-const ProductDetails = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-`;
-
-const TitlePriceContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline; 
-`;
-
-const CheckoutContainer = styled.div`
-  padding: 24px;
-  max-width: 960px;
-  margin: 0 auto; 
-  display: flex;
-  justify-content: space-between;
-  height: 100vh; 
-`;
-
-const ProductImage = styled(CardMedia)`
-  height: 80px;
-  width: 80px;
-  margin-right: 16px;
-  border-radius: 8px;
-`;
-
-const SectionTitle = styled(Typography)`
-  font-weight: bold;
-  margin-bottom: 16px;
-`;
-
-const OrderSummaryItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-`;
-
-const ConnectWalletContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    margin-top: 16px;
-    padding: 16px;
-`;
-
-const ConnectWalletButton = styled(Button)`
-  width: 50%;
-  padding: 16px;
-  margin-top: 16px;
-  background-color: primary.light};
-  color: white;
-  
-  &:hover {
-    background-color: primary.dark};
-  }
-`;
-
-const ConfirmationModal = styled(Modal)({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-});
-
-const ModalContent = styled(Box)`
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    outline: none;
-`;
-
-const NoItemsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-  border: 2px dashed #ccc;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  color: #333;
-  text-align: center;
-
-  & > p {
-    margin: 10px 0;
-    font-size: 18px;
-  }
-
-  & > button {
-    margin-top: 20px;
-  }
-`;
+import { useCustomFuelHook } from '@/context/WalletContext';
 
 export interface CardDetails {
     cardholderName: string;
@@ -165,6 +63,10 @@ function Checkout() {
 
     const { cart, isLoading, error, updateCart, removeItem, clearCart } = useCartContext();
     const { createOrder } = useOrderContext();
+    const { isConnecting, isWalletConnected, connectWallet, disconnectWallet, walletAddress } = useCustomFuelHook();
+    if (isWalletConnected) {
+        console.log("wallet address", walletAddress);
+    }
 
     const { mode, toggleColorMode } = useThemeContext();
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
@@ -178,7 +80,6 @@ function Checkout() {
     const [phone, setPhone] = React.useState('');
     const [status, setStatus] = React.useState('Pending');
     const [mpesaPhoneNumber, setMpesaPhoneNumber] = React.useState('');
-    const [walletAddress, setWalletAddress] = React.useState('');
     const [cardDetailsFilled, setCardDetailsFilled] = React.useState(false);
     const [cardDetails, setCardDetails] = React.useState<CardDetails>({
         cardholderName: '',
@@ -199,6 +100,36 @@ function Checkout() {
     const togglePaymentSection = () => {
         setIsPaymentOpen((prev) => !prev);
         if (isShippingOpen) setIsShippingOpen(false); // Collapse shipping when expanding payment
+    };
+
+    const handleWalletConnection = async () => {
+        try {
+            if (!isWalletConnected) {
+                const connected = await connectWallet();
+                if (connected) {
+                    console.log("connected");
+                    toast.success("Wallet Connected Successfully");
+                }
+            }
+        } catch (error: any) {
+            console.error("Error handling wallet connection:", error.message);
+            toast.error("Error Connecting Wallet");
+        }
+    };
+
+    const handleWalletDisconnection = async () => {
+        try {
+            if (isWalletConnected) {
+                const disconnect = await disconnectWallet();
+                if (disconnect) {
+                    console.log("Wallet Disconnected");
+                    toast.success("Wallet Disconnected Successfully");
+                }
+            }
+        } catch (error: any) {
+            console.error("Error handling wallet disconnection:", error.message);
+            toast.error("Error disconnecting Wallet");
+        }
     };
 
     const handleUpdateCart = (productId: string, change: number) => {
@@ -464,9 +395,15 @@ function Checkout() {
                                                 onChange={handleMpesaPhoneNumberChange} />
                                         ) : selectedPaymentMethod === 'wallet' ? (
                                             <ConnectWalletContainer>
-                                                <ConnectWalletButton variant="contained">
-                                                    Connect Wallet
-                                                </ConnectWalletButton>
+                                                {isWalletConnected ? (
+                                                    <DisconnectWalletButton onClick={handleWalletDisconnection}>
+                                                        Disconnect Wallet
+                                                    </DisconnectWalletButton>
+                                                ) : (
+                                                    <ConnectWalletButton onClick={handleWalletConnection}>
+                                                        Connect Wallet
+                                                    </ConnectWalletButton>
+                                                )}
                                             </ConnectWalletContainer>
 
                                         ) : (
@@ -546,3 +483,119 @@ function Checkout() {
 }
 
 export default withAuth(Checkout);
+
+
+const ProductCardContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const ProductDetails = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`;
+
+const TitlePriceContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline; 
+`;
+
+const CheckoutContainer = styled.div`
+  padding: 24px;
+  max-width: 960px;
+  margin: 0 auto; 
+  display: flex;
+  justify-content: space-between;
+  height: 100vh; 
+`;
+
+const ProductImage = styled(CardMedia)`
+  height: 80px;
+  width: 80px;
+  margin-right: 16px;
+  border-radius: 8px;
+`;
+
+const SectionTitle = styled(Typography)`
+  font-weight: bold;
+  margin-bottom: 16px;
+`;
+
+const OrderSummaryItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+`;
+
+const ConnectWalletContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+    padding: 16px;
+`;
+
+const ConnectWalletButton = styled(Button)`
+  width: 50%;
+  padding: 16px;
+  margin-top: 16px;
+  background-color: primary.light};
+  color: white;
+  
+  &:hover {
+    background-color: primary.dark};
+  }
+`;
+
+const DisconnectWalletButton = styled(Button)`
+  width: 50%;
+  padding: 16px;
+  margin-top: 16px;
+  background-color: secondary.light};
+  color: white;
+
+  &:hover {
+    background-color: secondary.dark};
+  }
+`;
+
+const ConfirmationModal = styled(Modal)({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+});
+
+const ModalContent = styled(Box)`
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    outline: none;
+`;
+
+const NoItemsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  color: #333;
+  text-align: center;
+
+  & > p {
+    margin: 10px 0;
+    font-size: 18px;
+  }
+
+  & > button {
+    margin-top: 20px;
+  }
+`;
